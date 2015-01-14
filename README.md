@@ -8,9 +8,15 @@ You are what you eat! Get Up, Chuck! is a 2D puzzle-platformer game focused arou
 This game is being developed as a capstone project for GAME 4701 at Northeastern University with Professor Casper Harteveld. Team members are:
 
 Korbin Shuffleton - Producer, Level Design
+
 Sam Lynch - UI Programming
+
 Deniz Ozkaynak - Programming
+
 Marcio Lama - Visual Art and Animation
+
 Andrew Ojemann - Programming
+
 Beejul Khatri - Sound and Music
+
 Dylan Schmidt - Marketing, etc.
