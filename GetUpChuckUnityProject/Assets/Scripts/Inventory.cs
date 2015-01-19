@@ -31,6 +31,7 @@ public abstract class Inventory : MonoBehaviour {
 		this.currentWeight = tmpWeight;
 	}
 
+
 	// Add items to structure, increment weight
 	public void AddItem(Item item){
 		loItems.Add(item);
@@ -62,8 +63,31 @@ public abstract class Inventory : MonoBehaviour {
 	}
 
 	// Given an Array of items check if any can be combined with each other.
-	void CheckItemCombinations(Item[] items){
+	public void CheckItemCombinations(ArrayList items){
+		// Declare an arraylist to keep track of which items are combos
+		ArrayList successfullCombinations = new ArrayList();
 
+		// For every item in items, check if any item in items is a
+		// member of the potentialCombinations list for each item.
+		for (int i = 0; i < items.Count; i++){
+			Item tmpItem = (Item) items[i];
+
+			for (int j = 0; j < tmpItem.potentialCombinations.Length; j++){
+				Item tmpItem1 = (Item) items[j];
+
+				if(tmpItem.potentialCombinations[i].Contains(tmpItem1.getName())){
+					successfullCombinations.Add(items[i]);
+				}else if(tmpItem.potentialCombinations[j].Contains(tmpItem1.getName())){
+					successfullCombinations.Add(items[i]);
+				}
+			}
+		}
+
+		// Debugging output
+		for(int t = 0; t < successfullCombinations.Count; t++){
+			Item debug_tmpItem = (Item) successfullCombinations[t];
+			Debug.Log(debug_tmpItem.getName());
+		}
 	}
 
 }

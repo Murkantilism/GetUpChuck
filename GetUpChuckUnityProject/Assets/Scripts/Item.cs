@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public abstract class Item : MonoBehaviour {
+public class Item : MonoBehaviour {
 
 	//stores weight of item
 	public float weight;
@@ -25,13 +25,13 @@ public abstract class Item : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-	
+
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		// If the item can be digested 
-		if(digestionTimer != 1337){
+		if(digestionTimer != 1337.0f){
 			// Increment timer
 		    oneSecTimer += Time.deltaTime;
 			// Once a second of game time is reached, call DigestionTick()
@@ -43,7 +43,9 @@ public abstract class Item : MonoBehaviour {
 		}
 	}
 
-	//geter and seter for weight
+	/**********************
+	 * Geters and Seters *
+	**********************/
 	public float getWeight (){
 		return this.weight;
 	}
@@ -51,7 +53,6 @@ public abstract class Item : MonoBehaviour {
 		this.weight = inWeight;
 	}
 
-	//geter and seter for hue
 	public int getHue(){
 		return this.hue;
 	}
@@ -64,7 +65,6 @@ public abstract class Item : MonoBehaviour {
 		}
 	}
 
-	//geter and seter for name
 	public string getName(){
 		return this.item_name;
 	}
@@ -72,7 +72,6 @@ public abstract class Item : MonoBehaviour {
 		this.item_name = tmpName;
 	}
 
-	// Geter and seter for digestion timer
 	public float getDigestionTimer(){
 		return this.digestionTimer;
 	}
@@ -80,13 +79,13 @@ public abstract class Item : MonoBehaviour {
 		this.digestionTimer = tmpTimer;
 	}
 
-	// Geter and seter for list of combinations
 	public string[] getCombinations(){
 		return this.potentialCombinations;
 	}
 	public void setCombinations(string[] tmpCombos){
 		this.potentialCombinations = tmpCombos;
 	}
+
 
 	// Add this item to the inventory system
 	void AddToInventory(){
