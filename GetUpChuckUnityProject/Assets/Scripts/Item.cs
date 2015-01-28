@@ -20,8 +20,7 @@ public class Item : MonoBehaviour {
 	// An array of potential item combinations allowed with this item
 	public string[] potentialCombinations;
 
-	// A timer to keep track of when a second of game time has occurred
-	float oneSecTimer;
+	public Sprite sprite;
 
 	// Use this for initialization
 	void Start () {
@@ -30,17 +29,7 @@ public class Item : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		// If the item can be digested 
-		if(digestionTimer != 1337.0f){
-			// Increment timer
-		    oneSecTimer += Time.deltaTime;
-			// Once a second of game time is reached, call DigestionTick()
-			if(oneSecTimer > 1){
-				// TODO: Get a reference to the Inventory classes for Red & Blue
-				// then call the DigestionTick() function, passing ourself as the arg
-			}
-			oneSecTimer = 0; // Reset timer
-		}
+
 	}
 
 	/**********************
@@ -86,11 +75,11 @@ public class Item : MonoBehaviour {
 		this.potentialCombinations = tmpCombos;
 	}
 
-
-	// Add this item to the inventory system
-	void AddToInventory(){
-		// TODO: Call the AddItem() function of the target inventory script
-		// TODO: Call the HonorableSeppuku() function once item is added
+	// Given which character is active, add this item to their inventory system
+	public void AddToInventory(Inventory playerInventory){
+		playerInventory.AddItem(this);
+		// Once item is added called self-destruct function
+		HonorableSeppuku();
 	}
 
 	// Item deletes iteself from world space after it has been added to inventory 

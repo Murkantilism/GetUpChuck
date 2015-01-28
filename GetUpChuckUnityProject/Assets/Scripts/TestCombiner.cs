@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class TestCombiner : ScriptableObject {
-	TestInventory redInventory;
+	Inventory_Red redInventory;
 	
 	public ArrayList selectedItems = new ArrayList();
 	
@@ -53,7 +53,7 @@ public class TestCombiner : ScriptableObject {
 		selectedItems.Add(apple);
 		selectedItems.Add(rock);
 		
-		redInventory = GameObject.Find("TestInventory").GetComponent<TestInventory>();
+		redInventory = GameObject.Find("TestInventory").GetComponent<Inventory_Red>();
 		
 		redInventory.CheckItemCombinations(selectedItems);
 	}

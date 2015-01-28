@@ -10,7 +10,12 @@ public abstract class Inventory : MonoBehaviour {
 	public float currentWeight;
 
 	// Declare ArrayList to store list of items
-	ArrayList loItems = new ArrayList();
+	public ArrayList loItems = new ArrayList();
+
+	GameObject inst_item;
+
+	// A timer to keep track of when a second of game time has occurred
+	float oneSecTimer;
 
 	// Use this for initialization
 	void Start () {
@@ -31,7 +36,6 @@ public abstract class Inventory : MonoBehaviour {
 		this.currentWeight = tmpWeight;
 	}
 
-
 	// Add items to structure, increment weight
 	public void AddItem(Item item){
 		loItems.Add(item);
@@ -41,14 +45,43 @@ public abstract class Inventory : MonoBehaviour {
 	//Remove item from structure, decrease weight
 	public void DropItem(Item item){
 		loItems.Remove(item);
-		currentWeight -= item.getWeight();
-		// TODO: Call a function to instantiate item in world space
+		if(currentWeight > item.getWeight()){
+		    currentWeight -= item.getWeight();
+		}
+		// Instantiate item in world space
+		InstantiateItem(item);
+	}
+
+	// Instantiate the item in world space directly in front of player character
+	void InstantiateItem(Item item){
+		// Set a temp gameObject from resources folder
+		inst_item = Resources.Load<GameObject>(item.getName());
+		// TODO: Once player class has been implemeneted, set a reference to player class
+		// and instantiate in front of player character instead of 0, 0
+		Instantiate(inst_item, new Vector2(0, 0), Quaternion.identity);
 	}
 
 	// Delete the item from inventory, DO NOT drop it back into world space
 	public void DeleteItem(Item item){
 		loItems.Remove(item);
 		currentWeight -= item.getWeight();
+	}
+
+	// For every item currently in the inventory that can be digested,
+	// call the DigestionTick() function on it.
+	public void ItemDigestion(){
+		foreach(Item item in loItems){
+			// If the item can be digested
+			if(item.digestionTimer != 1337.0f){
+				// Increment timer
+				oneSecTimer += Time.deltaTime;
+				// Once a sec of game time is reached, call DigestionTick()
+				if(oneSecTimer > 1){
+					DigestionTick(item);
+					oneSecTimer = 0; // Reset timer
+				}
+			}
+		}
 	}
 
 	// Called by each individual item once per second of game time.
