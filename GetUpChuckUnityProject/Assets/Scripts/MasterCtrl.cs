@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class AnimationCtrl : MonoBehaviour {
+public class MasterCtrl : MonoBehaviour {
 
 	//tracks color of active chuck
 	//"red" or "blue"

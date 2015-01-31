@@ -15,6 +15,12 @@ public class Player : MonoBehaviour {
 	//force of jumps
 	public int jumpForce;
 
+	//respawn x and y stored when player reaches a checkpoint
+	public float reX;
+	public float reY;
+
+	//==================================================================
+
 	// Use this for initialization
 	void Start () {
 		playerInventory = this.GetComponent<Inventory> ();
@@ -62,6 +68,17 @@ public class Player : MonoBehaviour {
 			}
 		}
 
+	//called by a checkpoint to set the respawn point
+	public void setCkPt(float tmpX, float tmpY){
+		this.reX = tmpX;
+		this.reY = tmpY;
+		}
+
+	//called when a player is forced to respawn (like on death)
+	public void playerRe(){
+		this.transform.position = new Vector3 (reX, reY, this.transform.position.z);
+		}
+
 
 	//geter and seter for colorRed
 	public bool getColorRed(){
@@ -75,15 +92,6 @@ public class Player : MonoBehaviour {
 		if (tmpColor.Equals ("blue")) {
 			this.colorRed = false;
 				}
-	}
-
-	//geter and seter for size
-	public int getSize(){
-		return this.size;
-	}
-
-	public void setSize(int tmpSize){
-		this.size = tmpSize;
 	}
 
 }
