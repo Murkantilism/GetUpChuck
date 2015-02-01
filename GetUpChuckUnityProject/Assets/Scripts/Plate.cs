@@ -4,14 +4,9 @@ using System.Collections;
 public class Plate : Obstacle, MonoBehaviour {
 
 	public int weightCheck;
-	bool heavyEnough = false;
 
-	void condCheck(Inventory inv) {
-		if (inv.getCurrentWeight () > weightCheck) {
-			heavyEnough = true;
-		} else {
-			heavyEnough = false;
-		}
+	public void condCheck(Inventory inv) {
+		if (inv.getCurrentWeight () > weightCheck) { condResponse(); } 
 	}
 
 	void condResponse() {

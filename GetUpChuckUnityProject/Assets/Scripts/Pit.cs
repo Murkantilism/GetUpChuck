@@ -5,7 +5,7 @@ public class Pit : Obstacle, MonoBehaviour {
 
 	bool inPit = false;
 
-	void condCheck(GameObject player) {
+	public void condCheck(GameObject player) {
 		// TODO check if player is in pit
 	}
 
