@@ -19,17 +19,23 @@ public class Player : MonoBehaviour {
 	public float reX;
 	public float reY;
 
+	//last y position, used to prevent double jump
+	private float lastY;
+	private float lastYTwo;
+
 	//==================================================================
 
 	// Use this for initialization
 	void Start () {
 		playerInventory = this.GetComponent<Inventory> ();
 		maxInvSize = playerInventory.inventorySize;
+		lastY = this.transform.position.y;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-	
+		lastYTwo = lastY;
+		lastY = this.transform.position.y;
 	}
 
 	//chages size of character if weight reaches a threshhold
@@ -57,15 +63,18 @@ public class Player : MonoBehaviour {
 	//called to make the player jump
 	//takes direction as a string
 	public void jump(string Direc){
-		//TODO make sure the player is not already jumping or falling
+		//make sure the player is not already jumping or falling
+		if (lastY == lastYTwo) {
 
-		if (Direc.Equals ("right")) {
-			this.rigidbody.AddForce(new Vector3(jumpForce, jumpForce,0));
+					if (Direc.Equals ("right")) {
+							this.rigidbody.AddForce (new Vector3 (jumpForce, jumpForce, 0));
+					}
+
+					if (Direc.Equals ("left")) {
+							this.rigidbody.AddForce (new Vector3 (-jumpForce, jumpForce, 0));
+					}
+
 				}
-
-		if (Direc.Equals ("left")) {
-			this.rigidbody.AddForce(new Vector3(-jumpForce, jumpForce,0));
-			}
 		}
 
 	//called by a checkpoint to set the respawn point

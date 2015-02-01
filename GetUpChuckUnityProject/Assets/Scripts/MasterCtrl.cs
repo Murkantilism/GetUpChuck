@@ -115,7 +115,7 @@ public class MasterCtrl : MonoBehaviour {
 			activeColor = "blue";
 		}
 		if (activeColor.Equals ("blue")) {
-			activeColor = "red"
+			activeColor = "red";
 		}
 	}
 
