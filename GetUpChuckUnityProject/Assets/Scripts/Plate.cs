@@ -5,17 +5,16 @@ public class Plate : Obstacle, MonoBehaviour {
 
 	public int weightCheck;
 	bool heavyEnough = false;
-	public Texture2D message;
 
-	void conditionCheck(GameObject player) {
-		//check if player's weight > weightCheck
+	void condCheck(Inventory inv) {
+		if (inv.getCurrentWeight () > weightCheck) {
+			heavyEnough = true;
+		} else {
+			heavyEnough = false;
+		}
 	}
 
-	void conditionMet() {
-		// if the weight condition is true, trigger the mechanism for this plate
-	}
-
-	void shareMessage() {
-		// display the player help message for this obstacle
+	void condResponse() {
+		// TODO if the weight condition is true, trigger the mechanism for this plate
 	}
 }
