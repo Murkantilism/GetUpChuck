@@ -45,7 +45,7 @@ public abstract class Inventory : MonoBehaviour {
 	//Remove item from structure, decrease weight
 	public void DropItem(Item item){
 		loItems.Remove(item);
-		if(currentWeight > item.getWeight()){
+		if(currentWeight > item.getWeight()){ // Make sure we don't go to negative weight
 		    currentWeight -= item.getWeight();
 		}
 		// Instantiate item in world space
@@ -64,7 +64,9 @@ public abstract class Inventory : MonoBehaviour {
 	// Delete the item from inventory, DO NOT drop it back into world space
 	public void DeleteItem(Item item){
 		loItems.Remove(item);
-		currentWeight -= item.getWeight();
+		if(currentWeight > item.getWeight()){ // Make sure we don't go to negative weight
+		    currentWeight -= item.getWeight();
+		}
 	}
 
 	// For every item currently in the inventory that can be digested,
