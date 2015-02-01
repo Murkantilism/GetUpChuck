@@ -6,57 +6,48 @@ public class Player : MonoBehaviour {
 	//boolean to handle color true=red false=blue
 	public bool colorRed;
 
-	//set the current size of the player
-	//1 is the starting size with an empty inventory
-	int size;
-
-	// threshholds for going up to the next size level
-	/*
-	public int sizeThresh1;
-	public int sizeThresh2;
-	public int sizeThresh3;
-	*/
-
 	//intance of player inventory used for this player
 	Inventory playerInventory;
+
+	//max inventory size stored for model calculations
+	int maxInvSize;
+
+	//force of jumps
+	public int jumpForce;
+
+	//respawn x and y stored when player reaches a checkpoint
+	public float reX;
+	public float reY;
+
+	//last y position, used to prevent double jump
+	private float lastY;
+	private float lastYTwo;
+
+	//==================================================================
 
 	// Use this for initialization
 	void Start () {
 		playerInventory = this.GetComponent<Inventory> ();
+		maxInvSize = playerInventory.inventorySize;
+		lastY = this.transform.position.y;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-	
+		lastYTwo = lastY;
+		lastY = this.transform.position.y;
 	}
 
 	//chages size of character if weight reaches a threshhold
 	//TODO call on eat or throwup
-	void changeSize (){
-		int tmpCurrInvSize = playerInventory.getCurrentWeight ();
-		int tmpMaxInvSize = playerInventory.inventorySize;
-		float tmpCurrF = (float) tmpCurrInvSize;
-		float tmpMax = (float)tmpMaxInvSize;
+	void changeSize (float sizeIn){
+		float tmpMax = (float)maxInvSize;
 
-		float scaleFactor = tmpCurrF / tmpMax;
+		float scaleFactor = sizeIn / tmpMax;
 
 		this.transform.localScale += new Vector3 (scaleFactor, scaleFactor, 0.0f);
-
-		/*if (tmpInvSize > this.sizeThresh1) {
-			if (tmpInvSize > this.sizeThresh2) {
-				if (tmpInvSize > this.sizeThresh3) {
-					this.size = 4;
-				}
-				else {
-					this.size = 3;
-				}
-			}
-			else {
-				this.size = 2;
-			}
-		}*/
+		
 	}
-
 	
 	//moves the player right
 	//TODO flip sprite to face correct direction
@@ -68,13 +59,33 @@ public class Player : MonoBehaviour {
 	public void moveLeft(){
 		this.transform.Translate (Vector3.left * Time.deltaTime);
 		}
-
-	//TODO apply force
+	
 	//called to make the player jump
-	public void jump(){
+	//takes direction as a string
+	public void jump(string Direc){
 		//make sure the player is not already jumping or falling
+		if (lastY == lastYTwo) {
 
-		//rigidbody.addforce
+					if (Direc.Equals ("right")) {
+							this.rigidbody.AddForce (new Vector3 (jumpForce, jumpForce, 0));
+					}
+
+					if (Direc.Equals ("left")) {
+							this.rigidbody.AddForce (new Vector3 (-jumpForce, jumpForce, 0));
+					}
+
+				}
+		}
+
+	//called by a checkpoint to set the respawn point
+	public void setCkPt(float tmpX, float tmpY){
+		this.reX = tmpX;
+		this.reY = tmpY;
+		}
+
+	//called when a player is forced to respawn (like on death)
+	public void playerRe(){
+		this.transform.position = new Vector3 (reX, reY, this.transform.position.z);
 		}
 
 
@@ -90,15 +101,6 @@ public class Player : MonoBehaviour {
 		if (tmpColor.Equals ("blue")) {
 			this.colorRed = false;
 				}
-	}
-
-	//geter and seter for size
-	public int getSize(){
-		return this.size;
-	}
-
-	public void setSize(int tmpSize){
-		this.size = tmpSize;
 	}
 
 }
