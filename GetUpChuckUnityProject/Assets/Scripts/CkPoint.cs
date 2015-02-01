@@ -13,7 +13,12 @@ public class CkPoint : MonoBehaviour {
 	
 	}
 
-	//public void OnCollisionEnter (bump)
-	//if bump.tag == ckRed or ckBlue
-	//bump.player.setCkPt(this.trasform.position.x, ...y)
+	public void OnCollisionEnter(Collision bump){
+		if (bump.gameObject.tag.Equals ("redCK") || bump.gameObject.tag.Equals ("blueCK")) {
+			Player tempP;
+			tempP = bump.gameObject.gameObject.GetComponent<Player>();
+			tempP.setCkPt(this.transform.position.x, this.transform.position.y);
+				}
+
+		}
 }
