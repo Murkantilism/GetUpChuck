@@ -21,12 +21,10 @@ public class TestController : MonoBehaviour {
 		apple.setName("apple");
 		apple.setDigestionTimer(5.0f);
 		
-		string [] appleCombinations = new string[2];
-		appleCombinations[0] = "flour";
-		appleCombinations[1] = "sugar";
+		ArrayList appleCombinations = new ArrayList();
+		appleCombinations.Add(System.Tuple.Create("dough", "applepie"));
 		
 		apple.setCombinations(appleCombinations);
-
 
 	}
 	

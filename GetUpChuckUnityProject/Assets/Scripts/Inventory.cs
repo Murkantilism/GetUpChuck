@@ -97,32 +97,25 @@ public abstract class Inventory : MonoBehaviour {
 		}
 	}
 
-	// Given an Array of items check if any can be combined with each other.
+	// Given an Array of 2 items check if item 2 is a member of item 1's list of potential combos
 	public void CheckItemCombinations(ArrayList items){
-		// Declare an arraylist to keep track of which items are combos
-		ArrayList successfullCombinations = new ArrayList();
 
-		// For every item in items, check if any item in items is a
-		// member of the potentialCombinations list for each item.
-		for (int i = 0; i < items.Count; i++){
-			Item tmpItem = (Item) items[i];
+		Item item0 = (Item) items[0];
+		Item item1 = (Item) items[1];
 
-			for (int j = 0; j < tmpItem.potentialCombinations.Length; j++){
-				Item tmpItem1 = (Item) items[j];
+		// For every element of the potential combination list, get the first item in
+		// the tuple and compare it against the item we are checking against (item1).
+		for (int i = 0; i < item0.potentialCombinations.Count; i++){
+			System.Tuple<string, string> tmpTuple = (System.Tuple<string, string>) item0.getCombinations()[i];
 
-				if(tmpItem.potentialCombinations[i].Contains(tmpItem1.getName())){
-					successfullCombinations.Add(items[i]);
-				}else if(tmpItem.potentialCombinations[j].Contains(tmpItem1.getName())){
-					successfullCombinations.Add(items[i]);
-				}
+			if(tmpTuple.Item1.Contains(item1.getName())){
+				Debug.Log("Successful combo: " + item0.getName() + " + " + item1.getName());
+				CombineItems(items);
 			}
-		}
-
-		// Debugging output
-		for(int t = 0; t < successfullCombinations.Count; t++){
-			Item debug_tmpItem = (Item) successfullCombinations[t];
-			Debug.Log(debug_tmpItem.getName());
 		}
 	}
 
+	public void CombineItems(ArrayList items){
+
+	}
 }

@@ -18,7 +18,7 @@ public class Item : MonoBehaviour {
 	public float digestionTimer;
 
 	// An array of potential item combinations allowed with this item
-	public string[] potentialCombinations;
+	public ArrayList potentialCombinations;
 
 	public Sprite sprite;
 
@@ -68,10 +68,10 @@ public class Item : MonoBehaviour {
 		this.digestionTimer = tmpTimer;
 	}
 
-	public string[] getCombinations(){
+	public ArrayList getCombinations(){
 		return this.potentialCombinations;
 	}
-	public void setCombinations(string[] tmpCombos){
+	public void setCombinations(ArrayList tmpCombos){
 		this.potentialCombinations = tmpCombos;
 	}
 
