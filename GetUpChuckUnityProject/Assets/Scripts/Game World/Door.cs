@@ -1,14 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Pit : Obstacle, MonoBehaviour {
+public class Door : Obstacle, MonoBehaviour {
 
-	bool inPit = false;
+	bool open = false;
 	
 	void OnCollisionEnter2D(Collision2D coll) {
-		if (coll.gameObject.tag == "Player") { condCheck(); }
+		if (coll.gameObject.tag == "Key") { condCheck(); }
 	}
-	
+
 	void condCheck(Inventory inv) {
 		// OnCollisionEnter2D satisfies the condition for this obstacle
 		// Follow through to response
@@ -16,10 +16,10 @@ public class Pit : Obstacle, MonoBehaviour {
 	}
 	
 	void condResponse() {
-		inPit = true;
+		open = true;
 	}
-	
+
 	public bool getStatus() {
-		return inPit;
+		return open;
 	}
 }
