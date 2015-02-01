@@ -38,6 +38,9 @@ public class MasterCtrl : MonoBehaviour {
 		if (Input.GetButton("CKjumpR")){
 			jumpRight();
 		}
+		if (Input.GetButton("playerSwaps")){
+			swapPlayer();
+		}
 	
 	}
 
@@ -95,5 +98,26 @@ public class MasterCtrl : MonoBehaviour {
 			BlueCKPlayer.jump("right");
 		}
 	}
+
+	//called when player dies
+	void playerDeath (){
+		if (activeColor.Equals ("red")) {
+			RedCKPlayer.playerRe();
+		}
+		if (activeColor.Equals ("blue")) {
+			BlueCKPlayer.playerRe();
+		}
+	}
+
+	//called to switch player from red to blue or blue to red
+	void swapPlayer(){
+		if (activeColor.Equals ("red")) {
+			activeColor = "blue";
+		}
+		if (activeColor.Equals ("blue")) {
+			activeColor = "red"
+		}
+	}
+
 
 }
