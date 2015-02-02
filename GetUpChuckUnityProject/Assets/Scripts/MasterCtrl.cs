@@ -17,8 +17,8 @@ public class MasterCtrl : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		BlueCK = GameObject.FindGameObjectWithTag ("blueCK");
-		RedCK = GameObject.FindGameObjectWithTag ("redCK");
+		BlueCK = GameObject.FindGameObjectWithTag("blueCK");
+		RedCK = GameObject.FindGameObjectWithTag("redCK");
 		RedCKPlayer = RedCK.GetComponent<Player> ();
 		BlueCKPlayer = BlueCK.GetComponent<Player> ();
 	
@@ -32,13 +32,13 @@ public class MasterCtrl : MonoBehaviour {
 		if (Input.GetButton("CKright")){
 			walkRight();
 		}
-		if (Input.GetButton("CKjumpL")){
+		if (Input.GetButtonDown("CKjumpL")){
 			jumpLeft();
 		}
-		if (Input.GetButton("CKjumpR")){
+		if (Input.GetButtonDown("CKjumpR")){
 			jumpRight();
 		}
-		if (Input.GetButton("playerSwaps")){
+		if (Input.GetButtonDown("playerSwaps")){
 			swapPlayer();
 		}
 	
@@ -114,7 +114,7 @@ public class MasterCtrl : MonoBehaviour {
 		if (activeColor.Equals ("red")) {
 			activeColor = "blue";
 		}
-		if (activeColor.Equals ("blue")) {
+		else if (activeColor.Equals ("blue")) {
 			activeColor = "red";
 		}
 	}
