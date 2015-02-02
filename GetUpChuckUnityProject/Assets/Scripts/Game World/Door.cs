@@ -4,15 +4,10 @@ using System.Collections;
 public class Door : Obstacle, MonoBehaviour {
 
 	bool open = false;
+	Inventory inv;
 	
 	void OnCollisionEnter2D(Collision2D coll) {
-		if (coll.gameObject.tag == "Key") { condCheck(); }
-	}
-
-	void condCheck(Inventory inv) {
-		// OnCollisionEnter2D satisfies the condition for this obstacle
-		// Follow through to response
-		condResponse();
+		if (coll.gameObject.tag.Equals("Key")) { condResponse(); }
 	}
 	
 	void condResponse() {
@@ -20,6 +15,6 @@ public class Door : Obstacle, MonoBehaviour {
 	}
 
 	public bool getStatus() {
-		return open;
+		return this.open;
 	}
 }
