@@ -10,7 +10,7 @@ public class Player : MonoBehaviour {
 	Inventory playerInventory;
 
 	//max inventory size stored for model calculations
-	int maxInvSize;
+	float maxInvSize;
 
 	//force of jumps
 	public int jumpForce;
@@ -23,11 +23,19 @@ public class Player : MonoBehaviour {
 	private float lastY;
 	private float lastYTwo;
 
+	//movespeed of the character
+	public float moveSpeed;
+
 	//==================================================================
 
 	// Use this for initialization
 	void Start () {
-		playerInventory = this.GetComponent<Inventory> ();
+		if (this.colorRed == true) {
+			playerInventory = this.GetComponent<Inventory_Red> ();
+		}
+		if (this.colorRed == false) {
+			playerInventory = this.GetComponent<Inventory_Blue> ();
+		}
 		maxInvSize = playerInventory.inventorySize;
 		lastY = this.transform.position.y;
 	}
@@ -52,12 +60,12 @@ public class Player : MonoBehaviour {
 	//moves the player right
 	//TODO flip sprite to face correct direction
 	public void moveRight(){
-		this.transform.Translate (Vector3.right * Time.deltaTime);
+		this.transform.Translate (Vector3.right * Time.deltaTime * moveSpeed);
 		}
 
 	//moves the player left
 	public void moveLeft(){
-		this.transform.Translate (Vector3.left * Time.deltaTime);
+		this.transform.Translate (Vector3.left * Time.deltaTime * moveSpeed);
 		}
 	
 	//called to make the player jump
@@ -67,11 +75,11 @@ public class Player : MonoBehaviour {
 		if (lastY == lastYTwo) {
 
 					if (Direc.Equals ("right")) {
-							this.rigidbody.AddForce (new Vector3 (jumpForce, jumpForce, 0));
+							this.rigidbody2D.AddForce (new Vector2 (jumpForce, jumpForce));
 					}
 
 					if (Direc.Equals ("left")) {
-							this.rigidbody.AddForce (new Vector3 (-jumpForce, jumpForce, 0));
+							this.rigidbody2D.AddForce (new Vector2 (-jumpForce, jumpForce));
 					}
 
 				}
