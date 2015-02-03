@@ -17,9 +17,11 @@ public abstract class Inventory : MonoBehaviour {
 	// A timer to keep track of when a second of game time has occurred
 	float oneSecTimer;
 
+	MasterCtrl master;
+
 	// Use this for initialization
 	void Start () {
-	    
+		master = GameObject.FindGameObjectWithTag("Master").GetComponent<MasterCtrl>();
 	}
 	
 	// Update is called once per frame
@@ -56,9 +58,10 @@ public abstract class Inventory : MonoBehaviour {
 	void InstantiateItem(Item item){
 		// Set a temp gameObject from resources folder
 		inst_item = Resources.Load<GameObject>(item.getName());
-		// TODO: Once player class has been implemeneted, set a reference to player class
-		// and instantiate in front of player character instead of 0, 0
-		Instantiate(inst_item, new Vector2(0, 0), Quaternion.identity);
+		// Get a reference to the active player gameobject from master controller
+		GameObject activePlayer = master.getActivePlayerGO();
+		// Instantiate item in front of the active player
+		Instantiate(inst_item, new Vector2(activePlayer.transform.position.x + 2, activePlayer.transform.position.y), Quaternion.identity);
 	}
 
 	// Delete the item from inventory, DO NOT drop it back into world space
