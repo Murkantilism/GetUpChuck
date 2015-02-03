@@ -21,7 +21,7 @@ public abstract class Inventory : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		master = GameObject.Find("Master").GetComponent<MasterCtrl>();
+		master = GameObject.FindGameObjectWithTag("Master").GetComponent<MasterCtrl>();
 	}
 	
 	// Update is called once per frame
