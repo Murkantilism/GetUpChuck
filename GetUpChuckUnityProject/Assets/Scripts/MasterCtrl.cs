@@ -2,11 +2,6 @@
 using System.Collections;
 
 public class MasterCtrl : MonoBehaviour {
-
-	//tracks color of active chuck
-	//"red" or "blue"
-	public string activeColor;
-
 	//stored reference to red chuck
 	GameObject RedCK;
 	Player RedCKPlayer;
@@ -14,6 +9,10 @@ public class MasterCtrl : MonoBehaviour {
 	//stored reference to blue chuck
 	GameObject BlueCK;
 	Player BlueCKPlayer;
+
+	// Tracks which player is currently active
+	GameObject activePlayer_go;
+	Player activePlayer;
 
 	// Use this for initialization
 	void Start () {
@@ -44,9 +43,30 @@ public class MasterCtrl : MonoBehaviour {
 	
 	}
 
-	//getter for color
-	public string getActiveColor(){
-		return this.activeColor;
+	public void setActivePlayerGO(string color){
+		if(color.Equals("red")){
+			activePlayer_go = RedCK;
+		}
+		if(color.Equals("blue")){
+			activePlayer_go = BlueCK;
+		}
+	}
+
+	public GameObject getActivePlayerGO(){
+		return this.activePlayer_go;
+	}
+
+	public void setActivePlayer(string color){
+		if(color.Equals("red")){
+			activePlayer = RedCKPlayer;
+		}
+		if(color.Equals("blue")){
+			activePlayer = BlueCKPlayer;
+		}
+	}
+
+	public Player getActivePlayer(){
+		return this.activePlayer;
 	}
 
 	//INPUT TAGS
@@ -61,61 +81,36 @@ public class MasterCtrl : MonoBehaviour {
 
 	//Walks left
 	void walkLeft(){
-		if (activeColor.Equals ("red")) {
-			RedCKPlayer.moveLeft();
-				}
-		if (activeColor.Equals ("blue")) {
-			BlueCKPlayer.moveLeft();
-		}
+		activePlayer.moveLeft();
 	}
 
 	//walk right
 	void walkRight(){
-		if (activeColor.Equals ("red")) {
-			RedCKPlayer.moveRight();
-		}
-		if (activeColor.Equals ("blue")) {
-			BlueCKPlayer.moveRight();
-		}
+		activePlayer.moveRight();
 	}
 
 	//jump left
 	void jumpLeft(){
-		if (activeColor.Equals ("red")) {
-			RedCKPlayer.jump("left");
-		}
-		if (activeColor.Equals ("blue")) {
-			BlueCKPlayer.jump("left");
-		}
+		activePlayer.jump("left");
 	}
 
 	//jump right
 	void jumpRight(){
-		if (activeColor.Equals ("red")) {
-			RedCKPlayer.jump("right");
-		}
-		if (activeColor.Equals ("blue")) {
-			BlueCKPlayer.jump("right");
-		}
+		activePlayer.jump("right");
 	}
 
 	//called when player dies
 	void playerDeath (){
-		if (activeColor.Equals ("red")) {
-			RedCKPlayer.playerRe();
-		}
-		if (activeColor.Equals ("blue")) {
-			BlueCKPlayer.playerRe();
-		}
+		activePlayer.playerRe();
 	}
 
 	//called to switch player from red to blue or blue to red
 	void swapPlayer(){
-		if (activeColor.Equals ("red")) {
-			activeColor = "blue";
+		if (activePlayer == RedCKPlayer) {
+			setActivePlayer("blue");
 		}
-		else if (activeColor.Equals ("blue")) {
-			activeColor = "red";
+		else if (activePlayer == BlueCKPlayer) {
+			setActivePlayer("red");
 		}
 	}
 
