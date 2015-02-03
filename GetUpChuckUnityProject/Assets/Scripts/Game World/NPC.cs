@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public interface NPC : MonoBehaviour {
+public interface NPC {
 
 	// Communicate this NPC's message to the player
 	void speak();

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Plate : Obstacle, MonoBehaviour {
+public class Plate : MonoBehaviour, Obstacle {
 
 	public int weightCheck;
 	bool pressed = false;
