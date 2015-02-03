@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Pit : Obstacle, MonoBehaviour {
+public class Pit : MonoBehaviour, Obstacle {
 
 	bool inPit = false;
 	Inventory inv;

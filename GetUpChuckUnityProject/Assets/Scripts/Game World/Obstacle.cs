@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public interface Obstacle : MonoBehaviour {
+public interface Obstacle {
 
 	// Check for player collisions and any further conditions to trigger this obstacle
 	void OnCollisionEnter2D(Collision2D coll);

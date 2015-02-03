@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Tube : Obstacle, MonoBehaviour {
+public class Tube : MonoBehaviour, Obstacle {
 
 	public int weightCheck;
 	bool fits = false;

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Door : Obstacle, MonoBehaviour {
+public class Door : MonoBehaviour, Obstacle {
 
 	bool open = false;
 	Inventory inv;
