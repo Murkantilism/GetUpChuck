@@ -11,8 +11,10 @@ public class MasterCtrl : MonoBehaviour {
 	Player BlueCKPlayer;
 
 	// Tracks which player is currently active
-	GameObject activePlayer_go;
+	public GameObject activePlayer_go;
 	Player activePlayer;
+
+	public CameraPan cameraPan;
 
 	// Use this for initialization
 	void Start () {
@@ -20,7 +22,10 @@ public class MasterCtrl : MonoBehaviour {
 		RedCK = GameObject.FindGameObjectWithTag("redCK");
 		RedCKPlayer = RedCK.GetComponent<Player> ();
 		BlueCKPlayer = BlueCK.GetComponent<Player> ();
-	
+		cameraPan = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraPan>();
+		setActivePlayer("red");
+		setActivePlayerGO("red");
+
 	}
 	
 	// Update is called once per frame
@@ -40,7 +45,6 @@ public class MasterCtrl : MonoBehaviour {
 		if (Input.GetButtonDown("playerSwaps")){
 			swapPlayer();
 		}
-	
 	}
 
 	public void setActivePlayerGO(string color){
@@ -108,9 +112,13 @@ public class MasterCtrl : MonoBehaviour {
 	void swapPlayer(){
 		if (activePlayer == RedCKPlayer) {
 			setActivePlayer("blue");
+			setActivePlayerGO("blue");
+			cameraPan.TriggerPan(BlueCK, RedCK);
 		}
 		else if (activePlayer == BlueCKPlayer) {
 			setActivePlayer("red");
+			setActivePlayerGO("red");
+			cameraPan.TriggerPan(RedCK, BlueCK);
 		}
 	}
 
