@@ -20,6 +20,9 @@ public class MasterCtrl : MonoBehaviour {
 		RedCK = GameObject.FindGameObjectWithTag("redCK");
 		RedCKPlayer = RedCK.GetComponent<Player> ();
 		BlueCKPlayer = BlueCK.GetComponent<Player> ();
+
+		setActivePlayer ("red");
+		setActivePlayerGO ("red");
 	
 	}
 	
@@ -108,9 +111,11 @@ public class MasterCtrl : MonoBehaviour {
 	void swapPlayer(){
 		if (activePlayer == RedCKPlayer) {
 			setActivePlayer("blue");
+			setActivePlayerGO("blue");
 		}
 		else if (activePlayer == BlueCKPlayer) {
 			setActivePlayer("red");
+			setActivePlayerGO("red");
 		}
 	}
 
