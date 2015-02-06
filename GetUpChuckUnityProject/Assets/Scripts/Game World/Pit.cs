@@ -3,14 +3,13 @@ using System.Collections;
 
 public class Pit : MonoBehaviour, Obstacle {
 
-	bool inPit = false;
-	Inventory inv;
-	
-	void OnCollisionEnter2D(Collision2D coll) {
+	public bool inPit = false;
+
+	public void OnCollisionEnter2D(Collision2D coll) {
 		if (coll.gameObject.tag.Equals("Player")) { condResponse(); }
 	}
 
-	void condResponse() {
+	public void condResponse() {
 		inPit = true;
 	}
 
