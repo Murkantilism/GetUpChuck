@@ -15,6 +15,8 @@ public class MasterCtrl : MonoBehaviour {
 	Player activePlayer;
 
 	public CameraPan cameraPan;
+	CameraZoom cameraZoom;
+	CameraZoomOut cameraZoomOut;
 
 	// Use this for initialization
 	void Start () {
@@ -22,9 +24,11 @@ public class MasterCtrl : MonoBehaviour {
 		RedCK = GameObject.FindGameObjectWithTag("redCK");
 		RedCKPlayer = RedCK.GetComponent<Player> ();
 		BlueCKPlayer = BlueCK.GetComponent<Player> ();
-		cameraPan = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraPan>();
 		setActivePlayer("red");
 		setActivePlayerGO("red");
+		cameraPan = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraPan>();
+		cameraZoom = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraZoom>();
+		cameraZoomOut = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraZoomOut>();
 
 	}
 	
@@ -44,6 +48,12 @@ public class MasterCtrl : MonoBehaviour {
 		}
 		if (Input.GetButtonDown("playerSwaps")){
 			swapPlayer();
+		}
+		if (Input.GetKeyDown(KeyCode.Z)){
+			openInventory();
+		}
+		if (Input.GetKeyDown(KeyCode.X)){
+			closeInventory();
 		}
 	}
 
@@ -106,6 +116,18 @@ public class MasterCtrl : MonoBehaviour {
 	//called when player dies
 	void playerDeath (){
 		activePlayer.playerRe();
+	}
+
+	// Called when player opens inventory
+	void openInventory(){
+		// TODO: Add a call to open inventory UI
+		cameraZoom.TriggerZoom();
+	}
+
+	// Called when player exits inventory
+	void closeInventory(){
+		// TODO: Add a call to close inventory UI
+		cameraZoomOut.TriggerZoom();
 	}
 
 	//called to switch player from red to blue or blue to red
