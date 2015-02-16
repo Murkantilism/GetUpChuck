@@ -2,17 +2,17 @@
 using System.Collections;
 
 public class MasterCtrl : MonoBehaviour {
-	//stored reference to red chuck
-	GameObject RedCK;
-	Player RedCKPlayer;
+	//stored reference to red
+	public GameObject Red_GO;
+	public Player Red_Player;
 
-	//stored reference to blue chuck
-	GameObject BlueCK;
-	Player BlueCKPlayer;
+	//stored reference to blue
+	GameObject Blue_GO;
+	Player Blue_Player;
 
 	// Tracks which player is currently active
 	public GameObject activePlayer_go;
-	Player activePlayer;
+	public Player activePlayer;
 
 	public CameraPan cameraPan;
 	CameraZoom cameraZoom;
@@ -20,16 +20,16 @@ public class MasterCtrl : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		BlueCK = GameObject.FindGameObjectWithTag("blueCK");
-		RedCK = GameObject.FindGameObjectWithTag("redCK");
-		RedCKPlayer = RedCK.GetComponent<Player> ();
-		BlueCKPlayer = BlueCK.GetComponent<Player> ();
+		Blue_GO = GameObject.Find("bluePlayer");
+		Blue_Player = Blue_GO.GetComponent<Player> ();
+		Red_GO = GameObject.Find("redPlayer");
+		Red_Player = Red_GO.GetComponent<Player> ();
+		// Set red to active player first
 		setActivePlayer("red");
 		setActivePlayerGO("red");
 		cameraPan = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraPan>();
 		cameraZoom = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraZoom>();
 		cameraZoomOut = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraZoomOut>();
-
 	}
 	
 	// Update is called once per frame
@@ -59,10 +59,10 @@ public class MasterCtrl : MonoBehaviour {
 
 	public void setActivePlayerGO(string color){
 		if(color.Equals("red")){
-			activePlayer_go = RedCK;
+			activePlayer_go = Red_GO;
 		}
 		if(color.Equals("blue")){
-			activePlayer_go = BlueCK;
+			activePlayer_go = Blue_GO;
 		}
 	}
 
@@ -72,10 +72,10 @@ public class MasterCtrl : MonoBehaviour {
 
 	public void setActivePlayer(string color){
 		if(color.Equals("red")){
-			activePlayer = RedCKPlayer;
+			activePlayer = Red_Player;
 		}
 		if(color.Equals("blue")){
-			activePlayer = BlueCKPlayer;
+			activePlayer = Blue_Player;
 		}
 	}
 
@@ -90,8 +90,8 @@ public class MasterCtrl : MonoBehaviour {
 	//CKjumpR
 
 	//OBJECT TAGS
-	//redCK
-	//blueCK
+	//red
+	//blue
 
 	//Walks left
 	void walkLeft(){
@@ -132,15 +132,15 @@ public class MasterCtrl : MonoBehaviour {
 
 	//called to switch player from red to blue or blue to red
 	void swapPlayer(){
-		if (activePlayer == RedCKPlayer) {
+		if (activePlayer == Red_Player) {
 			setActivePlayer("blue");
 			setActivePlayerGO("blue");
-			cameraPan.TriggerPan(BlueCK, RedCK);
+			cameraPan.TriggerPan(Blue_GO, Red_GO);
 		}
-		else if (activePlayer == BlueCKPlayer) {
+		else if (activePlayer == Blue_Player) {
 			setActivePlayer("red");
 			setActivePlayerGO("red");
-			cameraPan.TriggerPan(RedCK, BlueCK);
+			cameraPan.TriggerPan(Red_GO, Blue_GO);
 		}
 	}
 
