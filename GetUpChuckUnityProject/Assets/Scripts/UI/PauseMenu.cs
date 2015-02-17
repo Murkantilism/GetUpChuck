@@ -24,14 +24,14 @@ public class PauseMenu : MonoBehaviour {
 	
 	public void PauseGame(){
 		anim.enabled = true;
-		anim.Play("PauseMenuSlideIn");
+		anim.Play ("PauseMenuSlideIn");
 		isPaused = true;
 		Time.timeScale = 0;
 	}
 
 	public void UnpauseGame(){
 		isPaused = false;
-		anim.Play("PauseMenuSlideOut");
+		anim.Play ("PauseMenuSlideOut");
 		Time.timeScale = 1;
 	}
 }

@@ -13,12 +13,12 @@ public class MainMenu : MonoBehaviour {
 
 	void Update() {
 		if (load) {
-			Application.LoadLevel("UI_testScene");
+			Application.LoadLevel("devScene");
 		}
 	}
 
 	public void LoadLevel() {
 		anim.enabled = true;
-		anim.Play ("LoadPanel");		
+		anim.Play("LoadPanel");		
 	}
 }
