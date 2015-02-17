@@ -12,6 +12,9 @@ public class MainMenu : MonoBehaviour {
 	}
 
 	void Update() {
+		// Public load field is false by default, LoadPanel animation
+		// sets it to true when the animation is complete and the level
+		// is ready to be loaded
 		if (load) {
 			Application.LoadLevel("devScene");
 		}
