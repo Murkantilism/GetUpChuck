@@ -50,12 +50,12 @@ public class MasterCtrl : MonoBehaviour {
 		if (Input.GetButton("CKright")){
 			walkRight();
 		}*/
-		if (Input.GetButtonDown("CKjumpL")){
+		/*if (Input.GetButtonDown("CKjumpL")){
 			jumpLeft();
 		}
 		if (Input.GetButtonDown("CKjumpR")){
 			jumpRight();
-		}
+		}*/
 		if (Input.GetButtonDown("playerSwaps")){
 			swapPlayer();
 		}
@@ -63,6 +63,7 @@ public class MasterCtrl : MonoBehaviour {
 		//TODO Add eat/vomit controls
 		//hook
 
+		//walk controls (mouse)
 		if (Input.GetMouseButton (0)) {
 			if (mouseDragStart == defMDS){
 				if (0 < Input.mousePosition.x && Input.mousePosition.x < (mainCam.pixelWidth/3)){
@@ -74,12 +75,24 @@ public class MasterCtrl : MonoBehaviour {
 			}
 		}
 
+		//click to add item to inventory (mouse)
 		if (Input.GetMouseButtonDown (0)) {
 			if ((mainCam.pixelWidth/3) < Input.mousePosition.x && Input.mousePosition.x < (2*mainCam.pixelWidth/3)){
 				mouseDragStart = Input.mousePosition;
+				Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
+				RaycastHit hit;
+				if (Physics.Raycast (ray.origin, ray.direction, out hit)) {
+					//set hitItem to item hit with mouseclick
+					Item hitItem = hit.collider.GetComponent<Item>();
+					//if hitItem is not null (item hit) add it
+					if (hitItem != null){
+						activeInventory.AddItem(hitItem);
+					}
+				}
 			}
 		}
 
+		//jump controls (mouse)
 		if (Input.GetMouseButtonUp (0)) {
 			if (mouseDragStart != defMDS){
 				if (0 < Input.mousePosition.x && Input.mousePosition.x < (mainCam.pixelWidth/3)){
@@ -91,6 +104,7 @@ public class MasterCtrl : MonoBehaviour {
 			}
 			mouseDragStart = defMDS;
 		}
+
 		/*foreach (Touch touch in Input.touches) {
 			if (touch.phase == TouchPhase.Began) {
 				if (0 < touch.position.x < (mainCam.pixelWidth/3)){
