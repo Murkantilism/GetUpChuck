@@ -25,6 +25,11 @@ public class Player_Animator : MonoBehaviour {
 	void Start () {
 		anim = GetComponent<Animator>();
 		spriteRenderer = GetComponent<SpriteRenderer>();
+		if(this.gameObject.name == "redPlayer"){
+			spriteRenderer.color = Color.red;
+		}else if(this.gameObject.name == "bluePlayer"){
+			spriteRenderer.color = Color.blue;
+		}
 	}
 	
 	// Update is called once per frame
