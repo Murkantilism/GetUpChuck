@@ -29,7 +29,8 @@ public class HUD : MonoBehaviour {
 		pauseAnim.enabled = true;
 		pauseAnim.Play ("PauseMenuSlideIn");
 		isPaused = true;
-		Time.timeScale = 0;
+		Debug.Log("paused");
+		//Time.timeScale = 0;
 	}
 	public void UnpauseGame(){
 		isPaused = false;
@@ -39,11 +40,9 @@ public class HUD : MonoBehaviour {
 	public void OpenInventory(){
 		invAnim.enabled = true;
 		invAnim.Play ("InventoryFadeIn");
-		Time.timeScale = 0;
 	}
 	public void CloseInventory(){
 		invAnim.enabled = true;
 		invAnim.Play ("InventoryFadeOut");
-		Time.timeScale = 1;
 	}
 }
