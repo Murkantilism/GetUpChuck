@@ -25,6 +25,15 @@ public class MasterCtrl : MonoBehaviour {
 	Vector2 mouseDragStart;
 	Vector2 defMDS = new Vector2 (-1.0f, -1.0f);
 
+	//item pickup ranges
+	public float XEatTol;
+	public float YEatTol;
+
+	//variables for hold for opening inventory in touch
+	bool isIncrementing;
+	int incCount;
+	public int holdTimeForInv;
+
 	// Use this for initialization
 	void Start () {
 		BlueCK = GameObject.FindGameObjectWithTag("blueCK");
@@ -39,6 +48,8 @@ public class MasterCtrl : MonoBehaviour {
 		setActivePlayerGO("red");
 		setInventory ("red");
 		mouseDragStart = defMDS;
+		isIncrementing = false;
+		incCount = 0;
 
 	}
 	
@@ -60,8 +71,7 @@ public class MasterCtrl : MonoBehaviour {
 			swapPlayer();
 		}
 
-		//TODO Add eat/vomit controls
-		//hook
+#if UNITY_EDITOR
 
 		//walk controls (mouse)
 		if (Input.GetMouseButton (0)) {
@@ -75,24 +85,36 @@ public class MasterCtrl : MonoBehaviour {
 			}
 		}
 
-		//click to add item to inventory (mouse)
+		//click to add item to inventory (mouse) / inventory open also started
 		if (Input.GetMouseButtonDown (0)) {
 			if ((mainCam.pixelWidth/3) < Input.mousePosition.x && Input.mousePosition.x < (2*mainCam.pixelWidth/3)){
 				mouseDragStart = Input.mousePosition;
 				Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
-				RaycastHit hit;
-				if (Physics.Raycast (ray.origin, ray.direction, out hit)) {
-					//set hitItem to item hit with mouseclick
-					Item hitItem = hit.collider.GetComponent<Item>();
-					//if hitItem is not null (item hit) add it
+				RaycastHit2D hit = Physics2D.GetRayIntersection(ray);
+				if (hit) {
+					//set hitItem to item hit with touch
+					Collider2D hitItemCol = hit.collider;
+					Item hitItem = hitItemCol.GetComponent<Item>();
+					GameObject tmp = hitItemCol.gameObject;
+					//if hitItem is not null (item is hit) add it
 					if (hitItem != null){
-						activeInventory.AddItem(hitItem);
+						//distance check
+						if((activePlayer_go.transform.position.x + XEatTol) > hitItemCol.transform.position.x
+						   && (activePlayer_go.transform.position.x - XEatTol) < hitItemCol.transform.position.x
+						   && (activePlayer_go.transform.position.y + YEatTol) > hitItemCol.transform.position.y
+						   && (activePlayer_go.transform.position.y - YEatTol) < hitItemCol.transform.position.y){
+							activeInventory.AddItem(hitItem);
+						}
+					}
+					//checks if active player is being selected (for inventory open)
+					if (tmp == activePlayer_go){
+						isIncrementing = true;
 					}
 				}
 			}
 		}
 
-		//jump controls (mouse)
+		//jump controls (mouse) / also ends inventory open early
 		if (Input.GetMouseButtonUp (0)) {
 			if (mouseDragStart != defMDS){
 				if (0 < Input.mousePosition.x && Input.mousePosition.x < (mainCam.pixelWidth/3)){
@@ -103,6 +125,90 @@ public class MasterCtrl : MonoBehaviour {
 				}
 			}
 			mouseDragStart = defMDS;
+			//if not holding for long enough for inventory open
+			isIncrementing = false;
+			incCount = 0;
+		}
+
+#endif
+
+#if UNITY_IPHONE || UNITY_ANDROID
+
+		//touch controls
+		if(Input.touchCount > 0) {
+			if ((Input.GetTouch(0).phase == TouchPhase.Moved) || (Input.GetTouch(0).phase == TouchPhase.Stationary)) {
+				//walking left
+				if (0 < Input.GetTouch(0).position.x && Input.GetTouch(0).position.x < (mainCam.pixelWidth/3)){
+					walkLeft();
+				}
+				//walking right
+				if ((2*mainCam.pixelWidth/3) < Input.GetTouch(0).position.x && Input.GetTouch(0).position.x < mainCam.pixelWidth){
+					walkRight();
+				}
+			}
+			if (Input.GetTouch(0).phase == TouchPhase.Began){
+				//eating (and inventory open)
+				if ((mainCam.pixelWidth/3) < Input.GetTouch(0).position.x && Input.GetTouch(0).position.x < (2*mainCam.pixelWidth/3)){
+					mouseDragStart = Input.GetTouch(0).position;
+					Ray ray = Camera.main.ScreenPointToRay (Input.GetTouch(0).position);
+					RaycastHit2D hit = Physics2D.GetRayIntersection(ray);
+					if (hit) {
+						Collider2D hitItemCol = hit.collider;
+						//set hitItem to item hit with touch
+						Item hitItem = hitItemCol.GetComponent<Item>();
+						GameObject tmp = hitItemCol.gameObject;
+						//if hitItem is not null (item is hit) add it
+						if (hitItem != null){
+							//distance check
+							if((activePlayer_go.transform.position.x + XEatTol) > hitItemCol.transform.position.x
+							   && (activePlayer_go.transform.position.x - XEatTol) < hitItemCol.transform.position.x
+							   && (activePlayer_go.transform.position.y + YEatTol) > hitItemCol.transform.position.y
+							   && (activePlayer_go.transform.position.y - YEatTol) < hitItemCol.transform.position.y){
+								activeInventory.AddItem(hitItem);
+							}
+						}
+						//checks if active player is being selected (for inventory open)
+						if (tmp == activePlayer_go){
+							isIncrementing = true;
+						}
+					}
+				}
+			}
+			if (Input.GetTouch(0).phase == TouchPhase.Ended){
+				if (mouseDragStart != defMDS){
+					//jump left
+					if (0 < Input.GetTouch(0).position.x && Input.GetTouch(0).position.x < (mainCam.pixelWidth/3)){
+						jumpLeft();
+					}
+					//jump right
+					if ((2*mainCam.pixelWidth/3) < Input.GetTouch(0).position.x && Input.GetTouch(0).position.x < mainCam.pixelWidth){
+						jumpRight();
+					}
+				}
+				mouseDragStart = defMDS;
+			}
+			if (Input.GetTouch(0).phase != TouchPhase.Stationary){
+				//if not holding and was holding for inv open, stop and reset
+				if (incCount > 0){
+					isIncrementing = false;
+					incCount = 0;
+				}
+			}
+		}
+
+#endif
+
+		//increments incCount for inventory open
+		if (isIncrementing == true) {
+			incCount = incCount + 1;
+		}
+
+		//if have been holding down on chuck long enough, open inventory
+		//TODO hook
+		if (incCount > holdTimeForInv) {
+			isIncrementing = false;
+			incCount = 0;
+			//TODO OPEN INVENTORY HOOK HERE
 		}
 
 		/*foreach (Touch touch in Input.touches) {
