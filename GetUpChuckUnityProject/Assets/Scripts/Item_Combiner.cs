@@ -12,7 +12,7 @@ public class Item_Combiner : MonoBehaviour {
 	List<Item> loItems;
 
 	// Use this for initialization
-	void Start () {
+	void Awake () {
 		loItems = new List<Item>();
 
 		redTriangle = GameObject.Find("Item_redTriangle").AddComponent<Item>();
