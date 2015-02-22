@@ -14,12 +14,20 @@ public class TestController : MonoBehaviour {
 	
 	// Use this for initialization
 	void Start () {
+		StartCoroutine(Wait(2));  // Wait 2 seconds while references elsewhere are set (Item_Combiner.cs)
+
 		invnty_blue = GameObject.Find("Inventory").GetComponent<Inventory_Blue>();
 		invnty_red = GameObject.Find("Inventory").GetComponent<Inventory_Red>();
 
 		yellowTriangle = GameObject.Find("Item_yellowTriangle").GetComponent<Item>();
 		redTriangle = GameObject.Find("Item_redTriangle").GetComponent<Item>();
 		scrapMetal = GameObject.Find("Item_scrapMetal").GetComponent<Item>();
+	}
+
+	IEnumerator Wait(float waitTime)
+	{
+		if (waitTime > 0)
+			yield return new WaitForSeconds(waitTime);
 	}
 	
 	// Update is called once per frame

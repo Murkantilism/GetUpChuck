@@ -9,7 +9,6 @@ public class Inventory_Red : Inventory {
 		this.currentWeight = 0.0f;
 
 		master = GameObject.FindGameObjectWithTag("Master").GetComponent<MasterCtrl>();
-		combiner = GameObject.FindGameObjectWithTag("Combiner").GetComponent<Item_Combiner>();
 	}
 	
 	// Update is called once per frame

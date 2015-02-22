@@ -19,8 +19,6 @@ public abstract class Inventory : MonoBehaviour {
 
 	public MasterCtrl master;
 
-	public Item_Combiner combiner;
-
 	// Geter and seter for currentWeight
 	public float getCurrentWeight(){
 		return this.currentWeight;
@@ -42,19 +40,13 @@ public abstract class Inventory : MonoBehaviour {
 		if(currentWeight > item.getWeight()){ // Make sure we don't go to negative weight
 		    currentWeight -= item.getWeight();
 		}
-		// Instantiate item in world space
-		InstantiateItem(item);
-		combiner.SetItemReference(item);
-	}
 
-	// Instantiate the item in world space directly in front of player character
-	void InstantiateItem(Item item){
-		// Set a temp gameObject from resources folder
-		inst_item = Resources.Load<GameObject>(item.getName());
 		// Get a reference to the active player gameobject from master controller
 		GameObject activePlayer = master.getActivePlayerGO();
-		// Instantiate item in front of the active player
-		Instantiate(inst_item, new Vector2(activePlayer.transform.position.x + 2, activePlayer.transform.position.y), Quaternion.identity);
+		// Move the item in front of player
+		item.transform.position = new Vector2(activePlayer.transform.position.x + 2, activePlayer.transform.position.y);
+		// Re-enaable item's renderer
+		item.renderer.enabled = true;
 	}
 
 	// Delete the item from inventory, DO NOT drop it back into world space
