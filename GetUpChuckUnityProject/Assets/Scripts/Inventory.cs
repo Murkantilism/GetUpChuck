@@ -17,17 +17,9 @@ public abstract class Inventory : MonoBehaviour {
 	// A timer to keep track of when a second of game time has occurred
 	float oneSecTimer;
 
-	MasterCtrl master;
+	public MasterCtrl master;
 
-	// Use this for initialization
-	void Start () {
-		master = GameObject.FindGameObjectWithTag("Master").GetComponent<MasterCtrl>();
-	}
-	
-	// Update is called once per frame
-	void Update () {
-
-	}
+	public Item_Combiner combiner;
 
 	// Geter and seter for currentWeight
 	public float getCurrentWeight(){
@@ -52,6 +44,7 @@ public abstract class Inventory : MonoBehaviour {
 		}
 		// Instantiate item in world space
 		InstantiateItem(item);
+		combiner.SetItemReference(item);
 	}
 
 	// Instantiate the item in world space directly in front of player character
@@ -100,14 +93,14 @@ public abstract class Inventory : MonoBehaviour {
 		}
 	}
 
-	// Given an Array of 2 items check if item 2 is a member of item 1's list of potential combos
+	// Given an Array of 2 items check if item 1 is a member of item 0's list of potential combos
 	public void CheckItemCombinations(ArrayList items){
 
 		Item item0 = (Item) items[0];
 		Item item1 = (Item) items[1];
-
-		// For every element of the potential combination list, get the first item in
-		// the tuple and compare it against the item we are checking against (item1).
+		
+		// For every element of the potential combination list, get the each 
+		// item in item0's tuple and compare it against item1.
 		for (int i = 0; i < item0.potentialCombinations.Count; i++){
 			System.Tuple<string, string> tmpTuple = (System.Tuple<string, string>) item0.getCombinations()[i];
 
