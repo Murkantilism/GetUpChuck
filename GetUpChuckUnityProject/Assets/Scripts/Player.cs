@@ -14,6 +14,7 @@ public class Player : MonoBehaviour {
 
 	//force of jumps
 	public int jumpForce;
+	public float jumpAngle;
 
 	//respawn x and y stored when player reaches a checkpoint
 	public float reX;
@@ -75,11 +76,13 @@ public class Player : MonoBehaviour {
 		if (lastY == lastYTwo) {
 
 					if (Direc.Equals ("right")) {
-							this.rigidbody2D.AddForce (new Vector2 (jumpForce, jumpForce));
+							Vector3 dir = Quaternion.AngleAxis(jumpAngle, Vector3.forward) * Vector3.right;
+							this.rigidbody2D.AddForce (dir*jumpForce);
 					}
 
 					if (Direc.Equals ("left")) {
-							this.rigidbody2D.AddForce (new Vector2 (-jumpForce, jumpForce));
+							Vector3 dir = Quaternion.AngleAxis(jumpAngle, Vector3.back) * Vector3.left;
+							this.rigidbody2D.AddForce (dir*jumpForce);
 					}
 
 				}
