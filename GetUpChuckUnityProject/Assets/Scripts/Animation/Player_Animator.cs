@@ -21,14 +21,16 @@ public class Player_Animator : MonoBehaviour {
 	Color sickColor = new Color(0.502f, 0.392f, 0.118f, 1.0f);
 	Color healthyColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
 
+
+
 	// Use this for initialization
 	void Start () {
 		anim = GetComponent<Animator>();
 		spriteRenderer = GetComponent<SpriteRenderer>();
 		if(this.gameObject.name == "redPlayer"){
-			spriteRenderer.color = Color.red;
+			spriteRenderer.color = new Color(200.0f/255.0f, 35.0f/255.0f, 35.0f/255.0f, 1.0f);//Color.red;
 		}else if(this.gameObject.name == "bluePlayer"){
-			spriteRenderer.color = Color.blue;
+			spriteRenderer.color = new Color(35.0f/255.0f, 92.0f/255.0f, 205.0f/255.0f, 1.0f);//Color.blue;
 		}
 	}
 	

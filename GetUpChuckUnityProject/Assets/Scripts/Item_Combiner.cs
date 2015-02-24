@@ -12,7 +12,7 @@ public class Item_Combiner : MonoBehaviour {
 	List<Item> loItems;
 
 	// Use this for initialization
-	void Start () {
+	void Awake () {
 		loItems = new List<Item>();
 
 		redTriangle = GameObject.Find("Item_redTriangle").AddComponent<Item>();
@@ -54,17 +54,5 @@ public class Item_Combiner : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-	}
-
-	// Given an Item reference by Inventory's InstantiateItem() function, check if
-	//  it's an item in this level - if so set this script's refernece to it again.
-	public void SetItemReference(Item item){
-		for(int i = 0; i < loItems.Count; i++){
-			Item tmpItem = (Item)loItems[i];
-			if(item.getName().Equals(tmpItem.getName())){
-				Debug.Log(loItems[i].GetType());
-				loItems[i] = GameObject.Find(item.getName()+"(Clone)").GetComponent<Item>();
-			}
-		}
 	}
 }

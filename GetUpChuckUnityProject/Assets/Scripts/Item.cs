@@ -76,16 +76,9 @@ public class Item : MonoBehaviour {
 	}
 
 	// Given which character is active, add this item to their inventory system
+	// and disable the renderer to fake deletion of item.
 	public void AddToInventory(Inventory playerInventory){
 		playerInventory.AddItem(this);
-		// Once item is added called self-destruct function
-		HonorableSeppuku();
+		this.renderer.enabled = false;
 	}
-
-	// Item deletes iteself from world space after it has been added to inventory 
-	void HonorableSeppuku(){
-		Destroy(gameObject);
-		Destroy(this);
-	}
-
 }
