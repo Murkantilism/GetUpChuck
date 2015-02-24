@@ -21,7 +21,12 @@ public class CameraZoom : MonoBehaviour {
 
 	void Zoom(){
 		if(this.camera.orthographicSize > zoomLimit){
+			// Zoom camera in
 			this.camera.orthographicSize -= Time.deltaTime * zoomSpeed;
+			// Pan camera slightly to the right
+			this.camera.transform.position = new Vector3(this.camera.transform.position.x - Time.deltaTime * zoomSpeed, 
+			                                             this.camera.transform.position.y, 
+			                                             this.camera.transform.position.z);
 		}else{
 			triggerZoom = false;
 		}

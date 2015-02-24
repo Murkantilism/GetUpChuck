@@ -17,17 +17,7 @@ public abstract class Inventory : MonoBehaviour {
 	// A timer to keep track of when a second of game time has occurred
 	float oneSecTimer;
 
-	MasterCtrl master;
-
-	// Use this for initialization
-	void Start () {
-		master = GameObject.FindGameObjectWithTag("Master").GetComponent<MasterCtrl>();
-	}
-	
-	// Update is called once per frame
-	void Update () {
-
-	}
+	public MasterCtrl master;
 
 	// Geter and seter for currentWeight
 	public float getCurrentWeight(){
@@ -50,18 +40,13 @@ public abstract class Inventory : MonoBehaviour {
 		if(currentWeight > item.getWeight()){ // Make sure we don't go to negative weight
 		    currentWeight -= item.getWeight();
 		}
-		// Instantiate item in world space
-		InstantiateItem(item);
-	}
 
-	// Instantiate the item in world space directly in front of player character
-	void InstantiateItem(Item item){
-		// Set a temp gameObject from resources folder
-		inst_item = Resources.Load<GameObject>(item.getName());
 		// Get a reference to the active player gameobject from master controller
 		GameObject activePlayer = master.getActivePlayerGO();
-		// Instantiate item in front of the active player
-		Instantiate(inst_item, new Vector2(activePlayer.transform.position.x + 2, activePlayer.transform.position.y), Quaternion.identity);
+		// Move the item in front of player
+		item.transform.position = new Vector2(activePlayer.transform.position.x + 2, activePlayer.transform.position.y);
+		// Re-enaable item's renderer
+		item.renderer.enabled = true;
 	}
 
 	// Delete the item from inventory, DO NOT drop it back into world space
@@ -100,14 +85,14 @@ public abstract class Inventory : MonoBehaviour {
 		}
 	}
 
-	// Given an Array of 2 items check if item 2 is a member of item 1's list of potential combos
+	// Given an Array of 2 items check if item 1 is a member of item 0's list of potential combos
 	public void CheckItemCombinations(ArrayList items){
 
 		Item item0 = (Item) items[0];
 		Item item1 = (Item) items[1];
-
-		// For every element of the potential combination list, get the first item in
-		// the tuple and compare it against the item we are checking against (item1).
+		
+		// For every element of the potential combination list, get the each 
+		// item in item0's tuple and compare it against item1.
 		for (int i = 0; i < item0.potentialCombinations.Count; i++){
 			System.Tuple<string, string> tmpTuple = (System.Tuple<string, string>) item0.getCombinations()[i];
 

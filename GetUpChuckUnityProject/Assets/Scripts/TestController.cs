@@ -8,33 +8,27 @@ public class TestController : MonoBehaviour {
 	Inventory_Blue invnty_blue;
 	Inventory_Red invnty_red;
 
-	public Item apple;
+	public Item redTriangle;
+	public Item yellowTriangle;
+	public Item scrapMetal;
 	
 	// Use this for initialization
 	void Start () {
 		invnty_blue = GameObject.Find("Inventory").GetComponent<Inventory_Blue>();
 		invnty_red = GameObject.Find("Inventory").GetComponent<Inventory_Red>();
 
-		apple = GameObject.Find("Apple").AddComponent<Item>();
-		apple.setWeight(1.0f);
-		apple.setHue("red");
-		apple.setName("apple");
-		apple.setDigestionTimer(5.0f);
-		
-		ArrayList appleCombinations = new ArrayList();
-		appleCombinations.Add(System.Tuple.Create("dough", "applepie"));
-		
-		apple.setCombinations(appleCombinations);
-
+		yellowTriangle = GameObject.Find("Item_yellowTriangle").GetComponent<Item>();
+		redTriangle = GameObject.Find("Item_redTriangle").GetComponent<Item>();
+		scrapMetal = GameObject.Find("Item_scrapMetal").GetComponent<Item>();
 	}
 	
 	// Update is called once per frame
 	void Update () {
 	    if(Input.GetKeyUp(KeyCode.F)){
-			FakeItemTap(apple);
+			FakeItemTap(redTriangle);
 		}
-		if(Input.GetKeyUp(KeyCode.D)){
-			FakePlayerTap(apple);
+		if(Input.GetKeyUp(KeyCode.G)){
+			FakePlayerTap(redTriangle);
 		}
 	}
 
