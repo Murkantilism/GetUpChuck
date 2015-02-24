@@ -55,23 +55,11 @@ public class MasterCtrl : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		/*if (Input.GetButton("CKleft")){
-			walkLeft();
-		}
-		if (Input.GetButton("CKright")){
-			walkRight();
-		}*/
-		/*if (Input.GetButtonDown("CKjumpL")){
-			jumpLeft();
-		}
-		if (Input.GetButtonDown("CKjumpR")){
-			jumpRight();
-		}*/
 		if (Input.GetButtonDown("playerSwaps")){
 			swapPlayer();
 		}
 
-#if UNITY_EDITOR
+#if UNITY_EDITOR || UNITY_STANDALONE
 
 		//walk controls (mouse)
 		if (Input.GetMouseButton (0)) {
@@ -210,23 +198,6 @@ public class MasterCtrl : MonoBehaviour {
 			incCount = 0;
 			//TODO OPEN INVENTORY HOOK HERE
 		}
-
-		/*foreach (Touch touch in Input.touches) {
-			if (touch.phase == TouchPhase.Began) {
-				if (0 < touch.position.x < (mainCam.pixelWidth/3)){
-					walkLeft();
-				}
-				if ((2*mainCam.pixelWidth/3) < touch.position.x < mainCam.pixelWidth){
-					walkRight();
-				}
-				// Construct a ray from the current touch coordinates
-				//var ray = Camera.main.ScreenPointToRay (touch.position);
-				//if (Physics.Raycast (ray)) {
-				//	// Create a particle if hit
-				//	Instantiate (particle, transform.position, transform.rotation);
-				//}
-			}
-		}*/
 	}
 
 	public void setActivePlayerGO(string color){
@@ -267,16 +238,6 @@ public class MasterCtrl : MonoBehaviour {
 	public Inventory getActiveInventory(){
 		return this.activeInventory;
 	}
-
-	//INPUT TAGS
-	//CKleft
-	//CKright
-	//CKjumpL
-	//CKjumpR
-
-	//OBJECT TAGS
-	//redCK
-	//blueCK
 
 	//Walks left
 	void walkLeft(){
