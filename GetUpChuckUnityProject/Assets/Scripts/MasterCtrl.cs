@@ -19,6 +19,7 @@ public class MasterCtrl : MonoBehaviour {
 
 
 	//camera info
+	Camera mainCam;
 	public CameraPan cameraPan;
 	CameraZoom cameraZoom;
 	CameraZoomOut cameraZoomOut;
@@ -56,29 +57,11 @@ public class MasterCtrl : MonoBehaviour {
 		isIncrementing = false;
 		incCount = 0;
 
+		mainCam = GameObject.FindGameObjectWithTag ("MainCamera").GetComponent<Camera>();
 		cameraPan = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraPan>();
 		cameraZoom = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraZoom>();
 		cameraZoomOut = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraZoomOut>();
-
-		BlueCK = GameObject.FindGameObjectWithTag("blueCK");
-		RedCK = GameObject.FindGameObjectWithTag("redCK");
-		RedCKPlayer = RedCK.GetComponent<Player> ();
-		BlueCKPlayer = BlueCK.GetComponent<Player> ();
-
-		RedInv = RedCK.GetComponent<Inventory> ();
-		BlueInv = BlueCK.GetComponent<Inventory> ();
-
-		mainCam = GameObject.FindGameObjectWithTag ("MainCamera").GetComponent<Camera>();
-		cameraPan = GameObject.FindGameObjectWithTag ("MainCamera").GetComponent<CameraPan>();
-
-		setActivePlayer("red");
-		setActivePlayerGO("red");
-		setInventory ("red");
-		mouseDragStart = defMDS;
-		isIncrementing = false;
-		incCount = 0;
-
-
+		
 	}
 	
 	// Update is called once per frame
