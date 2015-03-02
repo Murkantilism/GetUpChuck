@@ -8,8 +8,10 @@ public class HUD : MonoBehaviour {
 	private Animator pauseAnim;
 	private Animator invAnim;
 	private bool isPaused = false;
+	UI_Inventory inventory;
 
 	void Start () {
+		inventory = GameObject.Find("InventoryPanel").GetComponent<UI_Inventory>();
 		Time.timeScale = 1;
 		pauseAnim = pauseMenuPanel.GetComponent<Animator>();
 		invAnim = inventoryPanel.GetComponent<Animator>();
@@ -40,6 +42,7 @@ public class HUD : MonoBehaviour {
 	public void OpenInventory(){
 		invAnim.enabled = true;
 		invAnim.Play ("InventoryFadeIn");
+		//inventory.OpenInventory();
 	}
 	public void CloseInventory(){
 		invAnim.enabled = true;

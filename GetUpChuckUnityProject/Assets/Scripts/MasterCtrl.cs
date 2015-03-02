@@ -5,17 +5,18 @@ public class MasterCtrl : MonoBehaviour {
 	//stored reference to red
 	public GameObject Red_GO;
 	public Player Red_Player;
-	Inventory RedInv;
+	Inventory_Red RedInv;
 
 	//stored reference to blue
 	GameObject Blue_GO;
 	Player Blue_Player;
-	Inventory BlueInv;
+	Inventory_Blue BlueInv;
 
 	// Tracks which player is currently active
 	public GameObject activePlayer_go;
 	public Player activePlayer;
 	Inventory activeInventory;
+	UI_Inventory ui_inventory;
 
 
 	//camera info
@@ -40,13 +41,15 @@ public class MasterCtrl : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 
+		ui_inventory = GameObject.Find("InventoryPanel").GetComponent<UI_Inventory>();
+
 		Blue_GO = GameObject.Find("bluePlayer");
 		Blue_Player = Blue_GO.GetComponent<Player> ();
 		Red_GO = GameObject.Find("redPlayer");
 		Red_Player = Red_GO.GetComponent<Player> ();
 
-		RedInv = Red_GO.GetComponent<Inventory> ();
-		BlueInv = Blue_GO.GetComponent<Inventory> ();
+		RedInv = Red_GO.GetComponent<Inventory_Red> ();
+		BlueInv = Blue_GO.GetComponent<Inventory_Blue> ();
 
 		// Set red to active player first
 		setActivePlayer("red");
@@ -203,11 +206,11 @@ public class MasterCtrl : MonoBehaviour {
 		}
 
 		//if have been holding down on chuck long enough, open inventory
-		//TODO hook
 		if (incCount > holdTimeForInv) {
 			isIncrementing = false;
 			incCount = 0;
-			//TODO OPEN INVENTORY HOOK HERE
+			// FIXME: This appears to trigger whenever player character is clicked at all
+			openInventory();
 		}
 		if (Input.GetKeyDown(KeyCode.Z)){
 			openInventory();
@@ -298,14 +301,15 @@ public class MasterCtrl : MonoBehaviour {
 
 	// Called when player opens inventory
 	void openInventory(){
-		// TODO: Add a call to open inventory UI
 		cameraZoom.TriggerZoom();
+		Debug.Log("Master call to Open Inventory");
+		ui_inventory.OpenInventory(activeInventory);
 	}
 
 	// Called when player exits inventory
 	void closeInventory(){
-		// TODO: Add a call to close inventory UI
 		cameraZoomOut.TriggerZoom();
+		ui_inventory.CloseInventory(activeInventory);
 	}
 
 	//called to switch player from red to blue or blue to red

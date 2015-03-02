@@ -19,25 +19,43 @@ public class UI_Inventory : MonoBehaviour {
 	Inventory_Blue blue_inventory;
 	Inventory_Red red_inventory;
 
+	bool firstTime = true; // First time opening inventory?
+
 	// Use this for initialization
 	void Start () {
-		CreateInventory();
-
 		blue_inventory = GameObject.FindGameObjectWithTag("blue").GetComponent<Inventory_Blue>();
 		red_inventory = GameObject.FindGameObjectWithTag("red").GetComponent<Inventory_Red>();
-
-		for (int i = 0; i < blue_inventory.loItems.Count; i++){
-			Debug.Log(blue_inventory.loItems[i]);
-		}
 	}
 	
 	// Update is called once per frame
 	void Update () {
-	
+
 	}
 
+	public void OpenInventory(Inventory activeInventory){
+		if(firstTime){
+			CreateInventory(activeInventory);
+			firstTime = false;
+		}else{
+			// For every slot in the inventory, enable it
+			for (int j = 0; j < inventorySlots.Count; j++){
+				inventorySlots[j].gameObject.SetActive(true);
+			}
+			this.gameObject.SetActive(true);
+		}
+	}
+
+	public void CloseInventory(Inventory activeInventory){
+		// For every slot in the inventory, disable it
+		for (int j = 0; j < inventorySlots.Count; j++){
+			inventorySlots[j].gameObject.SetActive(false);
+		}
+		this.gameObject.SetActive(false);
+	}
+
+
 	// Setup the initial inventory
-	private void CreateInventory(){
+	private void CreateInventory(Inventory activeInventory){
 		inventorySlots = new List<GameObject>();
 
 		// Calculate inventory width and height
@@ -63,6 +81,7 @@ public class UI_Inventory : MonoBehaviour {
 				GameObject newSlot = (GameObject) Instantiate(slotPrefab);
 				// Get a reference to new slot's transform
 				RectTransform slotRect = newSlot.GetComponent<RectTransform>();
+
 				// Rename the temp slot object
 				newSlot.name = "Inventory_Slot";
 				// Set the slot's parent to Canvas
@@ -75,14 +94,21 @@ public class UI_Inventory : MonoBehaviour {
 				slotRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, slotSize);
 				slotRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, slotSize);
 
-				// TODO: Set this slot's source image to the item's sprite
-				//newSlot.GetComponent<Image>() = ;
-
 				// Append this slot to list of slots
 				inventorySlots.Add(newSlot);
 
 			}
 		}
 
+		// For every slot in the inventory
+		for (int i = 0; i < inventorySlots.Count; i++){
+			// As long as we haven't run out of items to add
+			if (i < activeInventory.loItems.Count){
+				// Create a temp item reference
+				Item tmpItem = (Item) activeInventory.loItems[i];
+				// Set this slot's source image to the item's sprite
+				inventorySlots[i].GetComponent<Image>().sprite = tmpItem.getSprite();
+			}
+		}
 	}
 }
