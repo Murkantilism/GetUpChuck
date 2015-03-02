@@ -16,12 +16,12 @@ public class MainMenu : MonoBehaviour {
 		// sets it to true when the animation is complete and the level
 		// is ready to be loaded
 		if (load) {
-			Application.LoadLevel("devScene_inventory");
+			Application.LoadLevel("devScene");
 		}
 	}
 
 	public void LoadLevel() {
 		anim.enabled = true;
-		anim.Play("LoadPanel");		
+		anim.Play("Load_Panel");		
 	}
 }
