@@ -8,8 +8,10 @@ public class Tube : MonoBehaviour, Obstacle {
 	Inventory inv;
 
 	public void OnCollisionEnter2D(Collision2D coll) {
-		if (coll.gameObject.tag.Equals("Player")) { 
-			if (inv.getCurrentWeight () < weightCheck) { condResponse(); } 
+		if (coll.gameObject.tag.Equals("red") || coll.gameObject.tag.Equals("blue")) {
+			if (inv.getCurrentWeight () < weightCheck) {
+				condResponse();
+			} 
 		}
 	}
 
