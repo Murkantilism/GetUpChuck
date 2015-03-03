@@ -74,12 +74,6 @@ public class Item : MonoBehaviour {
 	public void setCombinations(ArrayList tmpCombos){
 		this.potentialCombinations = tmpCombos;
 	}
-	public Sprite getSprite(){
-		return this.GetComponent<SpriteRenderer>().sprite;
-	}
-	public void setSprite(Sprite s){
-		this.sprite = s;
-	}
 
 	// Given which character is active, add this item to their inventory system
 	// and disable the renderer to fake deletion of item.
