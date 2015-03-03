@@ -15,7 +15,6 @@ public class CameraZoomOut : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		Debug.Log((cameraZoom.GetZoomState() == false));
 		if (triggerZoom == true){
 			Zoom();
 		}
