@@ -6,8 +6,14 @@ public class CameraZoom : MonoBehaviour {
 
 	private float zoomSpeed = 6.0f;
 	private float zoomLimit = 3.0f;
-	bool triggerZoom = false;
-	
+	public bool triggerZoom = false;
+	CameraZoomOut cameraZoomOut;
+
+
+	void Start () {
+		cameraZoomOut = this.gameObject.GetComponent<CameraZoomOut>();
+	}
+
 	// Update is called once per frame
 	void Update () {
 		if (triggerZoom == true){
@@ -15,8 +21,15 @@ public class CameraZoom : MonoBehaviour {
 		}
 	}
 
-	public void TriggerZoom(){
-		triggerZoom = true;
+	public void SetZoomState(bool b){
+		// If we camera isn't already zooming out, set zoom state to given bool
+		if (cameraZoomOut.GetZoomState() == false){
+			triggerZoom = b;
+		}
+	}
+
+	public bool GetZoomState(){
+		return triggerZoom;
 	}
 
 	void Zoom(){

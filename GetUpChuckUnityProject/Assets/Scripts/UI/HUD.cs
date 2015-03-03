@@ -42,7 +42,6 @@ public class HUD : MonoBehaviour {
 	public void OpenInventory(){
 		invAnim.enabled = true;
 		invAnim.Play ("InventoryFadeIn");
-		//inventory.OpenInventory();
 	}
 	public void CloseInventory(){
 		invAnim.enabled = true;

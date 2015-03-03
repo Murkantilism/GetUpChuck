@@ -19,12 +19,18 @@ public class UI_Inventory : MonoBehaviour {
 	Inventory_Blue blue_inventory;
 	Inventory_Red red_inventory;
 
+	CameraZoom cameraZoom;
+	CameraZoomOut cameraZoomOut;
+
 	bool firstTime = true; // First time opening inventory?
 
 	// Use this for initialization
 	void Start () {
 		blue_inventory = GameObject.FindGameObjectWithTag("blue").GetComponent<Inventory_Blue>();
 		red_inventory = GameObject.FindGameObjectWithTag("red").GetComponent<Inventory_Red>();
+
+		cameraZoom = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraZoom>();
+		cameraZoomOut = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraZoomOut>();
 	}
 	
 	// Update is called once per frame
@@ -33,24 +39,32 @@ public class UI_Inventory : MonoBehaviour {
 	}
 
 	public void OpenInventory(Inventory activeInventory){
-		if(firstTime){
-			CreateInventory(activeInventory);
-			firstTime = false;
-		}else{
-			// For every slot in the inventory, enable it
-			for (int j = 0; j < inventorySlots.Count; j++){
-				inventorySlots[j].gameObject.SetActive(true);
+		// If we camera isn't already zooming out, open inventory UI
+		if(cameraZoomOut.GetZoomState() == false){
+			// If this is the first time we are opening inventory, create it
+			if(firstTime){
+				CreateInventory(activeInventory);
+				firstTime = false;
+			// Otherwise just re-enable it
+			}else{
+				// For every slot in the inventory, enable it
+				for (int j = 0; j < inventorySlots.Count; j++){
+					inventorySlots[j].gameObject.SetActive(true);
+				}
+				this.gameObject.SetActive(true);
 			}
-			this.gameObject.SetActive(true);
 		}
 	}
 
 	public void CloseInventory(Inventory activeInventory){
-		// For every slot in the inventory, disable it
-		for (int j = 0; j < inventorySlots.Count; j++){
-			inventorySlots[j].gameObject.SetActive(false);
+		// If we camera isn't already zooming in, close inventory UI
+		if(cameraZoom.GetZoomState() == false){
+			// For every slot in the inventory, disable it
+			for (int j = 0; j < inventorySlots.Count; j++){
+				inventorySlots[j].gameObject.SetActive(false);
+			}
+			this.gameObject.SetActive(false);
 		}
-		this.gameObject.SetActive(false);
 	}
 
 

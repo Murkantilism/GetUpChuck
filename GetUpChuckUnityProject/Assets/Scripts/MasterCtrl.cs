@@ -301,14 +301,14 @@ public class MasterCtrl : MonoBehaviour {
 
 	// Called when player opens inventory
 	void openInventory(){
-		cameraZoom.TriggerZoom();
+		cameraZoom.SetZoomState(true);
 		Debug.Log("Master call to Open Inventory");
 		ui_inventory.OpenInventory(activeInventory);
 	}
 
 	// Called when player exits inventory
 	void closeInventory(){
-		cameraZoomOut.TriggerZoom();
+		cameraZoomOut.SetZoomState(true);
 		ui_inventory.CloseInventory(activeInventory);
 	}
 
