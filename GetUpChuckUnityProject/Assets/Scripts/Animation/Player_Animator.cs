@@ -36,6 +36,7 @@ public class Player_Animator : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		/*
 		if(Input.GetKey(KeyCode.O)){
 			animation_state = 1;
 		}else if(Input.GetKey(KeyCode.P)){
@@ -48,7 +49,7 @@ public class Player_Animator : MonoBehaviour {
 			animation_state = 5;
 		}else{
 			animation_state = 0;
-		}
+		}*/
 
 		// Get the current state of the animator
 		// AnimatorStateInfo stateInfo = anim.GetCurrentAnimatorStateInfo(0);
@@ -68,7 +69,9 @@ public class Player_Animator : MonoBehaviour {
 			spriteRenderer.color = sickColor;
 			Debug.Log(spriteRenderer.color);
 			anim.SetBool("isSick", true);
-		}
+		} 
+
+		animation_state = 0;
 	}
 
 	public void Set_animation_state(int state){

@@ -3,19 +3,22 @@ using System.Collections;
 
 public class MasterCtrl : MonoBehaviour {
 	//stored reference to red
-	public GameObject Red_GO;
-	public Player Red_Player;
+	GameObject Red_GO;
+	Player Red_Player;
 	Inventory RedInv;
+	Player_Animator Red_animator;
 
 	//stored reference to blue
 	GameObject Blue_GO;
 	Player Blue_Player;
 	Inventory BlueInv;
+	Player_Animator Blue_animator;
 
 	// Tracks which player is currently active
 	public GameObject activePlayer_go;
 	public Player activePlayer;
 	Inventory activeInventory;
+	Player_Animator active_PAnimator;
 
 
 	//camera info
@@ -54,10 +57,14 @@ public class MasterCtrl : MonoBehaviour {
 		RedInv = Red_GO.GetComponent<Inventory> ();
 		BlueInv = Blue_GO.GetComponent<Inventory> ();
 
+		Red_animator = Red_GO.GetComponent<Player_Animator> ();
+		Blue_animator = Blue_GO.GetComponent<Player_Animator> ();
+
 		// Set red to active player first
 		setActivePlayer("red");
 		setActivePlayerGO("red");
 		setInventory ("red");
+		setActivePAni ("red");
 
 		mouseDragStart = defMDS;
 		isIncrementing = false;
@@ -247,6 +254,9 @@ public class MasterCtrl : MonoBehaviour {
 		}
 	}
 
+	//===========================================================
+	//getters and setters
+
 	public void setActivePlayerGO(string color){
 		if(color.Equals("red")){
 			activePlayer_go = Red_GO;
@@ -285,6 +295,19 @@ public class MasterCtrl : MonoBehaviour {
 	public Inventory getActiveInventory(){
 		return this.activeInventory;
 	}
+
+	public void setActivePAni(string color){
+		if(color.Equals("red")){
+			active_PAnimator = Red_animator;
+		}
+		if (color.Equals ("blue")) {
+			active_PAnimator = Blue_animator;
+		}
+	}
+
+
+
+	//======================================================================
 
 	//Walks left
 	void walkLeft(){
@@ -357,16 +380,13 @@ public class MasterCtrl : MonoBehaviour {
 
 	//function to delegate animations to animators in specific objects
 	void masterAnimationDel (string aniAction){
-		//TODO hook up with real animation scrips
-		//TODO handle walking animation using x velosity calculation
-		//disable if jumping, use y caculation similar to doulbe jump
+		//TODO handle walking animation using x velosity calculation, disable if jumping, use y caculation similar to doulbe jump
 		if (aniAction.Equals("jumpRight")){
-			//myAnimatorPlayer tmpAnimator = activePlayer_go.GetComponent<myAnimatorPlayer>();
-			//tmpAnimator.jumpRight();
+			active_PAnimator.Set_animation_state(2);
 		}
 		if (aniAction.Equals("jumpLeft")){
-			//myAnimatorPlayer tmpAnimator = activePlayer_go.GetComponent<myAnimatorPlayer>();
-			//tmpAnimator.jumpLeft();
+			active_PAnimator.Set_animation_state(2);
+			//TODO Faceing
 		}
 		//if (aniAction.Equals("walkLeft")){
 			//myAnimatorPlayer tmpAnimator = activePlayer_go.GetComponent<myAnimatorPlayer>();
@@ -377,24 +397,20 @@ public class MasterCtrl : MonoBehaviour {
 			//tmpAnimator.walkRight();
 		//}
 		if (aniAction.Equals("death")){
-			//myAnimatorPlayer tmpAnimator = activePlayer_go.GetComponent<myAnimatorPlayer>();
-			//tmpAnimator.death();
+			//active_PAnimator.Set_animation_state(???);
 		}
 		if (aniAction.Equals("STwalkLeft")){
-			//myAnimatorPlayer tmpAnimator = activePlayer_go.GetComponent<myAnimatorPlayer>();
-			//tmpAnimator.STwalkLeft();
+			active_PAnimator.Set_animation_state(1);
+			//TODO faceing
 		}
 		if (aniAction.Equals("STwalkRight")){
-			//myAnimatorPlayer tmpAnimator = activePlayer_go.GetComponent<myAnimatorPlayer>();
-			//tmpAnimator.STwalkRight();
+			active_PAnimator.Set_animation_state(1);
 		}
 		if (aniAction.Equals ("eat")) {
-			//myAnimatorPlayer tmpAnimator = activePlayer_go.GetComponent<myAnimatorPlayer>();
-			//tmpAnimator.eat();
+			active_PAnimator.Set_animation_state(3);
 		}
 		if (aniAction.Equals ("upchuck")) {
-			//myAnimatorPlayer tmpAnimator = activePlayer_go.GetComponent<myAnimatorPlayer>();
-			//tmpAnimator.upchuck();
+			active_PAnimator.Set_animation_state(4);
 		}
 
 	}
