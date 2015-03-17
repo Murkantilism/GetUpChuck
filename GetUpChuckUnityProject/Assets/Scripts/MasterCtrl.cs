@@ -119,8 +119,7 @@ public class MasterCtrl : MonoBehaviour {
 							&& (activePlayer_go.transform.position.x - XEatTol) < hitItemCol.transform.position.x
 							&& (activePlayer_go.transform.position.y + YEatTol) > hitItemCol.transform.position.y
 							&& (activePlayer_go.transform.position.y - YEatTol) < hitItemCol.transform.position.y) {
-									activeInventory.AddItem (hitItem);
-									activePlayer.changeSize (hitItem.weight);
+								playerEat(hitItem);
 						}
 					}
 					//checks if active player is being selected (for inventory open)
@@ -185,8 +184,7 @@ public class MasterCtrl : MonoBehaviour {
 							   && (activePlayer_go.transform.position.x - XEatTol) < hitItemCol.transform.position.x
 							   && (activePlayer_go.transform.position.y + YEatTol) > hitItemCol.transform.position.y
 							   && (activePlayer_go.transform.position.y - YEatTol) < hitItemCol.transform.position.y){
-								activeInventory.AddItem(hitItem);
-								activePlayer.changeSize(hitItem.weight);
+									playerEat(hitItem);
 							}
 						}
 						//checks if active player is being selected (for inventory open)
@@ -341,6 +339,7 @@ public class MasterCtrl : MonoBehaviour {
 
 	void playerEat(Item tmpI){
 		activeInventory.AddItem (tmpI);
+		activePlayer.changeSize (tmpI.weight);
 		masterAnimationDel ("eat");
 	}
 

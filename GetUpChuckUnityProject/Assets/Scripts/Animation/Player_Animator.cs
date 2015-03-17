@@ -38,22 +38,30 @@ public class Player_Animator : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-
-		if (Animator) {
+		/*
+		if (anim) {
 
 			//get the current state
 			AnimatorStateInfo stateInfo = anim.GetCurrentAnimatorStateInfo(0);
 
 			if(stateInfo.nameHash == Animator.StringToHash("Base Layer.Chuck_Idle")){
-				if(animation_state == 1){
-					anim.SetInteger("Movement", 1);
-				}
 				if(animation_state == 2){
 					anim.SetInteger("Movement", 2);
 				}
+				if(animation_state == 3){
+					anim.SetBool("isEating", true);
+				}
+				if(animation_state == 4){
+					anim.SetBool("isVomiting", true);
+				}
 			}
 
-		}
+			if (stateInfo.nameHash == Animator.StringToHash("Base Layer.Chuck_Jump")){
+				anim.SetInteger("Movement", 0);
+				animation_state = 0;
+			}
+
+		}*/
 
 
 		/*
@@ -73,7 +81,7 @@ public class Player_Animator : MonoBehaviour {
 
 		// Get the current state of the animator
 		// AnimatorStateInfo stateInfo = anim.GetCurrentAnimatorStateInfo(0);
-		/*
+
 		// If animation state is 0, 1, or 2
 		if (animation_state < 3){
 			// Set the movement int to animatio_state value
@@ -92,7 +100,7 @@ public class Player_Animator : MonoBehaviour {
 		} 
 
 		animation_state = 0;
-		*/
+
 	}
 
 	public void Set_animation_state(int state){
