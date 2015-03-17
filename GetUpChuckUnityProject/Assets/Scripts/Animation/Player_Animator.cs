@@ -17,7 +17,7 @@ public class Player_Animator : MonoBehaviour {
 	//int eatHash = Animator.StringToHash("Base Layer.Chuck_Eat");
 	//int vomitHash = Animator.StringToHash("Base Layer.Chuck_Vomit");
 
-	public SpriteRenderer spriteRenderer;
+	public UnityJellySprite spriteRenderer;
 	Color sickColor = new Color(0.502f, 0.392f, 0.118f, 1.0f);
 	Color healthyColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
 
@@ -26,16 +26,17 @@ public class Player_Animator : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		anim = GetComponent<Animator>();
-		spriteRenderer = GetComponent<SpriteRenderer>();
+		spriteRenderer = GetComponent<UnityJellySprite>();
 		if(this.gameObject.name == "redPlayer"){
-			spriteRenderer.color = new Color(200.0f/255.0f, 35.0f/255.0f, 35.0f/255.0f, 1.0f);//Color.red;
+			spriteRenderer.renderer.material.color = new Color(200.0f/255.0f, 35.0f/255.0f, 35.0f/255.0f, 1.0f);//Color.red;
 		}else if(this.gameObject.name == "bluePlayer"){
-			spriteRenderer.color = new Color(35.0f/255.0f, 92.0f/255.0f, 205.0f/255.0f, 1.0f);//Color.blue;
+			spriteRenderer.renderer.material.color = new Color(35.0f/255.0f, 92.0f/255.0f, 205.0f/255.0f, 1.0f);//Color.blue;
 		}
 	}
 	
 	// Update is called once per frame
 	void Update () {
+		/*
 		if(Input.GetKey(KeyCode.O)){
 			animation_state = 1;
 		}else if(Input.GetKey(KeyCode.P)){
@@ -48,7 +49,7 @@ public class Player_Animator : MonoBehaviour {
 			animation_state = 5;
 		}else{
 			animation_state = 0;
-		}
+		}*/
 
 		// Get the current state of the animator
 		// AnimatorStateInfo stateInfo = anim.GetCurrentAnimatorStateInfo(0);
@@ -65,8 +66,8 @@ public class Player_Animator : MonoBehaviour {
 		}else if (animation_state == 4){
 			anim.SetBool("isVomiting", true);
 		}else if (animation_state == 5){
-			spriteRenderer.color = sickColor;
-			Debug.Log(spriteRenderer.color);
+			spriteRenderer.renderer.material.color = sickColor;
+			Debug.Log(spriteRenderer.renderer.material.color);
 			anim.SetBool("isSick", true);
 		}
 	}

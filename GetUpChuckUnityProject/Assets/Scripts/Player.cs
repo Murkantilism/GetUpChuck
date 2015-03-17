@@ -27,8 +27,6 @@ public class Player : MonoBehaviour {
 	//movespeed of the character
 	public float moveSpeed;
 
-	//==================================================================
-
 	// Use this for initialization
 	void Start () {
 		if (this.colorRed == true) {
@@ -61,32 +59,36 @@ public class Player : MonoBehaviour {
 	//moves the player right
 	//TODO flip sprite to face correct direction
 	public void moveRight(){
-		this.transform.Translate (Vector3.right * Time.deltaTime * moveSpeed);
-		}
+		Debug.Log("MOVE RIGHT");
+		Vector3 dir = Quaternion.AngleAxis(15, Vector3.forward) * Vector3.right;
+		this.GetComponent<JellySprite>().AddForce(dir*moveSpeed);
+	}
 
 	//moves the player left
 	public void moveLeft(){
-		this.transform.Translate (Vector3.left * Time.deltaTime * moveSpeed);
-		}
+		Debug.Log("MOVE LEFT");
+		Vector3 dir = Quaternion.AngleAxis(15, Vector3.forward) * Vector3.left;
+		this.GetComponent<JellySprite>().AddForce(dir*moveSpeed);
+	}
 	
 	//called to make the player jump
 	//takes direction as a string
 	public void jump(string Direc){
 		//make sure the player is not already jumping or falling
 		if (lastY == lastYTwo) {
+			if (Direc.Equals ("right")) {
+				Vector3 dir = Quaternion.AngleAxis(jumpAngle, Vector3.forward) * Vector3.right;
+				this.GetComponent<JellySprite>().AddForce(dir*jumpForce);
+				//this.rigidbody2D.AddForce (dir*jumpForce);
+			}
 
-					if (Direc.Equals ("right")) {
-							Vector3 dir = Quaternion.AngleAxis(jumpAngle, Vector3.forward) * Vector3.right;
-							this.rigidbody2D.AddForce (dir*jumpForce);
-					}
-
-					if (Direc.Equals ("left")) {
-							Vector3 dir = Quaternion.AngleAxis(jumpAngle, Vector3.back) * Vector3.left;
-							this.rigidbody2D.AddForce (dir*jumpForce);
-					}
-
-				}
+			if (Direc.Equals ("left")) {
+				Vector3 dir = Quaternion.AngleAxis(jumpAngle, Vector3.back) * Vector3.left;
+				this.GetComponent<JellySprite>().AddForce(dir*jumpForce);
+				//this.rigidbody2D.AddForce (dir*jumpForce);
+			}
 		}
+	}
 
 	//called by a checkpoint to set the respawn point
 	public void setCkPt(float tmpX, float tmpY){
@@ -96,8 +98,9 @@ public class Player : MonoBehaviour {
 
 	//called when a player is forced to respawn (like on death)
 	public void playerRe(){
+		Debug.Log("RESPAWN");
 		this.transform.position = new Vector3 (reX, reY, this.transform.position.z);
-		}
+	}
 
 
 	//geter and seter for colorRed
@@ -108,10 +111,10 @@ public class Player : MonoBehaviour {
 	public void setColorRed(string tmpColor){
 		if (tmpColor.Equals ("red")) {
 			this.colorRed = true;
-				}
+		}
 		if (tmpColor.Equals ("blue")) {
 			this.colorRed = false;
-				}
+		}
 	}
 
 }

@@ -38,6 +38,8 @@ public class MasterCtrl : MonoBehaviour {
 	int incCount;
 	public int holdTimeForInv;
 
+	Player_Animator playerAnimator;
+
 	// Use this for initialization
 	void Start () {
 
@@ -61,9 +63,9 @@ public class MasterCtrl : MonoBehaviour {
 		incCount = 0;
 
 		mainCam = GameObject.FindGameObjectWithTag ("MainCamera").GetComponent<Camera>();
-		cameraPan = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraPan>();
-		cameraZoom = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraZoom>();
-		cameraZoomOut = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraZoomOut>();
+		cameraPan = mainCam.GetComponent<CameraPan>();
+		cameraZoom = mainCam.GetComponent<CameraZoom>();
+		cameraZoomOut = mainCam.GetComponent<CameraZoomOut>();
 		
 	}
 	
@@ -130,6 +132,10 @@ public class MasterCtrl : MonoBehaviour {
 			//if not holding for long enough for inventory open
 			isIncrementing = false;
 			incCount = 0;
+		}
+		// jump control dev key - spacebar
+		if(Input.GetKeyUp(KeyCode.Space)){
+			jumpRight();
 		}
 
 #endif
@@ -262,13 +268,13 @@ public class MasterCtrl : MonoBehaviour {
 	//Walks left
 	void walkLeft(){
 		activePlayer.moveLeft();
-		//masterAnimationDel ("walkLeft");
+		masterAnimationDel ("walkLeft");
 	}
 
 	//walk right
 	void walkRight(){
 		activePlayer.moveRight();
-		//masterAnimationDel ("walkRight");
+		masterAnimationDel ("walkRight");
 	}
 
 	//jump left
@@ -297,6 +303,10 @@ public class MasterCtrl : MonoBehaviour {
 	void playerUpChuck(Item tmpI){
 		activeInventory.DropItem (tmpI);
 		masterAnimationDel ("upchuck");
+	}
+
+	void playerIdle(){
+		masterAnimationDel("idle");
 	}
 
 	// Called when player opens inventory
@@ -331,25 +341,21 @@ public class MasterCtrl : MonoBehaviour {
 
 	//function to delegate animations to animators in specific objects
 	void masterAnimationDel (string aniAction){
-		//TODO hook up with real animation scrips
 		//TODO handle walking animation using x velosity calculation
 		//disable if jumping, use y caculation similar to doulbe jump
+		if (aniAction.Equals("walkLeft")){
+			activePlayer_go.GetComponent<Player_Animator>().Set_animation_state(1);
+		}
+		if (aniAction.Equals("walkRight")){
+			activePlayer_go.GetComponent<Player_Animator>().Set_animation_state(1);
+		}
 		if (aniAction.Equals("jumpRight")){
-			//myAnimatorPlayer tmpAnimator = activePlayer_go.GetComponent<myAnimatorPlayer>();
-			//tmpAnimator.jumpRight();
+			activePlayer_go.GetComponent<Player_Animator>().Set_animation_state(2);
 		}
 		if (aniAction.Equals("jumpLeft")){
-			//myAnimatorPlayer tmpAnimator = activePlayer_go.GetComponent<myAnimatorPlayer>();
-			//tmpAnimator.jumpLeft();
+			activePlayer_go.GetComponent<Player_Animator>().Set_animation_state(2);
 		}
-		//if (aniAction.Equals("walkLeft")){
-			//myAnimatorPlayer tmpAnimator = activePlayer_go.GetComponent<myAnimatorPlayer>();
-			//tmpAnimator.walkLeft();
-		//}
-		//if (aniAction.Equals("walkRight")){
-			//myAnimatorPlayer tmpAnimator = activePlayer_go.GetComponent<myAnimatorPlayer>();
-			//tmpAnimator.walkRight();
-		//}
+		// TODO: hook up death animation
 		if (aniAction.Equals("death")){
 			//myAnimatorPlayer tmpAnimator = activePlayer_go.GetComponent<myAnimatorPlayer>();
 			//tmpAnimator.death();
@@ -363,14 +369,15 @@ public class MasterCtrl : MonoBehaviour {
 			//tmpAnimator.STwalkRight();
 		}
 		if (aniAction.Equals ("eat")) {
-			//myAnimatorPlayer tmpAnimator = activePlayer_go.GetComponent<myAnimatorPlayer>();
-			//tmpAnimator.eat();
+			activePlayer_go.GetComponent<Player_Animator>().Set_animation_state(3);
 		}
 		if (aniAction.Equals ("upchuck")) {
-			//myAnimatorPlayer tmpAnimator = activePlayer_go.GetComponent<myAnimatorPlayer>();
-			//tmpAnimator.upchuck();
+			activePlayer_go.GetComponent<Player_Animator>().Set_animation_state(4);
 		}
-
+		if (aniAction.Equals ("idle")) {
+			activePlayer_go.GetComponent<Player_Animator>().Set_animation_state(0);
+		}
+		
 	}
 
 }
