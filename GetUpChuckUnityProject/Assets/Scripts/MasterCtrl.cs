@@ -71,9 +71,6 @@ public class MasterCtrl : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (Input.GetButtonDown("playerSwaps")){
-			swapPlayer();
-		}
 
 #if UNITY_EDITOR || UNITY_STANDALONE
 
@@ -323,7 +320,7 @@ public class MasterCtrl : MonoBehaviour {
 	}
 
 	//called to switch player from red to blue or blue to red
-	void swapPlayer(){
+	public void swapPlayer(){
 		if (activePlayer == Red_Player) {
 			setActivePlayer("blue");
 			setActivePlayerGO("blue");

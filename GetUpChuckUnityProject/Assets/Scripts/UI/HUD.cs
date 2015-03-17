@@ -9,6 +9,7 @@ public class HUD : MonoBehaviour {
 	private Animator invAnim;
 	private bool isPaused = false;
 	UI_Inventory inventory;
+	MasterCtrl master;
 
 	void Start () {
 		inventory = GameObject.Find("InventoryPanel").GetComponent<UI_Inventory>();
@@ -17,6 +18,7 @@ public class HUD : MonoBehaviour {
 		invAnim = inventoryPanel.GetComponent<Animator>();
 		pauseAnim.enabled = false;
 		invAnim.enabled = false;
+		master = GameObject.Find("MasterController").GetComponent<MasterCtrl>();
 	}
 	
 	public void Update () {
@@ -46,5 +48,9 @@ public class HUD : MonoBehaviour {
 	public void CloseInventory(){
 		invAnim.enabled = true;
 		invAnim.Play ("InventoryFadeOut");
+	}
+	public void SwapPlayers(){
+		master.swapPlayer();
+		Debug.Log("Player Swap");
 	}
 }
