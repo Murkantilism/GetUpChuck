@@ -123,7 +123,7 @@ public class UI_Inventory : MonoBehaviour {
 				// Set this slot's source image to the item's sprite
 				inventorySlots[i].GetComponent<Image>().sprite = tmpItem.getSprite();
 				// Resize this slot's source image to 500x500 pixels
-				inventorySlots[i].GetComponent<RectTransform>().sizeDelta = new Vector2(500, 500);
+				inventorySlots[i].GetComponent<RectTransform>().sizeDelta = new Vector2(50, 50);
 			}
 		}
 	}
