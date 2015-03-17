@@ -45,9 +45,9 @@ public class Player : MonoBehaviour {
 		lastY = this.transform.position.y;
 	}
 
-	//chages size of character if weight reaches a threshhold
+	//chages size of character with weight 
 	//TODO call on eat or throwup
-	void changeSize (float sizeIn){
+	public void changeSize (float sizeIn){
 		float tmpMax = (float)maxInvSize;
 
 		float scaleFactor = sizeIn / tmpMax;
@@ -61,14 +61,18 @@ public class Player : MonoBehaviour {
 	public void moveRight(){
 		Debug.Log("MOVE RIGHT");
 		Vector3 dir = Quaternion.AngleAxis(15, Vector3.forward) * Vector3.right;
-		this.GetComponent<JellySprite>().AddForce(dir*moveSpeed);
+		if (lastY == lastYTwo) {
+			this.GetComponent<JellySprite>().AddForce(dir*moveSpeed);
+		}
 	}
 
 	//moves the player left
 	public void moveLeft(){
 		Debug.Log("MOVE LEFT");
 		Vector3 dir = Quaternion.AngleAxis(15, Vector3.forward) * Vector3.left;
-		this.GetComponent<JellySprite>().AddForce(dir*moveSpeed);
+		if (lastY == lastYTwo) {
+			this.GetComponent<JellySprite>().AddForce(dir*moveSpeed);
+		}
 	}
 	
 	//called to make the player jump

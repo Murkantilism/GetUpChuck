@@ -4,7 +4,9 @@ using System.Collections;
 [RequireComponent (typeof(GameObject))] // This script must be attached to a player gameobject
 public class Player_Animator : MonoBehaviour {
 
-	Animator anim; // The animator attached to player GO
+	protected Animator anim; // The animator attached to player GO
+
+	Vector3 lastPosn; //last position used for movement animation
 
 	// Keep track of the state we are in, set by the MasterCtrl.cs script
 	// 0 = idle, 1 = walk, 2 = jump, 3 = eat, 4 = vomit, 5 = sick
@@ -21,8 +23,6 @@ public class Player_Animator : MonoBehaviour {
 	Color sickColor = new Color(0.502f, 0.392f, 0.118f, 1.0f);
 	Color healthyColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
 
-
-
 	// Use this for initialization
 	void Start () {
 		anim = GetComponent<Animator>();
@@ -32,6 +32,7 @@ public class Player_Animator : MonoBehaviour {
 		}else if(this.gameObject.name == "bluePlayer"){
 			spriteRenderer.renderer.material.color = new Color(35.0f/255.0f, 92.0f/255.0f, 205.0f/255.0f, 1.0f);//Color.blue;
 		}
+		lastPosn = this.transform.position;
 	}
 	
 	// Update is called once per frame
@@ -69,7 +70,10 @@ public class Player_Animator : MonoBehaviour {
 			spriteRenderer.renderer.material.color = sickColor;
 			Debug.Log(spriteRenderer.renderer.material.color);
 			anim.SetBool("isSick", true);
-		}
+		} 
+
+		animation_state = 0;
+
 	}
 
 	public void Set_animation_state(int state){
