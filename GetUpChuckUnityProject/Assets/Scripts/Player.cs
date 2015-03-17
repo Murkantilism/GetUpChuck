@@ -47,9 +47,9 @@ public class Player : MonoBehaviour {
 		lastY = this.transform.position.y;
 	}
 
-	//chages size of character if weight reaches a threshhold
+	//chages size of character with weight 
 	//TODO call on eat or throwup
-	void changeSize (float sizeIn){
+	public void changeSize (float sizeIn){
 		float tmpMax = (float)maxInvSize;
 
 		float scaleFactor = sizeIn / tmpMax;
@@ -61,12 +61,16 @@ public class Player : MonoBehaviour {
 	//moves the player right
 	//TODO flip sprite to face correct direction
 	public void moveRight(){
-		this.transform.Translate (Vector3.right * Time.deltaTime * moveSpeed);
+				if (lastY == lastYTwo) {
+						this.transform.Translate (Vector3.right * Time.deltaTime * moveSpeed);
+				}
 		}
 
 	//moves the player left
 	public void moveLeft(){
-		this.transform.Translate (Vector3.left * Time.deltaTime * moveSpeed);
+				if (lastY == lastYTwo) {
+						this.transform.Translate (Vector3.left * Time.deltaTime * moveSpeed);
+				}
 		}
 	
 	//called to make the player jump
