@@ -61,18 +61,14 @@ public class Player : MonoBehaviour {
 	public void moveRight(){
 		Debug.Log("MOVE RIGHT");
 		Vector3 dir = Quaternion.AngleAxis(15, Vector3.forward) * Vector3.right;
-		if (lastY == lastYTwo) {
-			this.GetComponent<JellySprite>().AddForce(dir*moveSpeed);
-		}
+		this.GetComponent<JellySprite>().AddForce(dir*moveSpeed);
 	}
 
 	//moves the player left
 	public void moveLeft(){
 		Debug.Log("MOVE LEFT");
 		Vector3 dir = Quaternion.AngleAxis(15, Vector3.forward) * Vector3.left;
-		if (lastY == lastYTwo) {
 			this.GetComponent<JellySprite>().AddForce(dir*moveSpeed);
-		}
 	}
 	
 	//called to make the player jump

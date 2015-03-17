@@ -6,14 +6,12 @@ public class MasterCtrl : MonoBehaviour {
 	public GameObject Red_GO;
 	public Player Red_Player;
 	Inventory_Red RedInv;
-	Inventory RedInv;
 	Player_Animator Red_animator;
 
 	//stored reference to blue
 	GameObject Blue_GO;
 	Player Blue_Player;
 	Inventory_Blue BlueInv;
-	Inventory BlueInv;
 	Player_Animator Blue_animator;
 
 	// Tracks which player is currently active
@@ -22,7 +20,6 @@ public class MasterCtrl : MonoBehaviour {
 	Inventory activeInventory;
 	UI_Inventory ui_inventory;
 	Player_Animator active_PAnimator;
-
 
 	//camera info
 	Camera mainCam;
@@ -88,8 +85,8 @@ public class MasterCtrl : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-
-#if UNITY_EDITOR || UNITY_STANDALONE
+		if (!isInvOpen) {
+#if UNITY_EDITOR || UNITY_STANDALONE || UNITY_WEBPLAYER
 
 		//walk controls (mouse)
 		if (Input.GetMouseButton (0)) {
