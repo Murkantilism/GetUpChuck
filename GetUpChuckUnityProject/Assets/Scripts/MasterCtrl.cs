@@ -149,6 +149,10 @@ public class MasterCtrl : MonoBehaviour {
 			incCount = 0;
 			holdAction = "none";
 		}
+		// jump control dev key - spacebar
+		if(Input.GetKeyUp(KeyCode.Space)){
+			jumpRight();
+		}
 
 #endif
 

@@ -61,17 +61,19 @@ public class Player : MonoBehaviour {
 	//moves the player right
 	//TODO flip sprite to face correct direction
 	public void moveRight(){
-				if (lastY == lastYTwo) {
-						this.transform.Translate (Vector3.right * Time.deltaTime * moveSpeed);
-				}
+		if (lastY == lastYTwo) {
+			Vector3 dir = Quaternion.AngleAxis(15, Vector3.forward) * Vector3.right;
+			this.GetComponent<JellySprite>().AddForce(dir*moveSpeed);
 		}
+	}
 
 	//moves the player left
 	public void moveLeft(){
-				if (lastY == lastYTwo) {
-						this.transform.Translate (Vector3.left * Time.deltaTime * moveSpeed);
-				}
+		if (lastY == lastYTwo) {
+			Vector3 dir = Quaternion.AngleAxis(15, Vector3.forward) * Vector3.left;
+			this.GetComponent<JellySprite>().AddForce(dir*moveSpeed);
 		}
+	}
 	
 	//called to make the player jump
 	//takes direction as a string
@@ -80,13 +82,13 @@ public class Player : MonoBehaviour {
 		if (lastY == lastYTwo) {
 
 					if (Direc.Equals ("right")) {
-							Vector3 dir = Quaternion.AngleAxis(jumpAngle, Vector3.forward) * Vector3.right;
-							this.rigidbody2D.AddForce (dir*jumpForce);
+						Vector3 dir = Quaternion.AngleAxis(jumpAngle, Vector3.forward) * Vector3.right;
+						this.GetComponent<JellySprite>().AddForce(dir*jumpForce);
 					}
 
 					if (Direc.Equals ("left")) {
-							Vector3 dir = Quaternion.AngleAxis(jumpAngle, Vector3.back) * Vector3.left;
-							this.rigidbody2D.AddForce (dir*jumpForce);
+						Vector3 dir = Quaternion.AngleAxis(jumpAngle, Vector3.back) * Vector3.left;
+						this.GetComponent<JellySprite>().AddForce(dir*jumpForce);
 					}
 
 				}
