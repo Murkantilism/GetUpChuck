@@ -135,10 +135,10 @@ public class MasterCtrl : MonoBehaviour {
 		//jump controls (mouse) / also ends inventory open early
 		if (Input.GetMouseButtonUp (0)) {
 			if (mouseDragStart != defMDS) {
-				if (0 < Input.mousePosition.x && Input.mousePosition.x < (mainCam.pixelWidth / 3)) {
+				if (-1 < Input.mousePosition.x && Input.mousePosition.x < (mainCam.pixelWidth / 3)) {
 					jumpLeft ();
 				}
-				if ((2 * mainCam.pixelWidth / 3) < Input.mousePosition.x && Input.mousePosition.x < mainCam.pixelWidth) {
+				if ((2 * mainCam.pixelWidth / 3) < Input.mousePosition.x && Input.mousePosition.x < mainCam.pixelWidth * 2) {
 					jumpRight ();
 				}
 			}
@@ -200,14 +200,15 @@ public class MasterCtrl : MonoBehaviour {
 					}
 				}
 			}
+			// Jump Input detection
 			if (Input.GetTouch(0).phase == TouchPhase.Ended){
 				if (mouseDragStart != defMDS){
 					//jump left
-					if (0 < Input.GetTouch(0).position.x && Input.GetTouch(0).position.x < (mainCam.pixelWidth/3)){
+					if (-1 < Input.GetTouch(0).position.x && Input.GetTouch(0).position.x < (mainCam.pixelWidth/3)){
 						jumpLeft();
 					}
 					//jump right
-					if ((2*mainCam.pixelWidth/3) < Input.GetTouch(0).position.x && Input.GetTouch(0).position.x < mainCam.pixelWidth){
+					if ((2*mainCam.pixelWidth/3) < Input.GetTouch(0).position.x && Input.GetTouch(0).position.x < mainCam.pixelWidth * 2){
 						jumpRight();
 					}
 				}
