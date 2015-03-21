@@ -164,11 +164,11 @@ public class MasterCtrl : MonoBehaviour {
 		if(Input.touchCount > 0) {
 			if ((Input.GetTouch(0).phase == TouchPhase.Moved) || (Input.GetTouch(0).phase == TouchPhase.Stationary)) {
 					//walking left
-					if (-1 < Input.GetTouch(0).position.x && Input.GetTouch(0).position.x < (mainCam.pixelWidth/3)){
+					if (0 < Input.GetTouch(0).position.x && Input.GetTouch(0).position.x < (mainCam.pixelWidth/3)){
 						walkLeft();
 					}
 					//walking right
-					if ((2*mainCam.pixelWidth/3) < Input.GetTouch(0).position.x && Input.GetTouch(0).position.x < mainCam.pixelWidth * 2){
+					if ((2*mainCam.pixelWidth/3) < Input.GetTouch(0).position.x && Input.GetTouch(0).position.x < mainCam.pixelWidth){
 						walkRight();
 					}
 			}
@@ -206,11 +206,11 @@ public class MasterCtrl : MonoBehaviour {
 			if (Input.GetTouch(0).phase == TouchPhase.Ended){
 				if (mouseDragStart != defMDS){
 					//jump left
-					if (0 < Input.GetTouch(0).position.x && Input.GetTouch(0).position.x < (mainCam.pixelWidth/3)){
+					if (-1 < Input.GetTouch(0).position.x && Input.GetTouch(0).position.x < (mainCam.pixelWidth/3)){
 						jumpLeft();
 					}
 					//jump right
-					if ((2*mainCam.pixelWidth/3) < Input.GetTouch(0).position.x && Input.GetTouch(0).position.x < mainCam.pixelWidth){
+					if ((2*mainCam.pixelWidth/3) < Input.GetTouch(0).position.x && Input.GetTouch(0).position.x < mainCam.pixelWidth * 2){
 						jumpRight();
 					}
 				}
