@@ -135,24 +135,26 @@ public class MasterCtrl : MonoBehaviour {
 
 		//jump controls (mouse) / also ends inventory open early
 		if (Input.GetMouseButtonUp (0)) {
-			if (mouseDragStart != defMDS) {
-				if (0 < Input.mousePosition.x && Input.mousePosition.x < (mainCam.pixelWidth / 3)) {
-					jumpLeft ();
+				Debug.Log(Input.mousePosition.x);
+				//Debug.Log (mainCam.pixelWidth);
+				if (mouseDragStart != defMDS) {
+					if (-1 < Input.mousePosition.x && Input.mousePosition.x < (mainCam.pixelWidth / 3)) {
+						jumpLeft ();
+					}
+					if ((2 * mainCam.pixelWidth / 3) < Input.mousePosition.x && Input.mousePosition.x < mainCam.pixelWidth * 2) {
+						jumpRight ();
+					}
 				}
-				if ((2 * mainCam.pixelWidth / 3) < Input.mousePosition.x && Input.mousePosition.x < mainCam.pixelWidth) {
-					jumpRight ();
-				}
+				mouseDragStart = defMDS;
+				//if not holding for long enough for click and 
+				isIncrementing = false;
+				incCount = 0;
+				holdAction = "none";
 			}
-			mouseDragStart = defMDS;
-			//if not holding for long enough for click and 
-			isIncrementing = false;
-			incCount = 0;
-			holdAction = "none";
-		}
-		// jump control dev key - spacebar
-		if(Input.GetKeyUp(KeyCode.Space)){
-			jumpRight();
-		}
+			// jump control dev key - spacebar
+			if(Input.GetKeyUp(KeyCode.Space)){
+				jumpRight();
+			}
 
 #endif
 
@@ -162,11 +164,11 @@ public class MasterCtrl : MonoBehaviour {
 		if(Input.touchCount > 0) {
 			if ((Input.GetTouch(0).phase == TouchPhase.Moved) || (Input.GetTouch(0).phase == TouchPhase.Stationary)) {
 					//walking left
-					if (0 < Input.GetTouch(0).position.x && Input.GetTouch(0).position.x < (mainCam.pixelWidth/3)){
+					if (-1 < Input.GetTouch(0).position.x && Input.GetTouch(0).position.x < (mainCam.pixelWidth/3)){
 						walkLeft();
 					}
 					//walking right
-					if ((2*mainCam.pixelWidth/3) < Input.GetTouch(0).position.x && Input.GetTouch(0).position.x < mainCam.pixelWidth){
+					if ((2*mainCam.pixelWidth/3) < Input.GetTouch(0).position.x && Input.GetTouch(0).position.x < mainCam.pixelWidth * 2){
 						walkRight();
 					}
 			}
@@ -306,10 +308,6 @@ public class MasterCtrl : MonoBehaviour {
 			active_PAnimator = Blue_animator;
 		}
 	}
-
-
-
-	//======================================================================
 
 	//Walks left
 	void walkLeft(){
