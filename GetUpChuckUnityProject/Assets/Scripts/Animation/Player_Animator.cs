@@ -103,6 +103,10 @@ public class Player_Animator : MonoBehaviour {
 
 	}
 
+	//movent calculator
+
+
+	//setter for animation state
 	public void Set_animation_state(int state){
 		animation_state = state;
 	}
