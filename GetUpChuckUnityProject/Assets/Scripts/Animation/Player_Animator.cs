@@ -12,13 +12,6 @@ public class Player_Animator : MonoBehaviour {
 	// 0 = idle, 1 = walk, 2 = jump, 3 = eat, 4 = vomit, 5 = sick
 	public int animation_state = 0;
 
-	// Hash string values for each animation
-	//int idleHash = Animator.StringToHash("Base Layer.Chuck_Idle");
-	//int walkHash = Animator.StringToHash("Base Layer.Chuck_Walk");
-	//int jumpHash = Animator.StringToHash("Base Layer.Chuck_Jump");
-	//int eatHash = Animator.StringToHash("Base Layer.Chuck_Eat");
-	//int vomitHash = Animator.StringToHash("Base Layer.Chuck_Vomit");
-
 	public SpriteRenderer spriteRenderer;
 	Color sickColor = new Color(0.502f, 0.392f, 0.118f, 1.0f);
 	Color healthyColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
@@ -37,50 +30,6 @@ public class Player_Animator : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-
-		/*
-		if (anim) {
-
-			//get the current state
-			AnimatorStateInfo stateInfo = anim.GetCurrentAnimatorStateInfo(0);
-
-			if(stateInfo.nameHash == Animator.StringToHash("Base Layer.Chuck_Idle")){
-				if(animation_state == 2){
-					anim.SetInteger("Movement", 2);
-				}
-				if(animation_state == 3){
-					anim.SetBool("isEating", true);
-				}
-				if(animation_state == 4){
-					anim.SetBool("isVomiting", true);
-				}
-			}
-
-			if (stateInfo.nameHash == Animator.StringToHash("Base Layer.Chuck_Jump")){
-				anim.SetInteger("Movement", 0);
-				animation_state = 0;
-			}
-
-		}*/
-
-
-		/*
-		if(Input.GetKey(KeyCode.O)){
-			animation_state = 1;
-		}else if(Input.GetKey(KeyCode.P)){
-			animation_state = 2;
-		}else if(Input.GetKey(KeyCode.C)){
-			animation_state = 3;
-		}else if(Input.GetKey(KeyCode.V)){
-			animation_state = 4;
-		}else if(Input.GetKey(KeyCode.B)){
-			animation_state = 5;
-		}else{
-			animation_state = 0;
-		}*/
-
-		// Get the current state of the animator
-		// AnimatorStateInfo stateInfo = anim.GetCurrentAnimatorStateInfo(0);
 
 		// If animation state is 0, 1, or 2
 		if (animation_state < 3){
@@ -102,9 +51,6 @@ public class Player_Animator : MonoBehaviour {
 		animation_state = 0;
 
 	}
-
-	//movent calculator
-
 
 	//setter for animation state
 	public void Set_animation_state(int state){
