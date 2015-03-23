@@ -24,6 +24,10 @@ public class UI_Inventory : MonoBehaviour {
 
 	bool firstTime = true; // First time opening inventory?
 
+	List<Item> upchuckQueue;
+
+	UI_InventoryUpchuck upchuckInventoryArea;
+
 	// Use this for initialization
 	void Start () {
 		blue_inventory = GameObject.FindGameObjectWithTag("blue").GetComponent<Inventory_Blue>();
@@ -31,6 +35,10 @@ public class UI_Inventory : MonoBehaviour {
 
 		cameraZoom = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraZoom>();
 		cameraZoomOut = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraZoomOut>();
+
+		upchuckInventoryArea = GameObject.Find("InventoryUpchuckPanel").GetComponent<UI_InventoryUpchuck>();
+
+		upchuckQueue = new List<Item>();
 	}
 	
 	// Update is called once per frame
@@ -44,6 +52,7 @@ public class UI_Inventory : MonoBehaviour {
 			// If this is the first time we are opening inventory, create it
 			if(firstTime){
 				CreateInventory(activeInventory);
+				upchuckInventoryArea.CreateInventory();
 				firstTime = false;
 			// Otherwise just re-enable it
 			}else{
@@ -52,6 +61,7 @@ public class UI_Inventory : MonoBehaviour {
 					inventorySlots[j].gameObject.SetActive(true);
 				}
 				this.gameObject.SetActive(true);
+				upchuckInventoryArea.OpenInventory();
 			}
 		}
 	}
@@ -64,6 +74,7 @@ public class UI_Inventory : MonoBehaviour {
 				inventorySlots[j].gameObject.SetActive(false);
 			}
 			this.gameObject.SetActive(false);
+			upchuckInventoryArea.CloseInventory();
 		}
 	}
 
@@ -97,7 +108,7 @@ public class UI_Inventory : MonoBehaviour {
 				RectTransform slotRect = newSlot.GetComponent<RectTransform>();
 
 				// Rename the temp slot object
-				newSlot.name = "Inventory_Slot";
+				newSlot.name = "default_inventorySlot";
 				// Set the slot's parent to Canvas
 				newSlot.transform.SetParent(this.transform.parent);
 				// Set this slot's position
@@ -124,7 +135,29 @@ public class UI_Inventory : MonoBehaviour {
 				inventorySlots[i].GetComponent<Image>().sprite = tmpItem.getSprite();
 				// Resize this slot's source image to 500x500 pixels
 				inventorySlots[i].GetComponent<RectTransform>().sizeDelta = new Vector2(50, 50);
+				// Set this slot's name to the item's name
+				inventorySlots[i].name = tmpItem.getName()+"_inventorySlot";
 			}
 		}
 	}
+
+	void UpchuckItem(Item item){
+		upchuckQueue.Add(item);
+	}
+
+	void CancelUpchuckItem(Item item){
+		upchuckQueue.Remove(item);
+	}
+
+	// Given which inventory we are in (active) for every item in the 
+	// upchuck queue pass the item to the active inventory's DropItem()
+	void ExitInventory(Inventory activeInventory){
+		for(int i = 0; i < upchuckQueue.Count; i++){
+			activeInventory.DropItem(upchuckQueue[i]);
+		}
+
+		CloseInventory(activeInventory);
+	}
+
+
 }
