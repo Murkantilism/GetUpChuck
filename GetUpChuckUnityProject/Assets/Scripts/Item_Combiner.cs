@@ -16,6 +16,10 @@ public class Item_Combiner : MonoBehaviour {
 		loItems = new List<Item>();
 
 		redTriangle = GameObject.Find("Item_redTriangle").AddComponent<Item>();
+		redTriangle.gameObject.AddComponent<BoxCollider2D>();
+		BoxCollider2D redBox = redTriangle.gameObject.GetComponent<BoxCollider2D>();
+		redBox.size = new Vector2(2.0f, 2.0f);
+		redBox.isTrigger = true;
 		redTriangle.setWeight(0.25f);
 		redTriangle.setHue("red");
 		redTriangle.setName("Item_redTriangle");
@@ -28,6 +32,10 @@ public class Item_Combiner : MonoBehaviour {
 
 
 		yellowTriangle = GameObject.Find("Item_yellowTriangle").AddComponent<Item>();
+		yellowTriangle.gameObject.AddComponent<BoxCollider2D>();
+		BoxCollider2D yellowBox = yellowTriangle.gameObject.GetComponent<BoxCollider2D>();
+		yellowBox.size = new Vector2(2.0f, 2.0f);
+		yellowBox.isTrigger = true;
 		yellowTriangle.setWeight(0.25f);
 		yellowTriangle.setHue("red");
 		yellowTriangle.setName("Item_yellowTriangle");
@@ -40,6 +48,10 @@ public class Item_Combiner : MonoBehaviour {
 
 
 		scrapMetal = GameObject.Find("Item_scrapMetal").AddComponent<Item>();
+		scrapMetal.gameObject.AddComponent<BoxCollider2D>();
+		BoxCollider2D scrapBox = scrapMetal.gameObject.GetComponent<BoxCollider2D>();
+		scrapBox.size = new Vector2(2.0f, 2.0f);
+		scrapBox.isTrigger = true;
 		scrapMetal.setWeight(2.0f);
 		scrapMetal.setHue("red");
 		scrapMetal.setName("Item_scrapMetal");
