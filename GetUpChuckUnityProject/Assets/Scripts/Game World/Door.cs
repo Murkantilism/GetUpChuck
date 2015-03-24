@@ -11,6 +11,7 @@ public class Door : MonoBehaviour, Obstacle {
 	
 	public void condResponse() {
 		open = true;
+		this.GetComponent<BoxCollider2D>().isTrigger = true;
 	}
 
 	public bool getStatus() {
