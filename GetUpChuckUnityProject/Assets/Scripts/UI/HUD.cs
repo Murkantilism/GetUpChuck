@@ -62,3 +62,4 @@ public class HUD : MonoBehaviour {
 		tutAnim.Play ("Tut_Swipe");
 	}
 }
+

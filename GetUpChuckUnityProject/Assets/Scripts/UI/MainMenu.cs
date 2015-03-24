@@ -25,3 +25,4 @@ public class MainMenu : MonoBehaviour {
 		anim.Play("Load_Panel");		
 	}
 }
+
