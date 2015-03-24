@@ -10,15 +10,22 @@ public class HUD : MonoBehaviour {
 	private Animator invAnim;
 	private Animator tutAnim;
 	private bool isPaused = false;
+	UI_Inventory inventory;
+	MasterCtrl master;
 
 	void Start () {
+		inventory = GameObject.Find("InventoryPanel").GetComponent<UI_Inventory>();
 		Time.timeScale = 1;
 		pauseAnim = pauseMenuPanel.GetComponent<Animator>();
 		invAnim = inventoryPanel.GetComponent<Animator>();
 		tutAnim = tutorialPanel.GetComponent<Animator>();
 		pauseAnim.enabled = false;
 		invAnim.enabled = false;
+<<<<<<< HEAD
 		tutAnim.enabled = false;
+=======
+		master = GameObject.Find("MasterController").GetComponent<MasterCtrl>();
+>>>>>>> denizDev
 	}
 	
 	public void Update () {
@@ -49,6 +56,7 @@ public class HUD : MonoBehaviour {
 		invAnim.enabled = true;
 		invAnim.Play ("Inv_Out");
 	}
+<<<<<<< HEAD
 	public void tutorialTap(){
 		tutAnim.enabled = true;
 		tutAnim.Play ("Tut_Tap");
@@ -63,3 +71,10 @@ public class HUD : MonoBehaviour {
 	}
 }
 
+=======
+	public void SwapPlayers(){
+		master.swapPlayer();
+		Debug.Log("Player Swap");
+	}
+}
+>>>>>>> denizDev
