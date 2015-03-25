@@ -46,7 +46,12 @@ public class MasterCtrl : MonoBehaviour {
 	string holdAction;  //def: "none"
 	//"OpenInv" - open inventory
 
+
 	Player_Animator playerAnimator;
+
+	//tracks the direction the player is facing
+	public bool faceingRight = true;
+
 
 	// Use this for initialization
 	void Start () {
@@ -237,7 +242,7 @@ public class MasterCtrl : MonoBehaviour {
 				isIncrementing = false;
 				incCount = 0;
 				if (holdAction.Equals ("OpenInv")) {
-					//TODO OPEN INVENTORY HOOK HERE
+					openInventory();
 					isInvOpen = true;
 					//TODO set isInvOpen to false when closing inventory
 				}
@@ -358,10 +363,6 @@ public class MasterCtrl : MonoBehaviour {
 		masterAnimationDel ("upchuck");
 	}
 
-	void playerIdle(){
-		masterAnimationDel("idle");
-	}
-
 	// Called when player opens inventory
 	void openInventory(){
 		cameraZoom.SetZoomState(true);
@@ -394,24 +395,30 @@ public class MasterCtrl : MonoBehaviour {
 
 	//function to delegate animations to animators in specific objects
 	void masterAnimationDel (string aniAction){
-		//TODO handle walking animation using x velosity calculation, disable if jumping, use y caculation similar to doulbe jump
 		if (aniAction.Equals("jumpRight")){
 			active_PAnimator.Set_animation_state(2);
 		}
 		if (aniAction.Equals("jumpLeft")){
 			active_PAnimator.Set_animation_state(2);
-			//TODO Faceing
 		}
+
 		// TODO: hook up death animation
 		if (aniAction.Equals("death")){
 			//active_PAnimator.Set_animation_state(???);
 		}
-		if (aniAction.Equals("STwalkLeft")){
+		if (aniAction.Equals("walkLeft")){
 			active_PAnimator.Set_animation_state(1);
-			//TODO faceing
+			if(faceingRight == true){
+				activePlayer_go.transform.localScale += new Vector3( -(2 * activePlayer_go.transform.localScale.x),0,0);
+			}
+			faceingRight = false;
 		}
-		if (aniAction.Equals("STwalkRight")){
+		if (aniAction.Equals("walkRight")){
 			active_PAnimator.Set_animation_state(1);
+			if(faceingRight == false){
+				activePlayer_go.transform.localScale += new Vector3( -(2 * activePlayer_go.transform.localScale.x),0,0);
+			}
+			faceingRight = true;
 		}
 		if (aniAction.Equals ("eat")) {
 			active_PAnimator.Set_animation_state(3);
