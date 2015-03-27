@@ -19,24 +19,51 @@ public class Player_Animator : MonoBehaviour {
 	//int eatHash = Animator.StringToHash("Base Layer.Chuck_Eat");
 	//int vomitHash = Animator.StringToHash("Base Layer.Chuck_Vomit");
 
-	public UnityJellySprite spriteRenderer;
+	public SpriteRenderer spriteRenderer;
 	Color sickColor = new Color(0.502f, 0.392f, 0.118f, 1.0f);
 	Color healthyColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
 
 	// Use this for initialization
 	void Start () {
 		anim = GetComponent<Animator>();
-		spriteRenderer = GetComponent<UnityJellySprite>();
+		spriteRenderer = GetComponent<SpriteRenderer>();
 		if(this.gameObject.name == "redPlayer"){
-			spriteRenderer.renderer.material.color = new Color(200.0f/255.0f, 35.0f/255.0f, 35.0f/255.0f, 1.0f);//Color.red;
+			spriteRenderer.color = new Color(200.0f/255.0f, 35.0f/255.0f, 35.0f/255.0f, 1.0f);//Color.red;
 		}else if(this.gameObject.name == "bluePlayer"){
-			spriteRenderer.renderer.material.color = new Color(35.0f/255.0f, 92.0f/255.0f, 205.0f/255.0f, 1.0f);//Color.blue;
+			spriteRenderer.color = new Color(35.0f/255.0f, 92.0f/255.0f, 205.0f/255.0f, 1.0f);//Color.blue;
 		}
 		lastPosn = this.transform.position;
 	}
 	
 	// Update is called once per frame
 	void Update () {
+
+		/*
+		if (anim) {
+
+			//get the current state
+			AnimatorStateInfo stateInfo = anim.GetCurrentAnimatorStateInfo(0);
+
+			if(stateInfo.nameHash == Animator.StringToHash("Base Layer.Chuck_Idle")){
+				if(animation_state == 2){
+					anim.SetInteger("Movement", 2);
+				}
+				if(animation_state == 3){
+					anim.SetBool("isEating", true);
+				}
+				if(animation_state == 4){
+					anim.SetBool("isVomiting", true);
+				}
+			}
+
+			if (stateInfo.nameHash == Animator.StringToHash("Base Layer.Chuck_Jump")){
+				anim.SetInteger("Movement", 0);
+				animation_state = 0;
+			}
+
+		}*/
+
+
 		/*
 		if(Input.GetKey(KeyCode.O)){
 			animation_state = 1;
@@ -67,8 +94,8 @@ public class Player_Animator : MonoBehaviour {
 		}else if (animation_state == 4){
 			anim.SetBool("isVomiting", true);
 		}else if (animation_state == 5){
-			spriteRenderer.renderer.material.color = sickColor;
-			Debug.Log(spriteRenderer.renderer.material.color);
+			spriteRenderer.color = sickColor;
+			Debug.Log(spriteRenderer.color);
 			anim.SetBool("isSick", true);
 		} 
 

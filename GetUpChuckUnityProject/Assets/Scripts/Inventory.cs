@@ -32,7 +32,6 @@ public abstract class Inventory : MonoBehaviour {
 	public void AddItem(Item item){
 		loItems.Add(item);
 		currentWeight += item.getWeight();
-		item.gameObject.SetActive(false);
 	}
 	
 	//Remove item from structure, decrease weight
@@ -48,7 +47,6 @@ public abstract class Inventory : MonoBehaviour {
 		item.transform.position = new Vector2(activePlayer.transform.position.x + 2, activePlayer.transform.position.y);
 		// Re-enaable item's renderer
 		item.renderer.enabled = true;
-		item.gameObject.SetActive(true);
 	}
 
 	// Delete the item from inventory, DO NOT drop it back into world space

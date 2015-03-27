@@ -3,23 +3,23 @@ using System.Collections;
 
 public class MasterCtrl : MonoBehaviour {
 	//stored reference to red
-	public GameObject Red_GO;
-	public Player Red_Player;
-	Inventory_Red RedInv;
+	GameObject Red_GO;
+	Player Red_Player;
+	Inventory RedInv;
 	Player_Animator Red_animator;
 
 	//stored reference to blue
 	GameObject Blue_GO;
 	Player Blue_Player;
-	Inventory_Blue BlueInv;
+	Inventory BlueInv;
 	Player_Animator Blue_animator;
 
 	// Tracks which player is currently active
 	public GameObject activePlayer_go;
 	public Player activePlayer;
 	Inventory activeInventory;
-	UI_Inventory ui_inventory;
 	Player_Animator active_PAnimator;
+
 
 	//camera info
 	Camera mainCam;
@@ -46,20 +46,16 @@ public class MasterCtrl : MonoBehaviour {
 	string holdAction;  //def: "none"
 	//"OpenInv" - open inventory
 
-	Player_Animator playerAnimator;
-
 	// Use this for initialization
 	void Start () {
-
-		ui_inventory = GameObject.Find("InventoryPanel").GetComponent<UI_Inventory>();
 
 		Blue_GO = GameObject.Find("bluePlayer");
 		Blue_Player = Blue_GO.GetComponent<Player> ();
 		Red_GO = GameObject.Find("redPlayer");
 		Red_Player = Red_GO.GetComponent<Player> ();
 
-		RedInv = Red_GO.GetComponent<Inventory_Red> ();
-		BlueInv = Blue_GO.GetComponent<Inventory_Blue> ();
+		RedInv = Red_GO.GetComponent<Inventory> ();
+		BlueInv = Blue_GO.GetComponent<Inventory> ();
 
 		Red_animator = Red_GO.GetComponent<Player_Animator> ();
 		Blue_animator = Blue_GO.GetComponent<Player_Animator> ();
@@ -75,9 +71,9 @@ public class MasterCtrl : MonoBehaviour {
 		incCount = 0;
 
 		mainCam = GameObject.FindGameObjectWithTag ("MainCamera").GetComponent<Camera>();
-		cameraPan = mainCam.GetComponent<CameraPan>();
-		cameraZoom = mainCam.GetComponent<CameraZoom>();
-		cameraZoomOut = mainCam.GetComponent<CameraZoomOut>();
+		cameraPan = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraPan>();
+		cameraZoom = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraZoom>();
+		cameraZoomOut = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraZoomOut>();
 
 		isInvOpen = false;
 		holdAction = "none";
@@ -85,8 +81,13 @@ public class MasterCtrl : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+
 		if (!isInvOpen) {
-#if UNITY_EDITOR || UNITY_STANDALONE || UNITY_WEBPLAYER
+			if (Input.GetButtonDown ("playerSwaps")) {
+				swapPlayer ();
+			}
+
+#if UNITY_EDITOR || UNITY_STANDALONE
 
 		//walk controls (mouse)
 		if (Input.GetMouseButton (0)) {
@@ -135,10 +136,10 @@ public class MasterCtrl : MonoBehaviour {
 		//jump controls (mouse) / also ends inventory open early
 		if (Input.GetMouseButtonUp (0)) {
 			if (mouseDragStart != defMDS) {
-				if (-1 < Input.mousePosition.x && Input.mousePosition.x < (mainCam.pixelWidth / 3)) {
+				if (0 < Input.mousePosition.x && Input.mousePosition.x < (mainCam.pixelWidth / 3)) {
 					jumpLeft ();
 				}
-				if ((2 * mainCam.pixelWidth / 3) < Input.mousePosition.x && Input.mousePosition.x < mainCam.pixelWidth * 2) {
+				if ((2 * mainCam.pixelWidth / 3) < Input.mousePosition.x && Input.mousePosition.x < mainCam.pixelWidth) {
 					jumpRight ();
 				}
 			}
@@ -147,10 +148,6 @@ public class MasterCtrl : MonoBehaviour {
 			isIncrementing = false;
 			incCount = 0;
 			holdAction = "none";
-		}
-		// jump control dev key - spacebar
-		if(Input.GetKeyUp(KeyCode.Space)){
-			jumpRight();
 		}
 
 #endif
@@ -200,15 +197,14 @@ public class MasterCtrl : MonoBehaviour {
 					}
 				}
 			}
-			// Jump Input detection
 			if (Input.GetTouch(0).phase == TouchPhase.Ended){
 				if (mouseDragStart != defMDS){
 					//jump left
-					if (-1 < Input.GetTouch(0).position.x && Input.GetTouch(0).position.x < (mainCam.pixelWidth/3)){
+					if (0 < Input.GetTouch(0).position.x && Input.GetTouch(0).position.x < (mainCam.pixelWidth/3)){
 						jumpLeft();
 					}
 					//jump right
-					if ((2*mainCam.pixelWidth/3) < Input.GetTouch(0).position.x && Input.GetTouch(0).position.x < mainCam.pixelWidth * 2){
+					if ((2*mainCam.pixelWidth/3) < Input.GetTouch(0).position.x && Input.GetTouch(0).position.x < mainCam.pixelWidth){
 						jumpRight();
 					}
 				}
@@ -247,13 +243,7 @@ public class MasterCtrl : MonoBehaviour {
 
 		} //Close !isInvOpen
 
-		//if have been holding down on chuck long enough, open inventory
-		if (incCount > holdTimeForInv) {
-			isIncrementing = false;
-			incCount = 0;
-			// FIXME: This appears to trigger whenever player character is clicked at all
-			openInventory();
-		}
+
 		if (Input.GetKeyDown(KeyCode.Z)){
 			openInventory();
 		}
@@ -320,13 +310,13 @@ public class MasterCtrl : MonoBehaviour {
 	//Walks left
 	void walkLeft(){
 		activePlayer.moveLeft();
-		masterAnimationDel ("walkLeft");
+		//masterAnimationDel ("walkLeft");
 	}
 
 	//walk right
 	void walkRight(){
 		activePlayer.moveRight();
-		masterAnimationDel ("walkRight");
+		//masterAnimationDel ("walkRight");
 	}
 
 	//jump left
@@ -358,25 +348,20 @@ public class MasterCtrl : MonoBehaviour {
 		masterAnimationDel ("upchuck");
 	}
 
-	void playerIdle(){
-		masterAnimationDel("idle");
-	}
-
 	// Called when player opens inventory
 	void openInventory(){
-		cameraZoom.SetZoomState(true);
-		Debug.Log("Master call to Open Inventory");
-		ui_inventory.OpenInventory(activeInventory);
+		// TODO: Add a call to open inventory UI
+		cameraZoom.TriggerZoom();
 	}
 
 	// Called when player exits inventory
 	void closeInventory(){
-		cameraZoomOut.SetZoomState(true);
-		ui_inventory.CloseInventory(activeInventory);
+		// TODO: Add a call to close inventory UI
+		cameraZoomOut.TriggerZoom();
 	}
 
 	//called to switch player from red to blue or blue to red
-	public void swapPlayer(){
+	void swapPlayer(){
 		if (activePlayer == Red_Player) {
 			setActivePlayer("blue");
 			setActivePlayerGO("blue");
@@ -402,7 +387,14 @@ public class MasterCtrl : MonoBehaviour {
 			active_PAnimator.Set_animation_state(2);
 			//TODO Faceing
 		}
-		// TODO: hook up death animation
+		//if (aniAction.Equals("walkLeft")){
+			//myAnimatorPlayer tmpAnimator = activePlayer_go.GetComponent<myAnimatorPlayer>();
+			//tmpAnimator.walkLeft();
+		//}
+		//if (aniAction.Equals("walkRight")){
+			//myAnimatorPlayer tmpAnimator = activePlayer_go.GetComponent<myAnimatorPlayer>();
+			//tmpAnimator.walkRight();
+		//}
 		if (aniAction.Equals("death")){
 			//active_PAnimator.Set_animation_state(???);
 		}
@@ -419,6 +411,7 @@ public class MasterCtrl : MonoBehaviour {
 		if (aniAction.Equals ("upchuck")) {
 			active_PAnimator.Set_animation_state(4);
 		}
+
 	}
 
 }

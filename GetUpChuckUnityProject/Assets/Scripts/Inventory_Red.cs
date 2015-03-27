@@ -15,8 +15,8 @@ public class Inventory_Red : Inventory {
 	void Update () {
 		ItemDigestion();
 
-		//foreach (Item item in loItems){
-		//	Debug.Log(item.getName());
-		//}
+		foreach (Item item in loItems){
+			Debug.Log(item.getName());
+		}
 	}
 }

@@ -14,8 +14,8 @@ public class TestController : MonoBehaviour {
 	
 	// Use this for initialization
 	void Start () {
-		invnty_blue = GameObject.FindGameObjectWithTag("blue").GetComponent<Inventory_Blue>();
-		invnty_red = GameObject.FindGameObjectWithTag("red").GetComponent<Inventory_Red>();
+		invnty_blue = GameObject.Find("Inventory").GetComponent<Inventory_Blue>();
+		invnty_red = GameObject.Find("Inventory").GetComponent<Inventory_Red>();
 
 		yellowTriangle = GameObject.Find("Item_yellowTriangle").GetComponent<Item>();
 		redTriangle = GameObject.Find("Item_redTriangle").GetComponent<Item>();
