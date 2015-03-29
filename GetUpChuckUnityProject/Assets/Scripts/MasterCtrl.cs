@@ -27,10 +27,6 @@ public class MasterCtrl : MonoBehaviour {
 	CameraZoom cameraZoom;
 	CameraZoomOut cameraZoomOut;
 
-	//tracks position for mouse drags
-	Vector2 mouseDragStart;
-	Vector2 defMDS = new Vector2 (-1.0f, -1.0f);
-
 	//item pickup ranges
 	public float XEatTol;
 	public float YEatTol;
@@ -40,13 +36,16 @@ public class MasterCtrl : MonoBehaviour {
 	int incCount;
 	public int holdTimeForInv = 200;
 
-	//keeps track if the inv is open or not
-	public bool isInvOpen; //def: false
-	//keeps track of what action is being held
-	string holdAction;  //def: "none"
-	//"OpenInv" - open inventory
-
 	Player_Animator playerAnimator;
+
+	// Input variables
+	public float startTime;
+	public Vector2 startPos;
+	public bool couldBeSwipe;
+	public bool chargingJump;
+	public float comfortZone = 10;
+	public float minSwipeDist;
+	public float maxSwipeTime;
 
 	// Use this for initialization
 	void Start () {
@@ -69,8 +68,7 @@ public class MasterCtrl : MonoBehaviour {
 		setActivePlayerGO("red");
 		setInventory ("red");
 		setActivePAni ("red");
-
-		mouseDragStart = defMDS;
+		
 		isIncrementing = false;
 		incCount = 0;
 
@@ -78,187 +76,92 @@ public class MasterCtrl : MonoBehaviour {
 		cameraPan = mainCam.GetComponent<CameraPan>();
 		cameraZoom = mainCam.GetComponent<CameraZoom>();
 		cameraZoomOut = mainCam.GetComponent<CameraZoomOut>();
-
-		isInvOpen = false;
-		holdAction = "none";
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		if (!isInvOpen) {
-#if UNITY_EDITOR || UNITY_STANDALONE || UNITY_WEBPLAYER
+		#if UNITY_EDITOR || UNITY_STANDALONE || UNITY_WEBPLAYER
+		if (Input.GetMouseButton(0)) {
+			// Simulate touch events from mouse events
+			if (Input.touchCount == 0) {
+				if (Input.GetMouseButtonDown(0) ) {
+					HandleTouch(10, Camera.main.ScreenToWorldPoint(Input.mousePosition), TouchPhase.Began);
+				}
+				if (Input.GetMouseButton(0) ) {
+					HandleTouch(10, Camera.main.ScreenToWorldPoint(Input.mousePosition), TouchPhase.Moved);
+				}
 
-		//walk controls (mouse)
-		if (Input.GetMouseButton (0)) {
-			if (mouseDragStart == defMDS) {
-				if (0 < Input.mousePosition.x && Input.mousePosition.x < (mainCam.pixelWidth / 3)) {
-					walkLeft ();
-				}
-				if ((2 * mainCam.pixelWidth / 3) < Input.mousePosition.x && Input.mousePosition.x < mainCam.pixelWidth) {
-					walkRight ();
-				}
 			}
+		}else if (Input.GetMouseButtonUp(0) ) {
+			HandleTouch(10, Camera.main.ScreenToWorldPoint(Input.mousePosition), TouchPhase.Ended);
 		}
 
-		//click to add item to inventory (mouse) / inventory open also started
-		if (Input.GetMouseButtonDown (0)) {
-			if ((mainCam.pixelWidth / 3) < Input.mousePosition.x && Input.mousePosition.x < (2 * mainCam.pixelWidth / 3)) {
-				mouseDragStart = Input.mousePosition;
-				Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
-				RaycastHit2D hit = Physics2D.GetRayIntersection (ray);
-				if (hit) {
-					//set hitItem to item hit with touch
-					Collider2D hitItemCol = hit.collider;
-					Item hitItem = hitItemCol.GetComponent<Item> ();
-					GameObject tmp = hitItemCol.gameObject;
-					//if hitItem is not null (item is hit) add it
-					if (hitItem != null) {
-						//distance check
-						if ((activePlayer_go.transform.position.x + XEatTol) > hitItemCol.transform.position.x
-							&& (activePlayer_go.transform.position.x - XEatTol) < hitItemCol.transform.position.x
-							&& (activePlayer_go.transform.position.y + YEatTol) > hitItemCol.transform.position.y
-							&& (activePlayer_go.transform.position.y - YEatTol) < hitItemCol.transform.position.y) {
-								playerEat(hitItem);
-						}
-					}
-					//checks if active player is being selected (for inventory open)
-					if (tmp != null) {
-						if (tmp == activePlayer_go) {
-							isIncrementing = true;
-							holdAction = "OpenInv";
-						}
-					}
-				}
-			}
+		#endif
+
+		//increments incCount for inventory open
+		if (isIncrementing == true) {
+			incCount = incCount + 1;
 		}
+	}
 
-		//jump controls (mouse) / also ends inventory open early
-		if (Input.GetMouseButtonUp (0)) {
-			if (mouseDragStart != defMDS) {
-				if (-1 < Input.mousePosition.x && Input.mousePosition.x < (mainCam.pixelWidth / 3)) {
-					jumpLeft ();
-				}
-				if ((2 * mainCam.pixelWidth / 3) < Input.mousePosition.x && Input.mousePosition.x < mainCam.pixelWidth * 2) {
-					jumpRight ();
-				}
-			}
-			mouseDragStart = defMDS;
-			//if not holding for long enough for click and 
-			isIncrementing = false;
-			incCount = 0;
-			holdAction = "none";
-		}
-		// jump control dev key - spacebar
-		if(Input.GetKeyUp(KeyCode.Space)){
-			jumpRight();
-		}
-
-#endif
-
-#if UNITY_IPHONE || UNITY_ANDROID
-
-		//touch controls
-		if(Input.touchCount > 0) {
-			if ((Input.GetTouch(0).phase == TouchPhase.Moved) || (Input.GetTouch(0).phase == TouchPhase.Stationary)) {
-					//walking left
-					if (0 < Input.GetTouch(0).position.x && Input.GetTouch(0).position.x < (mainCam.pixelWidth/3)){
-						walkLeft();
-					}
-					//walking right
-					if ((2*mainCam.pixelWidth/3) < Input.GetTouch(0).position.x && Input.GetTouch(0).position.x < mainCam.pixelWidth){
-						walkRight();
-					}
-			}
-			if (Input.GetTouch(0).phase == TouchPhase.Began){
-				//eating (and inventory open)
-				if ((mainCam.pixelWidth/3) < Input.GetTouch(0).position.x && Input.GetTouch(0).position.x < (2*mainCam.pixelWidth/3)){
-					mouseDragStart = Input.GetTouch(0).position;
-					Ray ray = Camera.main.ScreenPointToRay (Input.GetTouch(0).position);
-					RaycastHit2D hit = Physics2D.GetRayIntersection(ray);
-					if (hit) {
-						Collider2D hitItemCol = hit.collider;
-						//set hitItem to item hit with touch
-						Item hitItem = hitItemCol.GetComponent<Item>();
-						GameObject tmp = hitItemCol.gameObject;
-						//if hitItem is not null (item is hit) add it
-						if (hitItem != null){
-							//distance check
-							if((activePlayer_go.transform.position.x + XEatTol) > hitItemCol.transform.position.x
-							   && (activePlayer_go.transform.position.x - XEatTol) < hitItemCol.transform.position.x
-							   && (activePlayer_go.transform.position.y + YEatTol) > hitItemCol.transform.position.y
-							   && (activePlayer_go.transform.position.y - YEatTol) < hitItemCol.transform.position.y){
-									playerEat(hitItem);
-							}
-						}
-						//checks if active player is being selected (for inventory open)
-						if (tmp != null){
-							if (tmp == activePlayer_go){
-								isIncrementing = true;
-								holdAction = "OpenInv";
-							}
-						}
-					}
-				}
-			}
-			// Jump Input detection
-			if (Input.GetTouch(0).phase == TouchPhase.Ended){
-				if (mouseDragStart != defMDS){
-					//jump left
-					if (-1 < Input.GetTouch(0).position.x && Input.GetTouch(0).position.x < (mainCam.pixelWidth/3)){
-						jumpLeft();
-					}
-					//jump right
-					if ((2*mainCam.pixelWidth/3) < Input.GetTouch(0).position.x && Input.GetTouch(0).position.x < mainCam.pixelWidth * 2){
-						jumpRight();
-					}
-				}
-				mouseDragStart = defMDS;
-			}
-			if (Input.GetTouch(0).phase != TouchPhase.Stationary){
-				//if not holding and was holding for inv open, stop and reset
-				if (incCount > 0){
-					isIncrementing = false;
-					incCount = 0;
-					holdAction = "none";
-				}
-			}
-		}
-
-#endif
-
-			//increments incCount for inventory open
-			if (isIncrementing == true) {
-				incCount = incCount + 1;
+	private void HandleTouch(int touchFingerId, Vector2 touchPosition, TouchPhase touchPhase) {
+		switch(touchPhase){
+		case TouchPhase.Began:
+			couldBeSwipe = false;
+			chargingJump = false;
+			startPos = touchPosition;
+			startTime = Time.time;
+			break;
+			
+		case TouchPhase.Moved:
+			if(Mathf.Abs(touchPosition.y - startPos.y) < comfortZone){
+				couldBeSwipe = false;
+			}else{
+				couldBeSwipe = true;
 			}
 
-			//if have been holding down on chuck long enough, open inventory
-			//TODO hook
-			if (incCount > holdTimeForInv) {
-				isIncrementing = false;
-				incCount = 0;
-				if (holdAction.Equals ("OpenInv")) {
-					//TODO OPEN INVENTORY HOOK HERE
-					isInvOpen = true;
-					//TODO set isInvOpen to false when closing inventory
-				}
-				holdAction = "none";
+			// Calculate the current swipe's direction while moving
+			float curSwipeDirection = Mathf.Sign(touchPosition.y - startPos.y);
+
+			if(curSwipeDirection == -1 && couldBeSwipe){
+				chargingJump = true;
+				activePlayer.chargeJump();
+			}else{
+				chargingJump = false;
 			}
 
+			// Handle movement
+			if(touchPosition.x > 0){
+				activePlayer.moveRight();
+			}else if(touchPosition.x < 0){
+				activePlayer.moveLeft();
+			}
+			break;
+			
+		case TouchPhase.Stationary:
+			couldBeSwipe = false;
 
-		} //Close !isInvOpen
+			// Handle movement
+			Debug.Log (touchPosition.x);
+			if(touchPosition.x > 0){
+				activePlayer.moveRight();
+			}else if(touchPosition.x < 0){
+				activePlayer.moveLeft();
+			}
+			break;
+			
+		case TouchPhase.Ended:
+			float swipeDirection = Mathf.Sign(touchPosition.y - startPos.y);
 
-		//if have been holding down on chuck long enough, open inventory
-		if (incCount > holdTimeForInv) {
-			isIncrementing = false;
-			incCount = 0;
-			// FIXME: This appears to trigger whenever player character is clicked at all
-			openInventory();
-		}
-		if (Input.GetKeyDown(KeyCode.Z)){
-			openInventory();
-		}
-		if (Input.GetKeyDown(KeyCode.X)){
-			closeInventory();
+			// Based on swipe direction, jump
+			if(touchPosition.x > 0 && swipeDirection == -1 && couldBeSwipe && chargingJump){
+				activePlayer.triggerJump("right");
+				chargingJump = false;
+			}else if(touchPosition.x < 0 && swipeDirection == -1 && couldBeSwipe && chargingJump){
+				activePlayer.triggerJump("left");
+				chargingJump = false;
+			}
+			break;
 		}
 	}
 

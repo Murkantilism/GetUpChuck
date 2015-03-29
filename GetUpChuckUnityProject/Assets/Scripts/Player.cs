@@ -57,12 +57,14 @@ public class Player : MonoBehaviour {
 	//moves the player right
 	//TODO flip sprite to face correct direction
 	public void moveRight(){
+		Debug.Log ("Move right triggered.");
 		Vector3 dir = Quaternion.AngleAxis(15, Vector3.forward) * Vector3.right;
 		this.GetComponent<JellySprite>().AddForce(dir*moveSpeed);
 	}
 	
 	//moves the player left
 	public void moveLeft(){
+		Debug.Log ("Move left triggered.");
 		Vector3 dir = Quaternion.AngleAxis(15, Vector3.forward) * Vector3.left;
 		this.GetComponent<JellySprite>().AddForce(dir*moveSpeed);
 	}
@@ -80,6 +82,23 @@ public class Player : MonoBehaviour {
 			Vector3 dir = Quaternion.AngleAxis(jumpAngle, Vector3.back) * Vector3.left;
 			this.GetComponent<JellySprite>().AddForce(dir*jumpForce);
 			StartCoroutine("DisableJumpTmp");
+		}
+	}
+
+	// Charge the jump by applying down force
+	public void chargeJump(){
+		Debug.Log ("Charging jump.");
+		this.GetComponent<JellySprite>().AddForce(-Vector2.up*jumpForce);
+	}
+
+	// Once the charged jump is released trigger it, apply force in left/right dir
+	public void triggerJump(string Direc){
+		if (Direc.Equals("right")){
+			Debug.Log ("Right jump triggered.");
+			this.GetComponent<JellySprite>().AddForce(Vector3.right*1.5f*jumpForce);
+		}else{
+			Debug.Log ("Left jump triggered.");
+			this.GetComponent<JellySprite>().AddForce(Vector3.left*1.5f*jumpForce);
 		}
 	}
 	
