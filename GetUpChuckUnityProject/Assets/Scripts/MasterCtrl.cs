@@ -92,38 +92,38 @@ public class MasterCtrl : MonoBehaviour {
 
 		#if UNITY_IPHONE || UNITY_ANDROID
 		if(Input.touchCount > 0){
-			HandleTouch(Input.GetTouch(0).fingerId, Camera.main.ScreenToWorldPoint(Input.GetTouch(0).position), Input.GetTouch(0).phase);
+			HandleTouch(Input.GetTouch(0).fingerId, Camera.main.ScreenToWorldPoint(Input.GetTouch(0).position), Input.GetTouch(0).position, Input.GetTouch(0).phase);
 		}
 		#endif
 	}
 
-	private void HandleTouch(int touchFingerId, Vector2 touchPosition, Vector3 mousePosition, TouchPhase touchPhase) {
+	private void HandleTouch(int touchFingerId, Vector2 touchPositionWorldPoint, Vector3 realPosition, TouchPhase touchPhase) {
 		switch(touchPhase){
 		case TouchPhase.Began:
 			couldBeSwipe = false;
 			chargingJump = false;
-			startPos = touchPosition;
+			startPos = touchPositionWorldPoint;
 			startTime = Time.time;
 			break;
 			
 		case TouchPhase.Moved:
 			// Handle movement
-			if(touchPosition.x >= activePlayer.transform.position.x){
+			if(touchPositionWorldPoint.x >= activePlayer.transform.position.x){
 				activePlayer.moveRight();
-			}else if(touchPosition.x < activePlayer.transform.position.x){
+			}else if(touchPositionWorldPoint.x < activePlayer.transform.position.x){
 				activePlayer.moveLeft();
 			}
-			if(Mathf.Abs(touchPosition.y - startPos.y) < comfortZone){
+			if(Mathf.Abs(touchPositionWorldPoint.y - startPos.y) < comfortZone){
 				couldBeSwipe = false;
 			}else{
 				couldBeSwipe = true;
 			}
 
 			// Calculate the current swipe's direction while moving
-			float curSwipeDirection = Mathf.Sign(touchPosition.y - startPos.y);
+			float curSwipeDirection = Mathf.Sign(touchPositionWorldPoint.y - startPos.y);
 
 			// Cast a ray to check if the input is over the player
-			Ray ray = Camera.main.ScreenPointToRay(mousePosition);
+			Ray ray = Camera.main.ScreenPointToRay(realPosition);
 			RaycastHit2D hit = Physics2D.GetRayIntersection(ray);
 			// If the raycast hit exists and the jump isn't already being charged
 			if(hit && chargingJump == false){
@@ -141,23 +141,23 @@ public class MasterCtrl : MonoBehaviour {
 			couldBeSwipe = false;
 
 			// Handle movement
-			Debug.Log (touchPosition.x);
-			if(touchPosition.x >= activePlayer.transform.position.x){
+			Debug.Log (touchPositionWorldPoint.x);
+			if(touchPositionWorldPoint.x >= activePlayer.transform.position.x){
 				activePlayer.moveRight();
-			}else if(touchPosition.x < activePlayer.transform.position.x){
+			}else if(touchPositionWorldPoint.x < activePlayer.transform.position.x){
 				activePlayer.moveLeft();
 			}
 			break;
 			
 		case TouchPhase.Ended:
-			float swipeDirection = Mathf.Sign(touchPosition.y - startPos.y);
-			Vector2 swipeVector = Camera.main.ScreenToWorldPoint(touchPosition) - Camera.main.ScreenToWorldPoint(startPos);
+			float swipeDirection = Mathf.Sign(touchPositionWorldPoint.y - startPos.y);
+			Vector2 swipeVector = Camera.main.ScreenToWorldPoint(touchPositionWorldPoint) - Camera.main.ScreenToWorldPoint(startPos);
 			activePlayer.chargeJump(false);
 			// Based on swipe direction, jump
-			if(touchPosition.x >= activePlayer.transform.position.x && swipeDirection == -1 && couldBeSwipe && chargingJump){
+			if(touchPositionWorldPoint.x >= activePlayer.transform.position.x && swipeDirection == -1 && couldBeSwipe && chargingJump){
 				activePlayer.triggerJump("right", swipeVector);
 				chargingJump = false;
-			}else if(touchPosition.x < activePlayer.transform.position.x && swipeDirection == -1 && couldBeSwipe && chargingJump){
+			}else if(touchPositionWorldPoint.x < activePlayer.transform.position.x && swipeDirection == -1 && couldBeSwipe && chargingJump){
 				activePlayer.triggerJump("left", swipeVector);
 				chargingJump = false;
 			}
