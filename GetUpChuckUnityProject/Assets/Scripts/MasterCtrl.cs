@@ -114,6 +114,13 @@ public class MasterCtrl : MonoBehaviour {
 			break;
 			
 		case TouchPhase.Moved:
+			Debug.Log(touchPosition);
+			// Handle movement
+			if(touchPosition.x >= activePlayer.transform.position.x){
+				activePlayer.moveRight();
+			}else if(touchPosition.x < activePlayer.transform.position.x){
+				activePlayer.moveLeft();
+			}
 			if(Mathf.Abs(touchPosition.y - startPos.y) < comfortZone){
 				couldBeSwipe = false;
 			}else{
@@ -130,12 +137,6 @@ public class MasterCtrl : MonoBehaviour {
 				chargingJump = false;
 			}
 
-			// Handle movement
-			if(touchPosition.x > 0){
-				activePlayer.moveRight();
-			}else if(touchPosition.x < 0){
-				activePlayer.moveLeft();
-			}
 			break;
 			
 		case TouchPhase.Stationary:
@@ -143,9 +144,9 @@ public class MasterCtrl : MonoBehaviour {
 
 			// Handle movement
 			Debug.Log (touchPosition.x);
-			if(touchPosition.x > 0){
+			if(touchPosition.x >= activePlayer.transform.position.x){
 				activePlayer.moveRight();
-			}else if(touchPosition.x < 0){
+			}else if(touchPosition.x < activePlayer.transform.position.x){
 				activePlayer.moveLeft();
 			}
 			break;
@@ -154,10 +155,10 @@ public class MasterCtrl : MonoBehaviour {
 			float swipeDirection = Mathf.Sign(touchPosition.y - startPos.y);
 
 			// Based on swipe direction, jump
-			if(touchPosition.x > 0 && swipeDirection == -1 && couldBeSwipe && chargingJump){
+			if(touchPosition.x >= activePlayer.transform.position.x && swipeDirection == -1 && couldBeSwipe && chargingJump){
 				activePlayer.triggerJump("right");
 				chargingJump = false;
-			}else if(touchPosition.x < 0 && swipeDirection == -1 && couldBeSwipe && chargingJump){
+			}else if(touchPosition.x < activePlayer.transform.position.x && swipeDirection == -1 && couldBeSwipe && chargingJump){
 				activePlayer.triggerJump("left");
 				chargingJump = false;
 			}

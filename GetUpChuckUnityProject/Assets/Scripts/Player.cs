@@ -57,14 +57,14 @@ public class Player : MonoBehaviour {
 	//moves the player right
 	//TODO flip sprite to face correct direction
 	public void moveRight(){
-		Debug.Log ("Move right triggered.");
+		//Debug.Log ("Move right triggered.");
 		Vector3 dir = Quaternion.AngleAxis(15, Vector3.forward) * Vector3.right;
 		this.GetComponent<JellySprite>().AddForce(dir*moveSpeed);
 	}
 	
 	//moves the player left
 	public void moveLeft(){
-		Debug.Log ("Move left triggered.");
+		//Debug.Log ("Move left triggered.");
 		Vector3 dir = Quaternion.AngleAxis(15, Vector3.forward) * Vector3.left;
 		this.GetComponent<JellySprite>().AddForce(dir*moveSpeed);
 	}
