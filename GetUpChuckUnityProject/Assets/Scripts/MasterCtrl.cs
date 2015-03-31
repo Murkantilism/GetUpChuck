@@ -114,7 +114,6 @@ public class MasterCtrl : MonoBehaviour {
 			break;
 			
 		case TouchPhase.Moved:
-			Debug.Log(touchPosition);
 			// Handle movement
 			if(touchPosition.x >= activePlayer.transform.position.x){
 				activePlayer.moveRight();
@@ -153,13 +152,15 @@ public class MasterCtrl : MonoBehaviour {
 			
 		case TouchPhase.Ended:
 			float swipeDirection = Mathf.Sign(touchPosition.y - startPos.y);
+			Vector2 swipeVector = Camera.main.ScreenToWorldPoint(touchPosition) - Camera.main.ScreenToWorldPoint(startPos);
+			Debug.Log("SWIPE VECTOR" + swipeVector);
 
 			// Based on swipe direction, jump
 			if(touchPosition.x >= activePlayer.transform.position.x && swipeDirection == -1 && couldBeSwipe && chargingJump){
-				activePlayer.triggerJump("right");
+				activePlayer.triggerJump("right", swipeVector);
 				chargingJump = false;
 			}else if(touchPosition.x < activePlayer.transform.position.x && swipeDirection == -1 && couldBeSwipe && chargingJump){
-				activePlayer.triggerJump("left");
+				activePlayer.triggerJump("left", swipeVector);
 				chargingJump = false;
 			}
 			break;

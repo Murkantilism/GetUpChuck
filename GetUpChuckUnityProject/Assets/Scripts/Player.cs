@@ -87,18 +87,19 @@ public class Player : MonoBehaviour {
 
 	// Charge the jump by applying down force
 	public void chargeJump(){
-		Debug.Log ("Charging jump.");
+		//Debug.Log ("Charging jump.");
 		this.GetComponent<JellySprite>().AddForce(-Vector2.up*jumpForce);
 	}
 
-	// Once the charged jump is released trigger it, apply force in left/right dir
-	public void triggerJump(string Direc){
+	// Once the charged jump is released trigger it, apply force with
+	// the inverse of the swipe vector.
+	public void triggerJump(string Direc, Vector2 swipeVector){
 		if (Direc.Equals("right")){
-			Debug.Log ("Right jump triggered.");
-			this.GetComponent<JellySprite>().AddForce(Vector3.right*1.5f*jumpForce);
+			//Debug.Log ("Right jump triggered.");
+			this.GetComponent<JellySprite>().AddForce(-swipeVector*jumpForce);
 		}else{
-			Debug.Log ("Left jump triggered.");
-			this.GetComponent<JellySprite>().AddForce(Vector3.left*1.5f*jumpForce);
+			//Debug.Log ("Left jump triggered.");
+			this.GetComponent<JellySprite>().AddForce(-swipeVector*jumpForce);
 		}
 	}
 	
