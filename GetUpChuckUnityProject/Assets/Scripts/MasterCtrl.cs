@@ -31,11 +31,6 @@ public class MasterCtrl : MonoBehaviour {
 	public float XEatTol;
 	public float YEatTol;
 
-	//variables for hold for opening inventory in touch
-	bool isIncrementing;
-	int incCount;
-	public int holdTimeForInv = 200;
-
 	Player_Animator playerAnimator;
 
 	// Input variables
@@ -68,9 +63,6 @@ public class MasterCtrl : MonoBehaviour {
 		setActivePlayerGO("red");
 		setInventory ("red");
 		setActivePAni ("red");
-		
-		isIncrementing = false;
-		incCount = 0;
 
 		mainCam = GameObject.FindGameObjectWithTag ("MainCamera").GetComponent<Camera>();
 		cameraPan = mainCam.GetComponent<CameraPan>();
@@ -95,13 +87,14 @@ public class MasterCtrl : MonoBehaviour {
 		}else if (Input.GetMouseButtonUp(0) ) {
 			HandleTouch(10, Camera.main.ScreenToWorldPoint(Input.mousePosition), TouchPhase.Ended);
 		}
-
 		#endif
 
-		//increments incCount for inventory open
-		if (isIncrementing == true) {
-			incCount = incCount + 1;
+
+		#if UNITY_IPHONE || UNITY_ANDROID
+		if(Input.touchCount > 0){
+			HandleTouch(Input.GetTouch(0).fingerId, Camera.main.ScreenToWorldPoint(Input.GetTouch(0).position), Input.GetTouch(0).phase);
 		}
+		#endif
 	}
 
 	private void HandleTouch(int touchFingerId, Vector2 touchPosition, TouchPhase touchPhase) {
