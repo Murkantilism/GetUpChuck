@@ -77,15 +77,15 @@ public class MasterCtrl : MonoBehaviour {
 			// Simulate touch events from mouse events
 			if (Input.touchCount == 0) {
 				if (Input.GetMouseButtonDown(0) ) {
-					HandleTouch(10, Camera.main.ScreenToWorldPoint(Input.mousePosition), TouchPhase.Began);
+					HandleTouch(10, Camera.main.ScreenToWorldPoint(Input.mousePosition), Input.mousePosition, TouchPhase.Began);
 				}
 				if (Input.GetMouseButton(0) ) {
-					HandleTouch(10, Camera.main.ScreenToWorldPoint(Input.mousePosition), TouchPhase.Moved);
+					HandleTouch(10, Camera.main.ScreenToWorldPoint(Input.mousePosition), Input.mousePosition, TouchPhase.Moved);
 				}
 
 			}
 		}else if (Input.GetMouseButtonUp(0) ) {
-			HandleTouch(10, Camera.main.ScreenToWorldPoint(Input.mousePosition), TouchPhase.Ended);
+			HandleTouch(10, Camera.main.ScreenToWorldPoint(Input.mousePosition), Input.mousePosition, TouchPhase.Ended);
 		}
 		#endif
 
@@ -97,7 +97,7 @@ public class MasterCtrl : MonoBehaviour {
 		#endif
 	}
 
-	private void HandleTouch(int touchFingerId, Vector2 touchPosition, TouchPhase touchPhase) {
+	private void HandleTouch(int touchFingerId, Vector2 touchPosition, Vector3 mousePosition, TouchPhase touchPhase) {
 		switch(touchPhase){
 		case TouchPhase.Began:
 			couldBeSwipe = false;
@@ -122,13 +122,19 @@ public class MasterCtrl : MonoBehaviour {
 			// Calculate the current swipe's direction while moving
 			float curSwipeDirection = Mathf.Sign(touchPosition.y - startPos.y);
 
-			if(curSwipeDirection == -1 && couldBeSwipe){
-				chargingJump = true;
-				activePlayer.chargeJump();
-			}else{
-				chargingJump = false;
+			// Cast a ray to check if the input is over the player
+			Ray ray = Camera.main.ScreenPointToRay(mousePosition);
+			RaycastHit2D hit = Physics2D.GetRayIntersection(ray);
+			// If the raycast hit exists and the jump isn't already being charged
+			if(hit && chargingJump == false){
+				// Get the hit's collider, check if it's the same layer as the players (Jelly)
+				if(hit.collider.gameObject.layer == LayerMask.NameToLayer("JellySprites")){
+					chargingJump = true;
+				}
 			}
-
+			if(chargingJump){
+				activePlayer.chargeJump(true);
+			}
 			break;
 			
 		case TouchPhase.Stationary:
@@ -146,8 +152,7 @@ public class MasterCtrl : MonoBehaviour {
 		case TouchPhase.Ended:
 			float swipeDirection = Mathf.Sign(touchPosition.y - startPos.y);
 			Vector2 swipeVector = Camera.main.ScreenToWorldPoint(touchPosition) - Camera.main.ScreenToWorldPoint(startPos);
-			Debug.Log("SWIPE VECTOR" + swipeVector);
-
+			activePlayer.chargeJump(false);
 			// Based on swipe direction, jump
 			if(touchPosition.x >= activePlayer.transform.position.x && swipeDirection == -1 && couldBeSwipe && chargingJump){
 				activePlayer.triggerJump("right", swipeVector);

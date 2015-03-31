@@ -86,9 +86,11 @@ public class Player : MonoBehaviour {
 	}
 
 	// Charge the jump by applying down force
-	public void chargeJump(){
+	public void chargeJump(bool charging){
 		//Debug.Log ("Charging jump.");
-		this.GetComponent<JellySprite>().AddForce(-Vector2.up*jumpForce);
+		if(charging){
+			this.GetComponent<JellySprite>().AddForce(-Vector2.up*jumpForce);
+		}
 	}
 
 	// Once the charged jump is released trigger it, apply force with
