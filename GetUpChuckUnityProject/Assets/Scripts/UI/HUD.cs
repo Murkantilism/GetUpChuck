@@ -6,18 +6,18 @@ public class HUD : MonoBehaviour {
 	
 	public GameObject pauseMenuPanel;
 	public GameObject inventoryPanel;
-	public GameObject mainPanel;
+	public GameObject canvas;
 	private Animator pauseAnim;
 	private Animator invAnim;
 	private Animator mainAnim;
 	private bool isPaused = false;
 
 	void Start () {
+		canvas = GameObject.Find("Canvas");
 		Time.timeScale = 1;
 		pauseAnim = pauseMenuPanel.GetComponent<Animator>();
 		invAnim = inventoryPanel.GetComponent<Animator>();
-		mainAnim = mainPanel.GetComponent<Animator>();
-		//mainAnim.enabled = false;
+		mainAnim = canvas.GetComponent<Animator>();
 		pauseAnim.enabled = false;
 		invAnim.enabled = false;
 	}
@@ -51,6 +51,9 @@ public class HUD : MonoBehaviour {
 	}
 	public void ItemPickup() {
 		mainAnim.Play ("Key_Pickup");
+	}
+	public void ItemDiscard() {
+		mainAnim.Play("Key_Discard");
 	}
 
 	// These inventory methods may no longer be needed

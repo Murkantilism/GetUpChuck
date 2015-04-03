@@ -11,6 +11,7 @@ public class KeyItem : MonoBehaviour {
 	void Start () {
 		hud = GameObject.Find("UI_Handler").GetComponent<HUD>();
 		currentImage = GameObject.Find ("KeyItemSlot").GetComponent<Image> ();
+		currentImage.enabled = false;
 		mySprite = this.gameObject.GetComponent<SpriteRenderer> ().sprite;
 	}
 
@@ -18,8 +19,10 @@ public class KeyItem : MonoBehaviour {
 		currentImage.sprite = mySprite;
 		currentImage.enabled = true;
 		hud.ItemPickup ();
+
 	}
 	public void Discard() {
+		hud.ItemDiscard ();
 		currentImage.enabled = false;
 	}
 
