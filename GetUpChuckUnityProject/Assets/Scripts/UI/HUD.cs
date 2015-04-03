@@ -1,24 +1,25 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class HUD : MonoBehaviour {
 	
 	public GameObject pauseMenuPanel;
 	public GameObject inventoryPanel;
-	public GameObject tutorialPanel;
+	public GameObject mainPanel;
 	private Animator pauseAnim;
 	private Animator invAnim;
-	private Animator tutAnim;
+	private Animator mainAnim;
 	private bool isPaused = false;
 
 	void Start () {
 		Time.timeScale = 1;
 		pauseAnim = pauseMenuPanel.GetComponent<Animator>();
 		invAnim = inventoryPanel.GetComponent<Animator>();
-		tutAnim = tutorialPanel.GetComponent<Animator>();
+		mainAnim = mainPanel.GetComponent<Animator>();
+		//mainAnim.enabled = false;
 		pauseAnim.enabled = false;
 		invAnim.enabled = false;
-		tutAnim.enabled = false;
 	}
 	
 	public void Update () {
@@ -41,6 +42,18 @@ public class HUD : MonoBehaviour {
 		pauseAnim.Play ("Pause_Out");
 		Time.timeScale = 1;
 	}
+
+	public void TooSmall() {
+		mainAnim.Play("Too_Small");
+	}
+	public void TooBig() {
+		mainAnim.Play("Too_Big");
+	}
+	public void ItemPickup() {
+		mainAnim.Play ("Key_Pickup");
+	}
+
+	// These inventory methods may no longer be needed
 	public void OpenInventory(){
 		invAnim.enabled = true;
 		invAnim.Play ("Inv_In");
@@ -48,18 +61,6 @@ public class HUD : MonoBehaviour {
 	public void CloseInventory(){
 		invAnim.enabled = true;
 		invAnim.Play ("Inv_Out");
-	}
-	public void tutorialTap(){
-		tutAnim.enabled = true;
-		tutAnim.Play ("Tut_Tap");
-	}
-	public void tutorialHold(){
-		tutAnim.enabled = true;
-		tutAnim.Play ("Tut_Hold");
-	}
-	public void tutorialSwipe(){
-		tutAnim.enabled = true;
-		tutAnim.Play ("Tut_Swipe");
 	}
 }
 

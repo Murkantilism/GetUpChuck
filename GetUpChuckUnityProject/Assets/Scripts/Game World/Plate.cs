@@ -5,8 +5,13 @@ public class Plate : MonoBehaviour, Obstacle {
 
 	public int weightCheck;
 	public Door target;
-	bool pressed = false;
-	Inventory inv;
+	private HUD hud;
+	private bool pressed = false;
+	private Inventory inv;
+
+	void Start(){
+		hud = GameObject.Find("UI_Handler").GetComponent<HUD>();
+	}
 
 	public void OnCollisionEnter2D(Collision2D coll) {
 		// On collision with either player character, get that character's inventory. On other collisions, terminate.
@@ -17,13 +22,16 @@ public class Plate : MonoBehaviour, Obstacle {
 		} else {
 			return;
 		}
-
-		if (inv.getCurrentWeight() >= weightCheck) { condResponse(); }
+		condResponse(); 		
 	}
 
 	public void condResponse() {
-		pressed = true;
-		target.condResponse();
+		if (inv.getCurrentWeight () >= weightCheck) {
+			pressed = true;
+			target.condResponse ();
+		} else {
+			hud.TooSmall ();
+		}
 	}
 
 	public bool getStatus() {
