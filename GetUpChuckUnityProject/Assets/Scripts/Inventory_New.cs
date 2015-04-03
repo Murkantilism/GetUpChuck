@@ -24,7 +24,7 @@ public class Inventory_New : MonoBehaviour {
 	public void vomit(){
 		if (currentWeight > 0) {
 			currentWeight = currentWeight - 1;
-			//TODO spawn item
+			//TODO spawn stock item prefab
 		}
 	}
 
