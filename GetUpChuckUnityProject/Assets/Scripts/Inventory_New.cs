@@ -6,6 +6,10 @@ public class Inventory_New : MonoBehaviour {
 	//stores current inventory weight
 	int currentWeight;
 
+	//stores the stock item prefab
+	//http://answers.unity3d.com/questions/48941/randomly-pick-then-create-prefab.html
+	//http://docs.unity3d.com/Manual/InstantiatingPrefabs.html
+
 	// Use this for initialization
 	void Start () {
 		currentWeight = 0;
