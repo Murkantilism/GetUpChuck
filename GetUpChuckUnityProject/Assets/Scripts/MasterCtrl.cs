@@ -7,12 +7,14 @@ public class MasterCtrl : MonoBehaviour {
 	public Player Red_Player;
 	Inventory_Red RedInv;
 	Animator Red_animator;
+	Animator jelly_Red_animator;
 
 	//stored reference to blue
-	GameObject Blue_GO;
+	public GameObject Blue_GO;
 	Player Blue_Player;
 	Inventory_Blue BlueInv;
 	Animator Blue_animator;
+	Animator jelly_Blue_animator;
 
 	// Tracks which player is currently active
 	public GameObject activePlayer_go;
@@ -42,6 +44,9 @@ public class MasterCtrl : MonoBehaviour {
 	public float minSwipeDist;
 	public float maxSwipeTime;
 
+	Color sickColor = new Color(0.502f, 0.392f, 0.118f, 1.0f);
+	Color healthyColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+
 	// Use this for initialization
 	void Start () {
 
@@ -58,6 +63,9 @@ public class MasterCtrl : MonoBehaviour {
 		Red_animator = Red_GO.GetComponent<Animator> ();
 		Blue_animator = Blue_GO.GetComponent<Animator> ();
 
+		jelly_Red_animator = GameObject.Find("redPlayer_j").GetComponent<Animator>();
+		jelly_Blue_animator = GameObject.Find("bluePlayer_j").GetComponent<Animator>();
+
 		// Set red to active player first
 		setActivePlayer("red");
 		setActivePlayerGO("red");
@@ -68,6 +76,9 @@ public class MasterCtrl : MonoBehaviour {
 		cameraPan = mainCam.GetComponent<CameraPan>();
 		cameraZoom = mainCam.GetComponent<CameraZoom>();
 		cameraZoomOut = mainCam.GetComponent<CameraZoomOut>();
+
+		Blue_GO.GetComponent<UnityJellySprite>().renderer.material.color = new Color(35.0f/255.0f, 92.0f/255.0f, 205.0f/255.0f, 1.0f);//Color.blue;
+		Red_GO.GetComponent<UnityJellySprite>().renderer.material.color = new Color(200.0f/255.0f, 35.0f/255.0f, 35.0f/255.0f, 1.0f);//Color.red;
 	}
 	
 	// Update is called once per frame
@@ -86,6 +97,8 @@ public class MasterCtrl : MonoBehaviour {
 			}
 		}else if (Input.GetMouseButtonUp(0) ) {
 			HandleTouch(10, Camera.main.ScreenToWorldPoint(Input.mousePosition), Input.mousePosition, TouchPhase.Ended);
+		}else{
+			playerIdle();
 		}
 		#endif
 
@@ -198,7 +211,6 @@ public class MasterCtrl : MonoBehaviour {
 					}
 				}
 			}
-
 			break;
 		}
 	}
@@ -247,10 +259,10 @@ public class MasterCtrl : MonoBehaviour {
 
 	public void setActivePAni(string color){
 		if(color.Equals("red")){
-			active_PAnimator = Red_animator;
+			active_PAnimator = jelly_Red_animator;
 		}
 		if (color.Equals ("blue")) {
-			active_PAnimator = Blue_animator;
+			active_PAnimator = jelly_Blue_animator;
 		}
 	}
 
@@ -336,7 +348,6 @@ public class MasterCtrl : MonoBehaviour {
 
 	//function to delegate animations to animators in specific objects
 	void masterAnimationDel (string aniAction){
-		//TODO handle walking animation using x velosity calculation, disable if jumping, use y caculation similar to doulbe jump
 		if (aniAction.Equals("jumpRight")){
 			Debug.Log ("JUMP ANIM");
 			active_PAnimator.SetInteger("Movement", 2);
@@ -369,6 +380,12 @@ public class MasterCtrl : MonoBehaviour {
 		if (aniAction.Equals ("upchuck")) {
 			Debug.Log ("VOMIT ANIM");
 			active_PAnimator.SetBool("isVomiting", true);
+		}
+
+		if(aniAction.Equals("idle")){
+			active_PAnimator.SetInteger("Movement", 0);
+			active_PAnimator.SetBool("isEating", false);
+			active_PAnimator.SetBool("isVomiting", false);
 		}
 	}
 
