@@ -6,20 +6,20 @@ public class MasterCtrl : MonoBehaviour {
 	public GameObject Red_GO;
 	public Player Red_Player;
 	Inventory_Red RedInv;
-	Player_Animator Red_animator;
+	Animator Red_animator;
 
 	//stored reference to blue
 	GameObject Blue_GO;
 	Player Blue_Player;
 	Inventory_Blue BlueInv;
-	Player_Animator Blue_animator;
+	Animator Blue_animator;
 
 	// Tracks which player is currently active
 	public GameObject activePlayer_go;
 	public Player activePlayer;
 	Inventory activeInventory;
 	UI_Inventory ui_inventory;
-	Player_Animator active_PAnimator;
+	public Animator active_PAnimator;
 
 	//camera info
 	Camera mainCam;
@@ -55,8 +55,8 @@ public class MasterCtrl : MonoBehaviour {
 		RedInv = Red_GO.GetComponent<Inventory_Red> ();
 		BlueInv = Blue_GO.GetComponent<Inventory_Blue> ();
 
-		Red_animator = Red_GO.GetComponent<Player_Animator> ();
-		Blue_animator = Blue_GO.GetComponent<Player_Animator> ();
+		Red_animator = Red_GO.GetComponent<Animator> ();
+		Blue_animator = Blue_GO.GetComponent<Animator> ();
 
 		// Set red to active player first
 		setActivePlayer("red");
@@ -108,9 +108,9 @@ public class MasterCtrl : MonoBehaviour {
 		case TouchPhase.Moved:
 			// Handle movement
 			if(touchPositionWorldPoint.x >= activePlayer.transform.position.x){
-				activePlayer.moveRight();
+				walkRight();
 			}else if(touchPositionWorldPoint.x < activePlayer.transform.position.x){
-				activePlayer.moveLeft();
+				walkLeft();
 			}
 
 			// Check if movement could be a swipe or not
@@ -128,8 +128,7 @@ public class MasterCtrl : MonoBehaviour {
 				Ray ray = Camera.main.ScreenPointToRay(realPosition);
 				RaycastHit2D hit = Physics2D.GetRayIntersection(ray);
 				// If the raycast hit exists and the jump isn't already being charged and it could be a swipe
-				if(hit && chargingJump == false){
-					Debug.Log ("C");
+				if(hit && chargingJump == false){	
 					// Get the hit's collider, check if it's the same layer as the players (Jelly)
 					if(hit.collider.gameObject.layer == LayerMask.NameToLayer("JellySprites")){
 						chargingJump = true;
@@ -147,9 +146,9 @@ public class MasterCtrl : MonoBehaviour {
 			// Handle movement
 			Debug.Log (touchPositionWorldPoint.x);
 			if(touchPositionWorldPoint.x >= activePlayer.transform.position.x){
-				activePlayer.moveRight();
+				walkRight();
 			}else if(touchPositionWorldPoint.x < activePlayer.transform.position.x){
-				activePlayer.moveLeft();
+				walkLeft();
 			}
 			break;
 			
@@ -159,10 +158,10 @@ public class MasterCtrl : MonoBehaviour {
 			activePlayer.chargeJump(false);
 			// Based on swipe direction, jump
 			if(touchPositionWorldPoint.x >= activePlayer.transform.position.x && swipeDirection == -1 && couldBeSwipe && chargingJump){
-				activePlayer.triggerJump("right", swipeVector);
+				jumpRight(swipeVector);
 				chargingJump = false;
 			}else if(touchPositionWorldPoint.x < activePlayer.transform.position.x && swipeDirection == -1 && couldBeSwipe && chargingJump){
-				activePlayer.triggerJump("left", swipeVector);
+				jumpLeft(swipeVector);
 				chargingJump = false;
 			}
 
@@ -272,14 +271,14 @@ public class MasterCtrl : MonoBehaviour {
 	}
 
 	//jump left
-	void jumpLeft(){
-		activePlayer.jump("left");
+	void jumpLeft(Vector2 swipeVector){
+		activePlayer.triggerJump("left", swipeVector);
 		masterAnimationDel ("jumpLeft");
 	}
 
 	//jump right
-	void jumpRight(){
-		activePlayer.jump("right");
+	void jumpRight(Vector2 swipeVector){
+		activePlayer.triggerJump("right", swipeVector);
 		masterAnimationDel ("jumpRight");
 	}
 
@@ -322,13 +321,14 @@ public class MasterCtrl : MonoBehaviour {
 		if (activePlayer == Red_Player) {
 			setActivePlayer("blue");
 			setActivePlayerGO("blue");
-
+			setActivePAni("blue");
 			cameraPan.TriggerPan(Blue_GO, Red_GO);
 			setInventory("blue");
 		}
 		else if (activePlayer == Blue_Player) {
 			setActivePlayer("red");
 			setActivePlayerGO("red");
+			setActivePAni("red");
 			cameraPan.TriggerPan(Red_GO, Blue_GO);
 			setInventory("red");
 		}
@@ -338,28 +338,37 @@ public class MasterCtrl : MonoBehaviour {
 	void masterAnimationDel (string aniAction){
 		//TODO handle walking animation using x velosity calculation, disable if jumping, use y caculation similar to doulbe jump
 		if (aniAction.Equals("jumpRight")){
-			active_PAnimator.Set_animation_state(2);
+			Debug.Log ("JUMP ANIM");
+			active_PAnimator.SetInteger("Movement", 2);
+			active_PAnimator.SetBool("isSick", false);
+			active_PAnimator.SetBool("isVomiting", false);
 		}
 		if (aniAction.Equals("jumpLeft")){
-			active_PAnimator.Set_animation_state(2);
-			//TODO Faceing
+			Debug.Log ("JUMP ANIM");
+			active_PAnimator.SetInteger("Movement", 2);
+			active_PAnimator.SetBool("isSick", false);
+			active_PAnimator.SetBool("isVomiting", false);
 		}
 		// TODO: hook up death animation
 		if (aniAction.Equals("death")){
 			//active_PAnimator.Set_animation_state(???);
 		}
-		if (aniAction.Equals("STwalkLeft")){
-			active_PAnimator.Set_animation_state(1);
+		if (aniAction.Equals("walkLeft")){
+			Debug.Log ("WALK ANIM");
+			active_PAnimator.SetInteger("Movement", 1);
 			//TODO faceing
 		}
-		if (aniAction.Equals("STwalkRight")){
-			active_PAnimator.Set_animation_state(1);
+		if (aniAction.Equals("walkRight")){
+			Debug.Log ("WALK ANIM");
+			active_PAnimator.SetInteger("Movement", 1);
 		}
 		if (aniAction.Equals ("eat")) {
-			active_PAnimator.Set_animation_state(3);
+			Debug.Log ("EAT ANIM");
+			active_PAnimator.SetBool("isEating", true);
 		}
 		if (aniAction.Equals ("upchuck")) {
-			active_PAnimator.Set_animation_state(4);
+			Debug.Log ("VOMIT ANIM");
+			active_PAnimator.SetBool("isVomiting", true);
 		}
 	}
 
