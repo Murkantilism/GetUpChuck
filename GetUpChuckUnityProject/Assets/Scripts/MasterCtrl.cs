@@ -344,17 +344,9 @@ public class MasterCtrl : MonoBehaviour {
 		}
 		if (aniAction.Equals("walkLeft")){
 			active_PAnimator.Set_animation_state(1);
-			if(faceingRight == true){
-				activePlayer_go.transform.localScale += new Vector3( -(2 * activePlayer_go.transform.localScale.x),0,0);
-			}
-			faceingRight = false;
 		}
 		if (aniAction.Equals("walkRight")){
 			active_PAnimator.Set_animation_state(1);
-			if(faceingRight == false){
-				activePlayer_go.transform.localScale += new Vector3( -(2 * activePlayer_go.transform.localScale.x),0,0);
-			}
-			faceingRight = true;
 		}
 		if (aniAction.Equals ("eat")) {
 			active_PAnimator.Set_animation_state(3);
