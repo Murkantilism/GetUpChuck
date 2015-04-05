@@ -108,9 +108,9 @@ public class MasterCtrl : MonoBehaviour {
 		case TouchPhase.Moved:
 			// Handle movement
 			if(touchPositionWorldPoint.x >= activePlayer.transform.position.x){
-				activePlayer.moveRight();
+				walkRight();
 			}else if(touchPositionWorldPoint.x < activePlayer.transform.position.x){
-				activePlayer.moveLeft();
+				walkLeft();
 			}
 
 			// Check if movement could be a swipe or not
@@ -147,9 +147,9 @@ public class MasterCtrl : MonoBehaviour {
 			// Handle movement
 			Debug.Log (touchPositionWorldPoint.x);
 			if(touchPositionWorldPoint.x >= activePlayer.transform.position.x){
-				activePlayer.moveRight();
+				walkRight();
 			}else if(touchPositionWorldPoint.x < activePlayer.transform.position.x){
-				activePlayer.moveLeft();
+				walkLeft();
 			}
 			break;
 			
@@ -159,10 +159,10 @@ public class MasterCtrl : MonoBehaviour {
 			activePlayer.chargeJump(false);
 			// Based on swipe direction, jump
 			if(touchPositionWorldPoint.x >= activePlayer.transform.position.x && swipeDirection == -1 && couldBeSwipe && chargingJump){
-				activePlayer.triggerJump("right", swipeVector);
+				jumpRight(swipeVector);
 				chargingJump = false;
 			}else if(touchPositionWorldPoint.x < activePlayer.transform.position.x && swipeDirection == -1 && couldBeSwipe && chargingJump){
-				activePlayer.triggerJump("left", swipeVector);
+				jumpLeft(swipeVector);
 				chargingJump = false;
 			}
 			// Cast a ray to check if the input is over an item or the player
@@ -193,8 +193,7 @@ public class MasterCtrl : MonoBehaviour {
 				if(tmpGo != null){
 					if(tmpGo.layer == LayerMask.NameToLayer("JellySprites")){
 						Debug.Log("UPCHUCK!");
-						// TODO: Uncomment throw up call here
-						//playerUpChuck();
+						playerUpChuck();
 					}
 				}
 			}
@@ -271,14 +270,14 @@ public class MasterCtrl : MonoBehaviour {
 	}
 
 	//jump left
-	void jumpLeft(){
-		activePlayer.jump("left");
+	void jumpLeft(Vector2 swipeVector){
+		activePlayer.triggerJump("left", swipeVector);
 		masterAnimationDel ("jumpLeft");
 	}
 
 	//jump right
-	void jumpRight(){
-		activePlayer.jump("right");
+	void jumpRight(Vector2 swipeVector){
+		activePlayer.triggerJump("right", swipeVector);
 		masterAnimationDel ("jumpRight");
 	}
 
@@ -294,8 +293,8 @@ public class MasterCtrl : MonoBehaviour {
 		masterAnimationDel ("eat");
 	}
 
-	void playerUpChuck(Item tmpI){
-		activeInventory.DropItem (tmpI);
+	void playerUpChuck(){
+		//TODO actualy call throw up in new inventory
 		masterAnimationDel ("upchuck");
 	}
 
@@ -333,6 +332,7 @@ public class MasterCtrl : MonoBehaviour {
 	void masterAnimationDel (string aniAction){
 		if (aniAction.Equals("jumpRight")){
 			active_PAnimator.Set_animation_state(2);
+			Debug.Log ("AnimDel called jumpRight");
 		}
 		if (aniAction.Equals("jumpLeft")){
 			active_PAnimator.Set_animation_state(2);

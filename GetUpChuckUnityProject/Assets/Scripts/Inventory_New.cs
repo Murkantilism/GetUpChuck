@@ -6,6 +6,13 @@ public class Inventory_New : MonoBehaviour {
 	//stores current inventory weight
 	int currentWeight;
 
+	//game object prefabs
+	public GameObject prefab1;
+	public GameObject prefab2;
+	public GameObject prefab3;
+
+	GameObject[] prefabsAR;
+
 	//stores the stock item prefab
 	//http://answers.unity3d.com/questions/48941/randomly-pick-then-create-prefab.html
 	//http://docs.unity3d.com/Manual/InstantiatingPrefabs.html
@@ -13,6 +20,11 @@ public class Inventory_New : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		currentWeight = 0;
+
+		prefabsAR [0] = prefab1;
+		prefabsAR [1] = prefab2;
+		prefabsAR [2] = prefab3;
+		
 	}
 	
 	// Update is called once per frame
@@ -28,7 +40,8 @@ public class Inventory_New : MonoBehaviour {
 	public void vomit(){
 		if (currentWeight > 0) {
 			currentWeight = currentWeight - 1;
-			//TODO spawn stock item prefab
+			GameObject vomitI = prefabsAR[Random.Range(0, prefabsAR.Length)];
+			GameObject VItem = (GameObject) Instantiate(vomitI, transform.position, transform.rotation);
 		}
 	}
 
