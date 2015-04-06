@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class Item_Combiner : MonoBehaviour {
-	public ArrayList selectedItems = new ArrayList();
+	/*public ArrayList selectedItems = new ArrayList();
 
 	public Item redTriangle;
 	public Item yellowTriangle;
@@ -66,5 +66,5 @@ public class Item_Combiner : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-	}
+	}*/
 }
