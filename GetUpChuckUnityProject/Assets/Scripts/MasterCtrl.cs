@@ -46,6 +46,11 @@ public class MasterCtrl : MonoBehaviour {
 	string holdAction;  //def: "none"
 	//"OpenInv" - open inventory
 
+	//test item size change for inspector
+	public float sizeChangeValue = 10.0f;
+	//records size change from original for test output
+	float sizeChangeAmmount;
+
 	// Use this for initialization
 	void Start () {
 
@@ -77,6 +82,8 @@ public class MasterCtrl : MonoBehaviour {
 
 		isInvOpen = false;
 		holdAction = "none";
+
+		sizeChangeAmmount = 0.0f;
 	}
 	
 	// Update is called once per frame
@@ -245,10 +252,14 @@ public class MasterCtrl : MonoBehaviour {
 
 
 		if (Input.GetKeyDown(KeyCode.Z)){
-			openInventory();
+			activePlayer.changeSize(sizeChangeValue);
+			sizeChangeAmmount = sizeChangeAmmount + sizeChangeValue;
+			Debug.Log(sizeChangeAmmount);
 		}
 		if (Input.GetKeyDown(KeyCode.X)){
-			closeInventory();
+			activePlayer.changeSize(-sizeChangeValue);
+			sizeChangeAmmount = sizeChangeAmmount - sizeChangeValue;
+			Debug.Log(sizeChangeAmmount);
 		}
 	}
 
