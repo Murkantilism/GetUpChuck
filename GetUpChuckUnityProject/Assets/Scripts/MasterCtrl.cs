@@ -53,7 +53,7 @@ public class MasterCtrl : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 
-		ui_inventory = GameObject.Find("InventoryPanel").GetComponent<UI_Inventory>();
+		//ui_inventory = GameObject.Find("InventoryPanel").GetComponent<UI_Inventory>();
 
 		Blue_GO = GameObject.Find("bluePlayer");
 		Blue_Player = Blue_GO.GetComponent<Player> ();
@@ -304,12 +304,12 @@ public class MasterCtrl : MonoBehaviour {
 	void playerEat(Item tmpI){
 		if (tmpI.isKeyItem) {
 			//TODO call sam's ui key item script
-			tmpI.eatMe();
+			Debug.Log("key item eaten");
 		} else {
 			activeInventory.invEat();
 			activePlayer.changeSize (uniItemWeight);
-			tmpI.eatMe();
 		}
+		tmpI.eatMe ();
 		masterAnimationDel ("eat");
 	}
 
@@ -319,6 +319,10 @@ public class MasterCtrl : MonoBehaviour {
 			activePlayer.changeSize (-uniItemWeight);
 		}
 		masterAnimationDel ("upchuck");
+	}
+
+	void playerIdle(){
+		masterAnimationDel("idle");
 	}
 
 	/*// Called when player opens inventory
@@ -371,12 +375,10 @@ public class MasterCtrl : MonoBehaviour {
 			//active_PAnimator.Set_animation_state(???);
 		}
 		if (aniAction.Equals("walkLeft")){
-			Debug.Log ("WALK ANIM");
 			active_PAnimator.SetInteger("Movement", 1);
 			//TODO faceing
 		}
 		if (aniAction.Equals("walkRight")){
-			Debug.Log ("WALK ANIM");
 			active_PAnimator.SetInteger("Movement", 1);
 		}
 		if (aniAction.Equals ("eat")) {
