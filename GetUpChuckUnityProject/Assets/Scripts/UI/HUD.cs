@@ -36,8 +36,4 @@ public class HUD : MonoBehaviour {
 	public void TooBig() {
 		mainAnim.Play("Too_Big");
 	}
-	public void SwapPlayers(){
-		master.swapPlayer();
-		Debug.Log("Player Swap");
-	}
 }

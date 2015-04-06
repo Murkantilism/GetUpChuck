@@ -101,7 +101,7 @@ public class MasterCtrl : MonoBehaviour {
 		}else if (Input.GetMouseButtonUp(0) ) {
 			HandleTouch(10, Camera.main.ScreenToWorldPoint(Input.mousePosition), Input.mousePosition, TouchPhase.Ended);
 		}else{
-			playerIdle();
+			//playerIdle();
 		}
 		#endif
 
