@@ -36,9 +36,9 @@ public class MasterCtrl : MonoBehaviour {
 	// Input variables
 	public float startTime;
 	public Vector2 startPos;
-	public bool couldBeSwipe = false;
+	public bool couldBeSwipe;
 	public bool chargingJump;
-	public float comfortZone = 1;
+	public float comfortZone = 10;
 	public float minSwipeDist;
 	public float maxSwipeTime;
 
@@ -89,6 +89,7 @@ public class MasterCtrl : MonoBehaviour {
 		}
 		#endif
 
+
 		#if UNITY_IPHONE || UNITY_ANDROID
 		if(Input.touchCount > 0){
 			HandleTouch(Input.GetTouch(0).fingerId, Camera.main.ScreenToWorldPoint(Input.GetTouch(0).position), Input.GetTouch(0).position, Input.GetTouch(0).phase);
@@ -112,8 +113,6 @@ public class MasterCtrl : MonoBehaviour {
 			}else if(touchPositionWorldPoint.x < activePlayer.transform.position.x){
 				activePlayer.moveLeft();
 			}
-
-			// Check if movement could be a swipe or not
 			if(Mathf.Abs(touchPositionWorldPoint.y - startPos.y) < comfortZone){
 				couldBeSwipe = false;
 			}else{
@@ -123,17 +122,14 @@ public class MasterCtrl : MonoBehaviour {
 			// Calculate the current swipe's direction while moving
 			float curSwipeDirection = Mathf.Sign(touchPositionWorldPoint.y - startPos.y);
 
-			if(couldBeSwipe){
-				// Cast a ray to check if the input is over the player
-				Ray ray = Camera.main.ScreenPointToRay(realPosition);
-				RaycastHit2D hit = Physics2D.GetRayIntersection(ray);
-				// If the raycast hit exists and the jump isn't already being charged and it could be a swipe
-				if(hit && chargingJump == false){
-					Debug.Log ("C");
-					// Get the hit's collider, check if it's the same layer as the players (Jelly)
-					if(hit.collider.gameObject.layer == LayerMask.NameToLayer("JellySprites")){
-						chargingJump = true;
-					}
+			// Cast a ray to check if the input is over the player
+			Ray ray = Camera.main.ScreenPointToRay(realPosition);
+			RaycastHit2D hit = Physics2D.GetRayIntersection(ray);
+			// If the raycast hit exists and the jump isn't already being charged
+			if(hit && chargingJump == false){
+				// Get the hit's collider, check if it's the same layer as the players (Jelly)
+				if(hit.collider.gameObject.layer == LayerMask.NameToLayer("JellySprites")){
+					chargingJump = true;
 				}
 			}
 			if(chargingJump){
@@ -198,7 +194,6 @@ public class MasterCtrl : MonoBehaviour {
 					}
 				}
 			}
-
 			break;
 		}
 	}
