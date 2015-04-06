@@ -3,7 +3,7 @@ using System.Collections;
 
 public class TestController : MonoBehaviour {
 
-	int activePlayer = 0; // Red by default
+	/*int activePlayer = 0; // Red by default
 
 	Inventory_Blue invnty_blue;
 	Inventory_Red invnty_red;
@@ -47,6 +47,6 @@ public class TestController : MonoBehaviour {
 		}else{
 			invnty_blue.DropItem(item);
 		}
-	}
+	}*/
 }
 

@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class TestCombiner : ScriptableObject {
-	Inventory_Red redInventory;
+	/*Inventory_Red redInventory;
 	
 	public ArrayList selectedItems = new ArrayList();
 	
@@ -79,6 +79,6 @@ public class TestCombiner : ScriptableObject {
 	// Update is called once per frame
 	void Update () {
 	
-	}
+	}*/
 }
 
