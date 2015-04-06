@@ -6,20 +6,22 @@ public class MasterCtrl : MonoBehaviour {
 	public GameObject Red_GO;
 	public Player Red_Player;
 	Inventory_Red RedInv;
-	Player_Animator Red_animator;
+	Animator Red_animator;
+	Animator jelly_Red_animator;
 
 	//stored reference to blue
-	GameObject Blue_GO;
+	public GameObject Blue_GO;
 	Player Blue_Player;
 	Inventory_Blue BlueInv;
-	Player_Animator Blue_animator;
+	Animator Blue_animator;
+	Animator jelly_Blue_animator;
 
 	// Tracks which player is currently active
 	public GameObject activePlayer_go;
 	public Player activePlayer;
 	Inventory activeInventory;
 	UI_Inventory ui_inventory;
-	Player_Animator active_PAnimator;
+	public Animator active_PAnimator;
 
 	//camera info
 	Camera mainCam;
@@ -42,6 +44,9 @@ public class MasterCtrl : MonoBehaviour {
 	public float minSwipeDist;
 	public float maxSwipeTime;
 
+	Color sickColor = new Color(0.502f, 0.392f, 0.118f, 1.0f);
+	Color healthyColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+
 	// Use this for initialization
 	void Start () {
 
@@ -55,8 +60,11 @@ public class MasterCtrl : MonoBehaviour {
 		RedInv = Red_GO.GetComponent<Inventory_Red> ();
 		BlueInv = Blue_GO.GetComponent<Inventory_Blue> ();
 
-		Red_animator = Red_GO.GetComponent<Player_Animator> ();
-		Blue_animator = Blue_GO.GetComponent<Player_Animator> ();
+		Red_animator = Red_GO.GetComponent<Animator> ();
+		Blue_animator = Blue_GO.GetComponent<Animator> ();
+
+		jelly_Red_animator = GameObject.Find("redPlayer_j").GetComponent<Animator>();
+		jelly_Blue_animator = GameObject.Find("bluePlayer_j").GetComponent<Animator>();
 
 		// Set red to active player first
 		setActivePlayer("red");
@@ -68,6 +76,9 @@ public class MasterCtrl : MonoBehaviour {
 		cameraPan = mainCam.GetComponent<CameraPan>();
 		cameraZoom = mainCam.GetComponent<CameraZoom>();
 		cameraZoomOut = mainCam.GetComponent<CameraZoomOut>();
+
+		Blue_GO.GetComponent<UnityJellySprite>().renderer.material.color = new Color(35.0f/255.0f, 92.0f/255.0f, 205.0f/255.0f, 1.0f);//Color.blue;
+		Red_GO.GetComponent<UnityJellySprite>().renderer.material.color = new Color(200.0f/255.0f, 35.0f/255.0f, 35.0f/255.0f, 1.0f);//Color.red;
 	}
 	
 	// Update is called once per frame
@@ -86,6 +97,8 @@ public class MasterCtrl : MonoBehaviour {
 			}
 		}else if (Input.GetMouseButtonUp(0) ) {
 			HandleTouch(10, Camera.main.ScreenToWorldPoint(Input.mousePosition), Input.mousePosition, TouchPhase.Ended);
+		}else{
+			playerIdle();
 		}
 		#endif
 
@@ -109,9 +122,9 @@ public class MasterCtrl : MonoBehaviour {
 		case TouchPhase.Moved:
 			// Handle movement
 			if(touchPositionWorldPoint.x >= activePlayer.transform.position.x){
-				activePlayer.moveRight();
+				walkRight();
 			}else if(touchPositionWorldPoint.x < activePlayer.transform.position.x){
-				activePlayer.moveLeft();
+				walkLeft();
 			}
 			if(Mathf.Abs(touchPositionWorldPoint.y - startPos.y) < comfortZone){
 				couldBeSwipe = false;
@@ -122,14 +135,16 @@ public class MasterCtrl : MonoBehaviour {
 			// Calculate the current swipe's direction while moving
 			float curSwipeDirection = Mathf.Sign(touchPositionWorldPoint.y - startPos.y);
 
-			// Cast a ray to check if the input is over the player
-			Ray ray = Camera.main.ScreenPointToRay(realPosition);
-			RaycastHit2D hit = Physics2D.GetRayIntersection(ray);
-			// If the raycast hit exists and the jump isn't already being charged
-			if(hit && chargingJump == false){
-				// Get the hit's collider, check if it's the same layer as the players (Jelly)
-				if(hit.collider.gameObject.layer == LayerMask.NameToLayer("JellySprites")){
-					chargingJump = true;
+			if(couldBeSwipe){
+				// Cast a ray to check if the input is over the player
+				Ray ray = Camera.main.ScreenPointToRay(realPosition);
+				RaycastHit2D hit = Physics2D.GetRayIntersection(ray);
+				// If the raycast hit exists and the jump isn't already being charged and it could be a swipe
+				if(hit && chargingJump == false){	
+					// Get the hit's collider, check if it's the same layer as the players (Jelly)
+					if(hit.collider.gameObject.layer == LayerMask.NameToLayer("JellySprites")){
+						chargingJump = true;
+					}
 				}
 			}
 			if(chargingJump){
@@ -143,9 +158,9 @@ public class MasterCtrl : MonoBehaviour {
 			// Handle movement
 			Debug.Log (touchPositionWorldPoint.x);
 			if(touchPositionWorldPoint.x >= activePlayer.transform.position.x){
-				activePlayer.moveRight();
+				walkRight();
 			}else if(touchPositionWorldPoint.x < activePlayer.transform.position.x){
-				activePlayer.moveLeft();
+				walkLeft();
 			}
 			break;
 			
@@ -155,10 +170,10 @@ public class MasterCtrl : MonoBehaviour {
 			activePlayer.chargeJump(false);
 			// Based on swipe direction, jump
 			if(touchPositionWorldPoint.x >= activePlayer.transform.position.x && swipeDirection == -1 && couldBeSwipe && chargingJump){
-				activePlayer.triggerJump("right", swipeVector);
+				jumpRight(swipeVector);
 				chargingJump = false;
 			}else if(touchPositionWorldPoint.x < activePlayer.transform.position.x && swipeDirection == -1 && couldBeSwipe && chargingJump){
-				activePlayer.triggerJump("left", swipeVector);
+				jumpLeft(swipeVector);
 				chargingJump = false;
 			}
 			// Cast a ray to check if the input is over an item or the player
@@ -242,10 +257,10 @@ public class MasterCtrl : MonoBehaviour {
 
 	public void setActivePAni(string color){
 		if(color.Equals("red")){
-			active_PAnimator = Red_animator;
+			active_PAnimator = jelly_Red_animator;
 		}
 		if (color.Equals ("blue")) {
-			active_PAnimator = Blue_animator;
+			active_PAnimator = jelly_Blue_animator;
 		}
 	}
 
@@ -266,14 +281,14 @@ public class MasterCtrl : MonoBehaviour {
 	}
 
 	//jump left
-	void jumpLeft(){
-		activePlayer.jump("left");
+	void jumpLeft(Vector2 swipeVector){
+		activePlayer.triggerJump("left", swipeVector);
 		masterAnimationDel ("jumpLeft");
 	}
 
 	//jump right
-	void jumpRight(){
-		activePlayer.jump("right");
+	void jumpRight(Vector2 swipeVector){
+		activePlayer.triggerJump("right", swipeVector);
 		masterAnimationDel ("jumpRight");
 	}
 
@@ -312,13 +327,14 @@ public class MasterCtrl : MonoBehaviour {
 		if (activePlayer == Red_Player) {
 			setActivePlayer("blue");
 			setActivePlayerGO("blue");
-
+			setActivePAni("blue");
 			cameraPan.TriggerPan(Blue_GO, Red_GO);
 			setInventory("blue");
 		}
 		else if (activePlayer == Blue_Player) {
 			setActivePlayer("red");
 			setActivePlayerGO("red");
+			setActivePAni("red");
 			cameraPan.TriggerPan(Red_GO, Blue_GO);
 			setInventory("red");
 		}
@@ -327,10 +343,17 @@ public class MasterCtrl : MonoBehaviour {
 	//function to delegate animations to animators in specific objects
 	void masterAnimationDel (string aniAction){
 		if (aniAction.Equals("jumpRight")){
-			active_PAnimator.Set_animation_state(2);
+			Debug.Log ("JUMP ANIM");
+			active_PAnimator.SetInteger("Movement", 2);
+			active_PAnimator.SetBool("isSick", false);
+			active_PAnimator.SetBool("isVomiting", false);
 		}
 		if (aniAction.Equals("jumpLeft")){
-			active_PAnimator.Set_animation_state(2);
+
+			Debug.Log ("JUMP ANIM");
+			active_PAnimator.SetInteger("Movement", 2);
+			active_PAnimator.SetBool("isSick", false);
+			active_PAnimator.SetBool("isVomiting", false);
 		}
 
 		// TODO: hook up death animation
@@ -338,24 +361,27 @@ public class MasterCtrl : MonoBehaviour {
 			//active_PAnimator.Set_animation_state(???);
 		}
 		if (aniAction.Equals("walkLeft")){
-			active_PAnimator.Set_animation_state(1);
-			if(faceingRight == true){
-				activePlayer_go.transform.localScale += new Vector3( -(2 * activePlayer_go.transform.localScale.x),0,0);
-			}
-			faceingRight = false;
+			Debug.Log ("WALK ANIM");
+			active_PAnimator.SetInteger("Movement", 1);
+			//TODO faceing
 		}
 		if (aniAction.Equals("walkRight")){
-			active_PAnimator.Set_animation_state(1);
-			if(faceingRight == false){
-				activePlayer_go.transform.localScale += new Vector3( -(2 * activePlayer_go.transform.localScale.x),0,0);
-			}
-			faceingRight = true;
+			Debug.Log ("WALK ANIM");
+			active_PAnimator.SetInteger("Movement", 1);
 		}
 		if (aniAction.Equals ("eat")) {
-			active_PAnimator.Set_animation_state(3);
+			Debug.Log ("EAT ANIM");
+			active_PAnimator.SetBool("isEating", true);
 		}
 		if (aniAction.Equals ("upchuck")) {
-			active_PAnimator.Set_animation_state(4);
+			Debug.Log ("VOMIT ANIM");
+			active_PAnimator.SetBool("isVomiting", true);
+		}
+
+		if(aniAction.Equals("idle")){
+			active_PAnimator.SetInteger("Movement", 0);
+			active_PAnimator.SetBool("isEating", false);
+			active_PAnimator.SetBool("isVomiting", false);
 		}
 	}
 
