@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class UI_Inventory : MonoBehaviour {
 
-	private RectTransform inventoryRect;
+	/*private RectTransform inventoryRect;
 	private float inventoryW, inventoryH;
 
 	public int slots, rows;
@@ -157,7 +157,7 @@ public class UI_Inventory : MonoBehaviour {
 		}
 
 		CloseInventory(activeInventory);
-	}
+	}*/
 
 
 }

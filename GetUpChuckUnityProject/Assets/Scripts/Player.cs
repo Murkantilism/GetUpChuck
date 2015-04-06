@@ -10,7 +10,7 @@ public class Player : MonoBehaviour {
 	Inventory playerInventory;
 	
 	//max inventory size stored for model calculations
-	float maxInvSize;
+	public float maxInvSize;
 	
 	//force of jumps
 	public int jumpForce;
@@ -36,7 +36,7 @@ public class Player : MonoBehaviour {
 		if (this.colorRed == false) {
 			playerInventory = this.GetComponent<Inventory_Blue> ();
 		}
-		maxInvSize = playerInventory.inventorySize;
+		maxInvSize = 100;
 	}
 	
 	// Update is called once per frame

@@ -42,6 +42,9 @@ public class MasterCtrl : MonoBehaviour {
 	public float minSwipeDist;
 	public float maxSwipeTime;
 
+	//universal item weight for item size change
+	public float uniItemWeight;
+
 	// Use this for initialization
 	void Start () {
 
@@ -288,17 +291,26 @@ public class MasterCtrl : MonoBehaviour {
 	}
 
 	void playerEat(Item tmpI){
-		activeInventory.AddItem (tmpI);
-		activePlayer.changeSize (tmpI.weight);
+		if (tmpI.isKeyItem) {
+			//TODO call sam's ui key item script
+			tmpI.eatMe();
+		} else {
+			activeInventory.invEat();
+			activePlayer.changeSize (uniItemWeight);
+			tmpI.eatMe();
+		}
 		masterAnimationDel ("eat");
 	}
 
 	void playerUpChuck(){
-		//TODO actualy call throw up in new inventory
+		if (activeInventory.getCurrentWeight() > 0) {
+			activeInventory.vomit ();
+			activePlayer.changeSize (-uniItemWeight);
+		}
 		masterAnimationDel ("upchuck");
 	}
 
-	// Called when player opens inventory
+	/*// Called when player opens inventory
 	void openInventory(){
 		cameraZoom.SetZoomState(true);
 		Debug.Log("Master call to Open Inventory");
@@ -309,7 +321,7 @@ public class MasterCtrl : MonoBehaviour {
 	void closeInventory(){
 		cameraZoomOut.SetZoomState(true);
 		ui_inventory.CloseInventory(activeInventory);
-	}
+	}*/
 
 	//called to switch player from red to blue or blue to red
 	public void swapPlayer(){

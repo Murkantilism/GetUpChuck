@@ -1,111 +1,61 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public abstract class Inventory : MonoBehaviour {
+public class Inventory : MonoBehaviour {
 
-	//inventory size (max weight)
-	public float inventorySize;
+	//stores current inventory weight
+	public int currentWeight;
 
-	//keep traks of how much weight the player is currently carrying
-	public float currentWeight;
+	//game object prefabs
+	public GameObject prefab1;
+	public GameObject prefab2;
+	public GameObject prefab3;
 
-	// Declare ArrayList to store list of items
-	public ArrayList loItems = new ArrayList();
+	public GameObject[] prefabsAR;
 
-	GameObject inst_item;
+	//stores the stock item prefab
+	//http://answers.unity3d.com/questions/48941/randomly-pick-then-create-prefab.html
+	//http://docs.unity3d.com/Manual/InstantiatingPrefabs.html
 
-	// A timer to keep track of when a second of game time has occurred
-	float oneSecTimer;
+	// Use this for initialization
+	void Awake () {
+		//this needs to be awake and not start because this is not attached to any game objects
+		currentWeight = 0;
 
-	public MasterCtrl master;
+		prefabsAR = new GameObject[3];
 
-	// Geter and seter for currentWeight
-	public float getCurrentWeight(){
-		return this.currentWeight;
-	}
+		prefabsAR[0] = prefab1;
+		prefabsAR[1] = prefab2;
+		prefabsAR[2] = prefab3;
 
-	public void setCurrentWeight(float tmpWeight){
-		this.currentWeight = tmpWeight;
-	}
-
-	// Add items to structure, increment weight
-	public void AddItem(Item item){
-		loItems.Add(item);
-		currentWeight += item.getWeight();
-		item.gameObject.SetActive(false);
 	}
 	
-	//Remove item from structure, decrease weight
-	public void DropItem(Item item){
-		loItems.Remove(item);
-		if(currentWeight > item.getWeight()){ // Make sure we don't go to negative weight
-		    currentWeight -= item.getWeight();
-		}
-
-		// Get a reference to the active player gameobject from master controller
-		GameObject activePlayer = master.getActivePlayerGO();
-		// Move the item in front of player
-		item.transform.position = new Vector2(activePlayer.transform.position.x + 2, activePlayer.transform.position.y);
-		// Re-enaable item's renderer
-		item.renderer.enabled = true;
-		item.gameObject.SetActive(true);
+	// Update is called once per frame
+	void Update () {
+		Debug.Log (prefabsAR.Length);
 	}
 
-	// Delete the item from inventory, DO NOT drop it back into world space
-	public void DeleteItem(Item item){
-		loItems.Remove(item);
-		if(currentWeight > item.getWeight()){ // Make sure we don't go to negative weight
-		    currentWeight -= item.getWeight();
+	//call when chuck eats a non key item
+	public void invEat(){
+		currentWeight = currentWeight + 1;
+	}
+
+	public void vomit(){
+		if (currentWeight > 0) {
+			currentWeight = currentWeight - 1;
+			Debug.Log (prefabsAR.Length);
+			GameObject vomitI = prefabsAR[Random.Range(0, prefabsAR.Length)];
+			GameObject VItem = (GameObject) Instantiate(vomitI, transform.position, transform.rotation);
 		}
 	}
 
-	// For every item currently in the inventory that can be digested,
-	// call the DigestionTick() function on it.
-	public void ItemDigestion(){
-		foreach(Item item in loItems){
-			// If the item can be digested
-			if(item.digestionTimer != 1337.0f){
-				// Increment timer
-				oneSecTimer += Time.deltaTime;
-				// Once a sec of game time is reached, call DigestionTick()
-				if(oneSecTimer > 1){
-					DigestionTick(item);
-					oneSecTimer = 0; // Reset timer
-				}
-			}
-		}
+	//getters and setters
+
+	public int getCurrentWeight(){
+		return currentWeight;
 	}
 
-	// Called by each individual item once per second of game time.
-	public void DigestionTick(Item item){
-		// If the timer hasn't expired, subtract 1 from the digst timer
-		if(item.getDigestionTimer() > 0){
-			item.setDigestionTimer(item.getDigestionTimer() - 1.0f);
-		// If the timer has expired, delete the item fromt the inventory
-		}else if(item.getDigestionTimer() <= 0){
-			DeleteItem(item);
-		}
-	}
-
-	// Given an Array of 2 items check if item 1 is a member of item 0's list of potential combos
-	public void CheckItemCombinations(ArrayList items){
-
-		Item item0 = (Item) items[0];
-		Item item1 = (Item) items[1];
-		
-		// For every element of the potential combination list, get the each 
-		// item in item0's tuple and compare it against item1.
-		for (int i = 0; i < item0.potentialCombinations.Count; i++){
-			System.Tuple<string, string> tmpTuple = (System.Tuple<string, string>) item0.getCombinations()[i];
-
-			if(tmpTuple.Item1.Contains(item1.getName())){
-				Debug.Log("Successful combo: " + item0.getName() + " + " + item1.getName());
-				CombineItems(items);
-			}
-		}
-	}
-
-	public void CombineItems(ArrayList items){
-
+	public void setWeight(int tmpW){
+		currentWeight = tmpW;
 	}
 }
