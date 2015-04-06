@@ -7,7 +7,6 @@ public class HUD : MonoBehaviour {
 	public Sprite blank;
 	private GameObject canvas;
 	private Animator mainAnim;
-	private bool isPaused = false;
 
 	void Start () {
 		canvas = GameObject.Find("Canvas");
@@ -19,10 +18,8 @@ public class HUD : MonoBehaviour {
 
 	public void PauseGame(){
 		mainAnim.Play ("Pause_In");
-		isPaused = true;
 	}
 	public void UnpauseGame(){
-		isPaused = false;
 		mainAnim.Play ("Pause_Out");
 		Time.timeScale = 1;
 	}

@@ -4,13 +4,15 @@ using System.Collections;
 public class Plate : MonoBehaviour, Obstacle {
 
 	public int weightCheck;
-	public Door target;
+	public Gate target;
 	private HUD hud;
+	private Animator anim;
 	private bool pressed = false;
 	private Inventory inv;
 
 	void Start(){
 		hud = GameObject.Find("UI_Handler").GetComponent<HUD>();
+		anim = this.gameObject.GetComponent<Animator> ();
 	}
 
 	public void OnCollisionEnter2D(Collision2D coll) {
@@ -28,6 +30,7 @@ public class Plate : MonoBehaviour, Obstacle {
 	public void condResponse() {
 		if (inv.getCurrentWeight () >= weightCheck) {
 			pressed = true;
+			anim.Play("Button_Press");
 			target.condResponse ();
 		} else {
 			hud.TooSmall ();
