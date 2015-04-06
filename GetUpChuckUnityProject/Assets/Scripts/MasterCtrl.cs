@@ -38,9 +38,9 @@ public class MasterCtrl : MonoBehaviour {
 	// Input variables
 	public float startTime;
 	public Vector2 startPos;
-	public bool couldBeSwipe;
+	public bool couldBeSwipe = false;
 	public bool chargingJump;
-	public float comfortZone = 10;
+	public float comfortZone = 1;
 	public float minSwipeDist;
 	public float maxSwipeTime;
 
@@ -129,6 +129,8 @@ public class MasterCtrl : MonoBehaviour {
 			}else if(touchPositionWorldPoint.x < activePlayer.transform.position.x){
 				walkLeft();
 			}
+
+			// Check if movement could be a swipe or not
 			if(Mathf.Abs(touchPositionWorldPoint.y - startPos.y) < comfortZone){
 				couldBeSwipe = false;
 			}else{
