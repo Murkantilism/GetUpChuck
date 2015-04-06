@@ -1,69 +1,40 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class HUD : MonoBehaviour {
 	
-	public GameObject pauseMenuPanel;
-	public GameObject inventoryPanel;
-	public GameObject tutorialPanel;
-	private Animator pauseAnim;
-	private Animator invAnim;
-	private Animator tutAnim;
-	private bool isPaused = false;
-	UI_Inventory inventory;
-	MasterCtrl master;
+	public Sprite blank;
+	private GameObject canvas;
+	private Animator mainAnim;
 
 	void Start () {
-		inventory = GameObject.Find("InventoryPanel").GetComponent<UI_Inventory>();
-		Time.timeScale = 1;
-		pauseAnim = pauseMenuPanel.GetComponent<Animator>();
-		invAnim = inventoryPanel.GetComponent<Animator>();
-		tutAnim = tutorialPanel.GetComponent<Animator>();
-		pauseAnim.enabled = false;
-		invAnim.enabled = false;
-		tutAnim.enabled = false;
-		master = GameObject.Find("MasterController").GetComponent<MasterCtrl>();
+		canvas = GameObject.Find("Canvas");
+		mainAnim = canvas.GetComponent<Animator>();
+		blank = Resources.Load<Sprite>("blank");
 	}
 	
-	public void Update () {
-		if(Input.GetKeyUp(KeyCode.Escape) && !isPaused){
-			PauseGame();
-		}
-		else if(Input.GetKeyUp(KeyCode.Escape) && isPaused){
-			UnpauseGame();
-		}
-	}
+	public void Update () { }
+
 	public void PauseGame(){
-		pauseAnim.enabled = true;
-		pauseAnim.Play ("Pause_In");
-		isPaused = true;
-		Debug.Log("paused");
-		//Time.timeScale = 0;
+		mainAnim.Play ("Pause_In");
 	}
 	public void UnpauseGame(){
-		isPaused = false;
-		pauseAnim.Play ("Pause_Out");
+		mainAnim.Play ("Pause_Out");
 		Time.timeScale = 1;
 	}
-	public void OpenInventory(){
-		invAnim.enabled = true;
-		invAnim.Play ("Inv_In");
+	public void ItemPickup() {
+		mainAnim.Play ("Key_Pickup");
 	}
-	public void CloseInventory(){
-		invAnim.enabled = true;
-		invAnim.Play ("Inv_Out");
+	public void ItemDiscard() {
+		mainAnim.Play("Key_Discard");
 	}
-	public void tutorialTap(){
-		tutAnim.enabled = true;
-		tutAnim.Play ("Tut_Tap");
+	// Messages for when the character is too big or too small for an obstacle
+	public void TooSmall() {
+		mainAnim.Play("Too_Small");
 	}
-	public void tutorialHold(){
-		tutAnim.enabled = true;
-		tutAnim.Play ("Tut_Hold");
-	}
-	public void tutorialSwipe(){
-		tutAnim.enabled = true;
-		tutAnim.Play ("Tut_Swipe");
+	public void TooBig() {
+		mainAnim.Play("Too_Big");
 	}
 	public void SwapPlayers(){
 		master.swapPlayer();
