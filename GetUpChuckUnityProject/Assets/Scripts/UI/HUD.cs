@@ -7,7 +7,7 @@ public class HUD : MonoBehaviour {
 	public Sprite blank;
 	private GameObject canvas;
 	private Animator mainAnim;
-
+	// UI_Inventory inventory;
 	MasterCtrl master;
 
 	void Start () {
