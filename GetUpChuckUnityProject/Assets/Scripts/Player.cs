@@ -106,6 +106,7 @@ public class Player : MonoBehaviour {
 			if(!(-swipeVector.x > maxRightJumpForce.x && -swipeVector.y > maxRightJumpForce.y)){
 				// Apply the given swipeVector
 				this.GetComponent<JellySprite>().AddForce(-swipeVector*jumpForce);
+				Debug.Log("RIGHT FORCE APPLIED: " + -swipeVector*jumpForce);
 			// If either X or Y or both are bigger than max, simply apply max vector instead
 			}else{
 				Debug.LogWarning("WARN: Max Jump Force Reached: " + -swipeVector + " exceeded max RIGHT jump: " + maxRightJumpForce);
@@ -116,6 +117,7 @@ public class Player : MonoBehaviour {
 			if(!(-swipeVector.x > maxLeftJumpForce.x && -swipeVector.y > maxLeftJumpForce.y)){
 				// Apply the given swipeVector
 				this.GetComponent<JellySprite>().AddForce(-swipeVector*jumpForce);
+				Debug.Log("LEFT FORCE APPLIED: " + -swipeVector*jumpForce);
 				// If either X or Y or both are bigger than max, simply apply max vector instead
 			}else{
 				Debug.LogWarning("WARN: Max Jump Force Reached: " + -swipeVector + " exceeded max LEFT jump: " + maxLeftJumpForce);
@@ -138,7 +140,35 @@ public class Player : MonoBehaviour {
 	
 	//called when a player is forced to respawn (like on death)
 	public void playerRe(){
-		this.transform.position = new Vector3 (reX, reY, this.transform.position.z);
+		MoveJellySpriteToPosition(this.GetComponent<JellySprite>(), new Vector3 (reX, reY, this.transform.position.z), true);
+	}
+
+	// A special function to move a Jelly Sprite to the given position.
+	void MoveJellySpriteToPosition(JellySprite jellySprite, Vector3 position, bool resetVelocity)
+	{
+		Vector3 offset = position - jellySprite.CentralPoint.GameObject.transform.position;
+		
+		foreach(JellySprite.ReferencePoint referencePoint in jellySprite.ReferencePoints)
+		{
+			if(!referencePoint.IsDummy)
+			{
+				referencePoint.GameObject.transform.position = referencePoint.GameObject.transform.position + offset;
+				
+				if(resetVelocity)
+				{
+					if(referencePoint.Body2D)
+					{
+						referencePoint.Body2D.angularVelocity = 0.0f;
+						referencePoint.Body2D.velocity = Vector2.zero;
+					}
+					else if(referencePoint.Body3D)
+					{
+						referencePoint.Body3D.angularVelocity = Vector3.zero;
+						referencePoint.Body3D.velocity = Vector3.zero;
+					}
+				}
+			}
+		}
 	}
 	
 	
