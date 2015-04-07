@@ -104,6 +104,12 @@ public class MasterCtrl : MonoBehaviour {
 		}else{
 			playerIdle();
 		}
+
+		// FIXMIE: Delete this dev key
+		if(Input.GetKeyUp(KeyCode.R)){
+			activePlayer.playerRe();
+		}
+
 		#endif
 
 		#if UNITY_IPHONE || UNITY_ANDROID
