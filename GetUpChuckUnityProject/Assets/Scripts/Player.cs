@@ -25,6 +25,9 @@ public class Player : MonoBehaviour {
 	
 	//movespeed of the character
 	public float moveSpeed;
+
+	public Vector2 maxLeftJumpForce = new Vector2(2.5f, 2.5f); // The maximum force that can be applied to the player
+	public Vector2 maxRightJumpForce = new Vector2(-2.5f, 2.5f); // The maximum force that can be applied to the player
 	
 	//==================================================================
 	
@@ -37,6 +40,8 @@ public class Player : MonoBehaviour {
 			playerInventory = this.GetComponent<Inventory_Blue> ();
 		}
 		maxInvSize = playerInventory.inventorySize;
+		maxLeftJumpForce = new Vector2(2.5f, 2.5f);
+		maxRightJumpForce = new Vector2(-2.5f, 2.5f);
 	}
 	
 	// Update is called once per frame
@@ -97,11 +102,25 @@ public class Player : MonoBehaviour {
 	// the inverse of the swipe vector.
 	public void triggerJump(string Direc, Vector2 swipeVector){
 		if (Direc.Equals("right")){
-			//Debug.Log ("Right jump triggered.");
-			this.GetComponent<JellySprite>().AddForce(-swipeVector*jumpForce);
+			// If the swipe vector's X and Y values are NOT bigger than the max
+			if(!(-swipeVector.x > maxRightJumpForce.x && -swipeVector.y > maxRightJumpForce.y)){
+				// Apply the given swipeVector
+				this.GetComponent<JellySprite>().AddForce(-swipeVector*jumpForce);
+			// If either X or Y or both are bigger than max, simply apply max vector instead
+			}else{
+				Debug.LogWarning("WARN: Max Jump Force Reached: " + -swipeVector + " exceeded max RIGHT jump: " + maxRightJumpForce);
+				this.GetComponent<JellySprite>().AddForce(maxRightJumpForce*jumpForce);
+			}
 		}else{
-			//Debug.Log ("Left jump triggered.");
-			this.GetComponent<JellySprite>().AddForce(-swipeVector*jumpForce);
+			// If the swipe vector's X and Y values are NOT bigger than the max
+			if(!(-swipeVector.x > maxLeftJumpForce.x && -swipeVector.y > maxLeftJumpForce.y)){
+				// Apply the given swipeVector
+				this.GetComponent<JellySprite>().AddForce(-swipeVector*jumpForce);
+				// If either X or Y or both are bigger than max, simply apply max vector instead
+			}else{
+				Debug.LogWarning("WARN: Max Jump Force Reached: " + -swipeVector + " exceeded max LEFT jump: " + maxLeftJumpForce);
+				this.GetComponent<JellySprite>().AddForce(maxLeftJumpForce*jumpForce);
+			}
 		}
 	}
 	

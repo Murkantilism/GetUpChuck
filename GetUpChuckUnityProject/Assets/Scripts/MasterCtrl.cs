@@ -44,6 +44,8 @@ public class MasterCtrl : MonoBehaviour {
 	public float minSwipeDist;
 	public float maxSwipeTime;
 
+	public float maxJumpHeight = 25.0f; // The maximum height FROM which the player can trigger a jump
+
 	Color sickColor = new Color(0.502f, 0.392f, 0.118f, 1.0f);
 	Color healthyColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
 
@@ -79,6 +81,8 @@ public class MasterCtrl : MonoBehaviour {
 
 		Blue_GO.GetComponent<UnityJellySprite>().renderer.material.color = new Color(35.0f/255.0f, 92.0f/255.0f, 205.0f/255.0f, 1.0f);//Color.blue;
 		Red_GO.GetComponent<UnityJellySprite>().renderer.material.color = new Color(200.0f/255.0f, 35.0f/255.0f, 35.0f/255.0f, 1.0f);//Color.red;
+
+		float maxJumpHeight = 25.0f;
 	}
 	
 	// Update is called once per frame
@@ -144,7 +148,12 @@ public class MasterCtrl : MonoBehaviour {
 				if(hit && chargingJump == false){	
 					// Get the hit's collider, check if it's the same layer as the players (Jelly)
 					if(hit.collider.gameObject.layer == LayerMask.NameToLayer("JellySprites")){
-						chargingJump = true;
+						// As long as the player isn't too high up to start a jump
+						if(activePlayer.transform.position.y < maxJumpHeight){
+							chargingJump = true;
+						}else{
+							Debug.LogWarning("MAX JUMP HEIGHT HIT");
+						}
 					}
 				}
 			}
@@ -349,13 +358,13 @@ public class MasterCtrl : MonoBehaviour {
 	//function to delegate animations to animators in specific objects
 	void masterAnimationDel (string aniAction){
 		if (aniAction.Equals("jumpRight")){
-			Debug.Log ("JUMP ANIM");
+			//Debug.Log ("JUMP ANIM");
 			active_PAnimator.SetInteger("Movement", 2);
 			active_PAnimator.SetBool("isSick", false);
 			active_PAnimator.SetBool("isVomiting", false);
 		}
 		if (aniAction.Equals("jumpLeft")){
-			Debug.Log ("JUMP ANIM");
+			//Debug.Log ("JUMP ANIM");
 			active_PAnimator.SetInteger("Movement", 2);
 			active_PAnimator.SetBool("isSick", false);
 			active_PAnimator.SetBool("isVomiting", false);
@@ -365,20 +374,20 @@ public class MasterCtrl : MonoBehaviour {
 			//active_PAnimator.Set_animation_state(???);
 		}
 		if (aniAction.Equals("walkLeft")){
-			Debug.Log ("WALK ANIM");
+			//Debug.Log ("WALK ANIM");
 			active_PAnimator.SetInteger("Movement", 1);
 			//TODO faceing
 		}
 		if (aniAction.Equals("walkRight")){
-			Debug.Log ("WALK ANIM");
+			//Debug.Log ("WALK ANIM");
 			active_PAnimator.SetInteger("Movement", 1);
 		}
 		if (aniAction.Equals ("eat")) {
-			Debug.Log ("EAT ANIM");
+			//Debug.Log ("EAT ANIM");
 			active_PAnimator.SetBool("isEating", true);
 		}
 		if (aniAction.Equals ("upchuck")) {
-			Debug.Log ("VOMIT ANIM");
+			//Debug.Log ("VOMIT ANIM");
 			active_PAnimator.SetBool("isVomiting", true);
 		}
 
