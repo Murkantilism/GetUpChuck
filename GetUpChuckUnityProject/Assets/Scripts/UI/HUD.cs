@@ -8,13 +8,13 @@ public class HUD : MonoBehaviour {
 	public Sprite blank;
 	private GameObject canvas;
 	private Animator mainAnim;
-	UI_Inventory inventory;
+	// UI_Inventory inventory;
 	MasterCtrl master;
 	
 	void Start () {
 		canvas = GameObject.Find("Canvas");
 		mainAnim = canvas.GetComponent<Animator>();
-		inventory = GameObject.Find("InventoryPanel").GetComponent<UI_Inventory>();
+	//	inventory = GameObject.Find("InventoryPanel").GetComponent<UI_Inventory>();
 		master = GameObject.Find("MasterController").GetComponent<MasterCtrl>();
 		blank = Resources.Load<Sprite>("blank");
 	}

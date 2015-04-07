@@ -18,9 +18,9 @@ public class Plate : MonoBehaviour, Obstacle {
 	public void OnCollisionEnter2D(Collision2D coll) {
 		// On collision with either player character, get that character's inventory. On other collisions, terminate.
 		if (coll.gameObject.tag.Equals ("red")) { 
-			inv = coll.gameObject.GetComponent<Inventory_Red> ();
+			inv = GameObject.Find("redPlayer").GetComponent<Inventory_Red> ();
 		} else if (coll.gameObject.tag.Equals ("blue")) {
-			inv = coll.gameObject.GetComponent<Inventory_Blue> ();
+			inv = GameObject.Find("bluePlayer").GetComponent<Inventory_Blue> ();
 		} else {
 			return;
 		}
