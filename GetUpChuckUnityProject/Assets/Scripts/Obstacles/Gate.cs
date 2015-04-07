@@ -20,9 +20,13 @@ public class Gate : MonoBehaviour, Obstacle {
 	public void condResponse() {
 		open = true;
 		if (this.gameObject.tag.Equals ("Door")) {
-			anim.Play ("Door_Open");
+			//anim.Play ("Door_Open");
+			BoxCollider2D doorCol = this.GetComponent<BoxCollider2D>();
+			doorCol.isTrigger = true;
 		} else if (this.gameObject.tag.Equals ("Pipe")) {
-			anim.Play ("Pipe_Open");
+			//anim.Play ("Pipe_Open");
+			BoxCollider2D doorCol = this.GetComponent<BoxCollider2D>();
+			doorCol.isTrigger = true;
 		}
 	}
 	public bool getStatus() {
