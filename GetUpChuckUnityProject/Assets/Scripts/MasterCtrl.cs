@@ -3,23 +3,25 @@ using System.Collections;
 
 public class MasterCtrl : MonoBehaviour {
 	//stored reference to red
-	GameObject Red_GO;
-	Player Red_Player;
-	Inventory RedInv;
-	Player_Animator Red_animator;
+	public GameObject Red_GO;
+	public Player Red_Player;
+	Inventory_Red RedInv;
+	Animator Red_animator;
+	Animator jelly_Red_animator;
 
 	//stored reference to blue
-	GameObject Blue_GO;
+	public GameObject Blue_GO;
 	Player Blue_Player;
-	Inventory BlueInv;
-	Player_Animator Blue_animator;
+	Inventory_Blue BlueInv;
+	Animator Blue_animator;
+	Animator jelly_Blue_animator;
 
 	// Tracks which player is currently active
 	public GameObject activePlayer_go;
 	public Player activePlayer;
 	Inventory activeInventory;
-	Player_Animator active_PAnimator;
-
+	UI_Inventory ui_inventory;
+	public Animator active_PAnimator;
 
 	//camera info
 	Camera mainCam;
@@ -27,38 +29,45 @@ public class MasterCtrl : MonoBehaviour {
 	CameraZoom cameraZoom;
 	CameraZoomOut cameraZoomOut;
 
-	//tracks position for mouse drags
-	Vector2 mouseDragStart;
-	Vector2 defMDS = new Vector2 (-1.0f, -1.0f);
-
 	//item pickup ranges
 	public float XEatTol;
 	public float YEatTol;
 
-	//variables for hold for opening inventory in touch
-	bool isIncrementing;
-	int incCount;
-	public int holdTimeForInv = 200;
+	Player_Animator playerAnimator;
 
-	//keeps track if the inv is open or not
-	public bool isInvOpen; //def: false
-	//keeps track of what action is being held
-	string holdAction;  //def: "none"
-	//"OpenInv" - open inventory
+	// Input variables
+	public float startTime;
+	public Vector2 startPos;
+	public bool couldBeSwipe = false;
+	public bool chargingJump;
+	public float comfortZone = 1;
+	public float minSwipeDist;
+	public float maxSwipeTime;
+
+	Color sickColor = new Color(0.502f, 0.392f, 0.118f, 1.0f);
+	Color healthyColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+
+	//universal item weight for item size change
+	public float uniItemWeight;
 
 	// Use this for initialization
 	void Start () {
+
+		//ui_inventory = GameObject.Find("InventoryPanel").GetComponent<UI_Inventory>();
 
 		Blue_GO = GameObject.Find("bluePlayer");
 		Blue_Player = Blue_GO.GetComponent<Player> ();
 		Red_GO = GameObject.Find("redPlayer");
 		Red_Player = Red_GO.GetComponent<Player> ();
 
-		RedInv = Red_GO.GetComponent<Inventory> ();
-		BlueInv = Blue_GO.GetComponent<Inventory> ();
+		RedInv = Red_GO.GetComponent<Inventory_Red> ();
+		BlueInv = Blue_GO.GetComponent<Inventory_Blue> ();
 
-		Red_animator = Red_GO.GetComponent<Player_Animator> ();
-		Blue_animator = Blue_GO.GetComponent<Player_Animator> ();
+		Red_animator = Red_GO.GetComponent<Animator> ();
+		Blue_animator = Blue_GO.GetComponent<Animator> ();
+
+		jelly_Red_animator = GameObject.Find("redPlayer_j").GetComponent<Animator>();
+		jelly_Blue_animator = GameObject.Find("bluePlayer_j").GetComponent<Animator>();
 
 		// Set red to active player first
 		setActivePlayer("red");
@@ -66,189 +75,144 @@ public class MasterCtrl : MonoBehaviour {
 		setInventory ("red");
 		setActivePAni ("red");
 
-		mouseDragStart = defMDS;
-		isIncrementing = false;
-		incCount = 0;
-
 		mainCam = GameObject.FindGameObjectWithTag ("MainCamera").GetComponent<Camera>();
-		cameraPan = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraPan>();
-		cameraZoom = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraZoom>();
-		cameraZoomOut = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraZoomOut>();
+		cameraPan = mainCam.GetComponent<CameraPan>();
+		cameraZoom = mainCam.GetComponent<CameraZoom>();
+		cameraZoomOut = mainCam.GetComponent<CameraZoomOut>();
 
-		isInvOpen = false;
-		holdAction = "none";
+		Blue_GO.GetComponent<UnityJellySprite>().renderer.material.color = new Color(35.0f/255.0f, 92.0f/255.0f, 205.0f/255.0f, 1.0f);//Color.blue;
+		Red_GO.GetComponent<UnityJellySprite>().renderer.material.color = new Color(200.0f/255.0f, 35.0f/255.0f, 35.0f/255.0f, 1.0f);//Color.red;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-
-		if (!isInvOpen) {
-			if (Input.GetButtonDown ("playerSwaps")) {
-				swapPlayer ();
-			}
-
-#if UNITY_EDITOR || UNITY_STANDALONE
-
-		//walk controls (mouse)
-		if (Input.GetMouseButton (0)) {
-			if (mouseDragStart == defMDS) {
-				if (0 < Input.mousePosition.x && Input.mousePosition.x < (mainCam.pixelWidth / 3)) {
-					walkLeft ();
+		#if UNITY_EDITOR || UNITY_STANDALONE || UNITY_WEBPLAYER
+		if (Input.GetMouseButton(0)) {
+			// Simulate touch events from mouse events
+			if (Input.touchCount == 0) {
+				if (Input.GetMouseButtonDown(0) ) {
+					HandleTouch(10, Camera.main.ScreenToWorldPoint(Input.mousePosition), Input.mousePosition, TouchPhase.Began);
 				}
-				if ((2 * mainCam.pixelWidth / 3) < Input.mousePosition.x && Input.mousePosition.x < mainCam.pixelWidth) {
-					walkRight ();
+				if (Input.GetMouseButton(0) ) {
+					HandleTouch(10, Camera.main.ScreenToWorldPoint(Input.mousePosition), Input.mousePosition, TouchPhase.Moved);
 				}
+
 			}
+		}else if (Input.GetMouseButtonUp(0) ) {
+			HandleTouch(10, Camera.main.ScreenToWorldPoint(Input.mousePosition), Input.mousePosition, TouchPhase.Ended);
+		}else{
+			playerIdle();
 		}
+		#endif
 
-		//click to add item to inventory (mouse) / inventory open also started
-		if (Input.GetMouseButtonDown (0)) {
-			if ((mainCam.pixelWidth / 3) < Input.mousePosition.x && Input.mousePosition.x < (2 * mainCam.pixelWidth / 3)) {
-				mouseDragStart = Input.mousePosition;
-				Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
-				RaycastHit2D hit = Physics2D.GetRayIntersection (ray);
-				if (hit) {
-					//set hitItem to item hit with touch
-					Collider2D hitItemCol = hit.collider;
-					Item hitItem = hitItemCol.GetComponent<Item> ();
-					GameObject tmp = hitItemCol.gameObject;
-					//if hitItem is not null (item is hit) add it
-					if (hitItem != null) {
-						//distance check
-						if ((activePlayer_go.transform.position.x + XEatTol) > hitItemCol.transform.position.x
-							&& (activePlayer_go.transform.position.x - XEatTol) < hitItemCol.transform.position.x
-							&& (activePlayer_go.transform.position.y + YEatTol) > hitItemCol.transform.position.y
-							&& (activePlayer_go.transform.position.y - YEatTol) < hitItemCol.transform.position.y) {
-								playerEat(hitItem);
-						}
-					}
-					//checks if active player is being selected (for inventory open)
-					if (tmp != null) {
-						if (tmp == activePlayer_go) {
-							isIncrementing = true;
-							holdAction = "OpenInv";
-						}
-					}
-				}
-			}
+		#if UNITY_IPHONE || UNITY_ANDROID
+		if(Input.touchCount > 0){
+			HandleTouch(Input.GetTouch(0).fingerId, Camera.main.ScreenToWorldPoint(Input.GetTouch(0).position), Input.GetTouch(0).position, Input.GetTouch(0).phase);
 		}
+		#endif
+	}
 
-		//jump controls (mouse) / also ends inventory open early
-		if (Input.GetMouseButtonUp (0)) {
-			if (mouseDragStart != defMDS) {
-				if (0 < Input.mousePosition.x && Input.mousePosition.x < (mainCam.pixelWidth / 3)) {
-					jumpLeft ();
-				}
-				if ((2 * mainCam.pixelWidth / 3) < Input.mousePosition.x && Input.mousePosition.x < mainCam.pixelWidth) {
-					jumpRight ();
-				}
+	private void HandleTouch(int touchFingerId, Vector2 touchPositionWorldPoint, Vector3 realPosition, TouchPhase touchPhase) {
+		switch(touchPhase){
+		case TouchPhase.Began:
+			couldBeSwipe = false;
+			chargingJump = false;
+			startPos = touchPositionWorldPoint;
+			startTime = Time.time;
+			break;
+			
+		case TouchPhase.Moved:
+			// Handle movement
+			if(touchPositionWorldPoint.x >= activePlayer.transform.position.x){
+				walkRight();
+			}else if(touchPositionWorldPoint.x < activePlayer.transform.position.x){
+				walkLeft();
 			}
-			mouseDragStart = defMDS;
-			//if not holding for long enough for click and 
-			isIncrementing = false;
-			incCount = 0;
-			holdAction = "none";
-		}
 
-#endif
-
-#if UNITY_IPHONE || UNITY_ANDROID
-
-		//touch controls
-		if(Input.touchCount > 0) {
-			if ((Input.GetTouch(0).phase == TouchPhase.Moved) || (Input.GetTouch(0).phase == TouchPhase.Stationary)) {
-					//walking left
-					if (0 < Input.GetTouch(0).position.x && Input.GetTouch(0).position.x < (mainCam.pixelWidth/3)){
-						walkLeft();
-					}
-					//walking right
-					if ((2*mainCam.pixelWidth/3) < Input.GetTouch(0).position.x && Input.GetTouch(0).position.x < mainCam.pixelWidth){
-						walkRight();
-					}
+			// Check if movement could be a swipe or not
+			if(Mathf.Abs(touchPositionWorldPoint.y - startPos.y) < comfortZone){
+				couldBeSwipe = false;
+			}else{
+				couldBeSwipe = true;
 			}
-			if (Input.GetTouch(0).phase == TouchPhase.Began){
-				//eating (and inventory open)
-				if ((mainCam.pixelWidth/3) < Input.GetTouch(0).position.x && Input.GetTouch(0).position.x < (2*mainCam.pixelWidth/3)){
-					mouseDragStart = Input.GetTouch(0).position;
-					Ray ray = Camera.main.ScreenPointToRay (Input.GetTouch(0).position);
-					RaycastHit2D hit = Physics2D.GetRayIntersection(ray);
-					if (hit) {
-						Collider2D hitItemCol = hit.collider;
-						//set hitItem to item hit with touch
-						Item hitItem = hitItemCol.GetComponent<Item>();
-						GameObject tmp = hitItemCol.gameObject;
-						//if hitItem is not null (item is hit) add it
-						if (hitItem != null){
-							//distance check
-							if((activePlayer_go.transform.position.x + XEatTol) > hitItemCol.transform.position.x
-							   && (activePlayer_go.transform.position.x - XEatTol) < hitItemCol.transform.position.x
-							   && (activePlayer_go.transform.position.y + YEatTol) > hitItemCol.transform.position.y
-							   && (activePlayer_go.transform.position.y - YEatTol) < hitItemCol.transform.position.y){
-									playerEat(hitItem);
-							}
-						}
-						//checks if active player is being selected (for inventory open)
-						if (tmp != null){
-							if (tmp == activePlayer_go){
-								isIncrementing = true;
-								holdAction = "OpenInv";
-							}
-						}
+
+			// Calculate the current swipe's direction while moving
+			float curSwipeDirection = Mathf.Sign(touchPositionWorldPoint.y - startPos.y);
+
+			if(couldBeSwipe){
+				// Cast a ray to check if the input is over the player
+				Ray ray = Camera.main.ScreenPointToRay(realPosition);
+				RaycastHit2D hit = Physics2D.GetRayIntersection(ray);
+				// If the raycast hit exists and the jump isn't already being charged and it could be a swipe
+				if(hit && chargingJump == false){	
+					// Get the hit's collider, check if it's the same layer as the players (Jelly)
+					if(hit.collider.gameObject.layer == LayerMask.NameToLayer("JellySprites")){
+						chargingJump = true;
 					}
 				}
 			}
-			if (Input.GetTouch(0).phase == TouchPhase.Ended){
-				if (mouseDragStart != defMDS){
-					//jump left
-					if (0 < Input.GetTouch(0).position.x && Input.GetTouch(0).position.x < (mainCam.pixelWidth/3)){
-						jumpLeft();
+			if(chargingJump){
+				activePlayer.chargeJump(true);
+			}
+			break;
+			
+		case TouchPhase.Stationary:
+			couldBeSwipe = false;
+
+			// Handle movement
+			Debug.Log (touchPositionWorldPoint.x);
+			if(touchPositionWorldPoint.x >= activePlayer.transform.position.x){
+				walkRight();
+			}else if(touchPositionWorldPoint.x < activePlayer.transform.position.x){
+				walkLeft();
+			}
+			break;
+			
+		case TouchPhase.Ended:
+			float swipeDirection = Mathf.Sign(touchPositionWorldPoint.y - startPos.y);
+			Vector2 swipeVector = Camera.main.ScreenToWorldPoint(touchPositionWorldPoint) - Camera.main.ScreenToWorldPoint(startPos);
+			activePlayer.chargeJump(false);
+			// Based on swipe direction, jump
+			if(touchPositionWorldPoint.x >= activePlayer.transform.position.x && swipeDirection == -1 && couldBeSwipe && chargingJump){
+				jumpRight(swipeVector);
+				chargingJump = false;
+			}else if(touchPositionWorldPoint.x < activePlayer.transform.position.x && swipeDirection == -1 && couldBeSwipe && chargingJump){
+				jumpLeft(swipeVector);
+				chargingJump = false;
+			}
+			// Cast a ray to check if the input is over an item or the player
+			Ray _ray = Camera.main.ScreenPointToRay(realPosition);
+			RaycastHit2D _hit = Physics2D.GetRayIntersection(_ray);
+			// If the ray hit exists
+			if(_hit){
+				// Get the hit's collider
+				Collider2D hitItemCol = _hit.collider;
+				// Get the hit's gameobject
+				GameObject tmpGo = hitItemCol.gameObject;
+				// Get the collider's item component
+				Item hitItem = hitItemCol.GetComponent<Item>();
+				
+				// If the item component exists, check proximity to item
+				if(hitItem != null){
+					Debug.Log ("ITEM EAT");
+					// Distance check
+					if ((activePlayer_go.transform.position.x + XEatTol) > hitItemCol.transform.position.x
+					    && (activePlayer_go.transform.position.x - XEatTol) < hitItemCol.transform.position.x
+					    && (activePlayer_go.transform.position.y + YEatTol) > hitItemCol.transform.position.y
+					    && (activePlayer_go.transform.position.y - YEatTol) < hitItemCol.transform.position.y) {
+						playerEat(hitItem);
 					}
-					//jump right
-					if ((2*mainCam.pixelWidth/3) < Input.GetTouch(0).position.x && Input.GetTouch(0).position.x < mainCam.pixelWidth){
-						jumpRight();
+				}
+				
+				// Check if it's the player, if so throw up an item
+				if(tmpGo != null){
+					if(tmpGo.layer == LayerMask.NameToLayer("JellySprites")){
+						Debug.Log("UPCHUCK!");
+						playerUpChuck();
 					}
 				}
-				mouseDragStart = defMDS;
 			}
-			if (Input.GetTouch(0).phase != TouchPhase.Stationary){
-				//if not holding and was holding for inv open, stop and reset
-				if (incCount > 0){
-					isIncrementing = false;
-					incCount = 0;
-					holdAction = "none";
-				}
-			}
-		}
-
-#endif
-
-			//increments incCount for inventory open
-			if (isIncrementing == true) {
-				incCount = incCount + 1;
-			}
-
-			//if have been holding down on chuck long enough, open inventory
-			//TODO hook
-			if (incCount > holdTimeForInv) {
-				isIncrementing = false;
-				incCount = 0;
-				if (holdAction.Equals ("OpenInv")) {
-					//TODO OPEN INVENTORY HOOK HERE
-					isInvOpen = true;
-					//TODO set isInvOpen to false when closing inventory
-				}
-				holdAction = "none";
-			}
-
-
-		} //Close !isInvOpen
-
-
-		if (Input.GetKeyDown(KeyCode.Z)){
-			openInventory();
-		}
-		if (Input.GetKeyDown(KeyCode.X)){
-			closeInventory();
+			break;
 		}
 	}
 
@@ -296,10 +260,10 @@ public class MasterCtrl : MonoBehaviour {
 
 	public void setActivePAni(string color){
 		if(color.Equals("red")){
-			active_PAnimator = Red_animator;
+			active_PAnimator = jelly_Red_animator;
 		}
 		if (color.Equals ("blue")) {
-			active_PAnimator = Blue_animator;
+			active_PAnimator = jelly_Blue_animator;
 		}
 	}
 
@@ -310,24 +274,24 @@ public class MasterCtrl : MonoBehaviour {
 	//Walks left
 	void walkLeft(){
 		activePlayer.moveLeft();
-		//masterAnimationDel ("walkLeft");
+		masterAnimationDel ("walkLeft");
 	}
 
 	//walk right
 	void walkRight(){
 		activePlayer.moveRight();
-		//masterAnimationDel ("walkRight");
+		masterAnimationDel ("walkRight");
 	}
 
 	//jump left
-	void jumpLeft(){
-		activePlayer.jump("left");
+	void jumpLeft(Vector2 swipeVector){
+		activePlayer.triggerJump("left", swipeVector);
 		masterAnimationDel ("jumpLeft");
 	}
 
 	//jump right
-	void jumpRight(){
-		activePlayer.jump("right");
+	void jumpRight(Vector2 swipeVector){
+		activePlayer.triggerJump("right", swipeVector);
 		masterAnimationDel ("jumpRight");
 	}
 
@@ -338,40 +302,55 @@ public class MasterCtrl : MonoBehaviour {
 	}
 
 	void playerEat(Item tmpI){
-		activeInventory.AddItem (tmpI);
-		activePlayer.changeSize (tmpI.weight);
+		if (tmpI.isKeyItem) {
+			//TODO call sam's ui key item script
+			Debug.Log("key item eaten");
+		} else {
+			activeInventory.invEat();
+			activePlayer.changeSize (uniItemWeight);
+		}
+		tmpI.eatMe ();
 		masterAnimationDel ("eat");
 	}
 
-	void playerUpChuck(Item tmpI){
-		activeInventory.DropItem (tmpI);
+	void playerUpChuck(){
+		if (activeInventory.getCurrentWeight() > 0) {
+			activeInventory.vomit ();
+			activePlayer.changeSize (-uniItemWeight);
+		}
 		masterAnimationDel ("upchuck");
 	}
 
-	// Called when player opens inventory
+	void playerIdle(){
+		masterAnimationDel("idle");
+	}
+
+	/*// Called when player opens inventory
 	void openInventory(){
-		// TODO: Add a call to open inventory UI
-		cameraZoom.TriggerZoom();
+		cameraZoom.SetZoomState(true);
+		Debug.Log("Master call to Open Inventory");
+		ui_inventory.OpenInventory(activeInventory);
 	}
 
 	// Called when player exits inventory
 	void closeInventory(){
-		// TODO: Add a call to close inventory UI
-		cameraZoomOut.TriggerZoom();
-	}
+		cameraZoomOut.SetZoomState(true);
+		ui_inventory.CloseInventory(activeInventory);
+	}*/
 
 	//called to switch player from red to blue or blue to red
-	void swapPlayer(){
+	public void swapPlayer(){
 		if (activePlayer == Red_Player) {
 			setActivePlayer("blue");
 			setActivePlayerGO("blue");
-
+			setActivePAni("blue");
 			cameraPan.TriggerPan(Blue_GO, Red_GO);
 			setInventory("blue");
 		}
 		else if (activePlayer == Blue_Player) {
 			setActivePlayer("red");
 			setActivePlayerGO("red");
+			setActivePAni("red");
 			cameraPan.TriggerPan(Red_GO, Blue_GO);
 			setInventory("red");
 		}
@@ -379,39 +358,43 @@ public class MasterCtrl : MonoBehaviour {
 
 	//function to delegate animations to animators in specific objects
 	void masterAnimationDel (string aniAction){
-		//TODO handle walking animation using x velosity calculation, disable if jumping, use y caculation similar to doulbe jump
 		if (aniAction.Equals("jumpRight")){
-			active_PAnimator.Set_animation_state(2);
+			Debug.Log ("JUMP ANIM");
+			active_PAnimator.SetInteger("Movement", 2);
+			active_PAnimator.SetBool("isSick", false);
+			active_PAnimator.SetBool("isVomiting", false);
 		}
 		if (aniAction.Equals("jumpLeft")){
-			active_PAnimator.Set_animation_state(2);
-			//TODO Faceing
+			Debug.Log ("JUMP ANIM");
+			active_PAnimator.SetInteger("Movement", 2);
+			active_PAnimator.SetBool("isSick", false);
 		}
-		//if (aniAction.Equals("walkLeft")){
-			//myAnimatorPlayer tmpAnimator = activePlayer_go.GetComponent<myAnimatorPlayer>();
-			//tmpAnimator.walkLeft();
-		//}
-		//if (aniAction.Equals("walkRight")){
-			//myAnimatorPlayer tmpAnimator = activePlayer_go.GetComponent<myAnimatorPlayer>();
-			//tmpAnimator.walkRight();
-		//}
+
+		// TODO: hook up death animation
 		if (aniAction.Equals("death")){
 			//active_PAnimator.Set_animation_state(???);
 		}
-		if (aniAction.Equals("STwalkLeft")){
-			active_PAnimator.Set_animation_state(1);
+		if (aniAction.Equals("walkLeft")){
+			active_PAnimator.SetInteger("Movement", 1);
 			//TODO faceing
 		}
-		if (aniAction.Equals("STwalkRight")){
-			active_PAnimator.Set_animation_state(1);
+		if (aniAction.Equals("walkRight")){
+			active_PAnimator.SetInteger("Movement", 1);
 		}
 		if (aniAction.Equals ("eat")) {
-			active_PAnimator.Set_animation_state(3);
+			Debug.Log ("EAT ANIM");
+			active_PAnimator.SetBool("isEating", true);
 		}
 		if (aniAction.Equals ("upchuck")) {
-			active_PAnimator.Set_animation_state(4);
+			Debug.Log ("VOMIT ANIM");
+			active_PAnimator.SetBool("isVomiting", true);
 		}
 
+		if(aniAction.Equals("idle")){
+			active_PAnimator.SetInteger("Movement", 0);
+			active_PAnimator.SetBool("isEating", false);
+			active_PAnimator.SetBool("isVomiting", false);
+		}
 	}
 
 }

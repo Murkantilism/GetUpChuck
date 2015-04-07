@@ -55,7 +55,7 @@ public class CameraPan : MonoBehaviour {
 			if(this.transform.position.x - cameraPanBuffer > activePlayer_go.transform.position.x){
 				// Linearly interpolate 
 				currentXpos = Mathf.Lerp(currentXpos, activePlayer_go.transform.position.x, Time.deltaTime * panSpeed);
-				Debug.Log("Left - " + currentXpos.ToString());
+				//Debug.Log("Left - " + currentXpos.ToString());
 				// Pan camera position
 				this.transform.position = new Vector3(currentXpos, this.transform.position.y, this.transform.position.z);
 			}else{
@@ -63,11 +63,11 @@ public class CameraPan : MonoBehaviour {
 				triggerPan = false; // Stop panning
 			}
 		}else if(direction > 0){ // Pan right
-			Debug.Log(this.transform.position.x.ToString() + " | " + activePlayer_go.transform.position.x.ToString());
+			//Debug.Log(this.transform.position.x.ToString() + " | " + activePlayer_go.transform.position.x.ToString());
 			if(this.transform.position.x + cameraPanBuffer < activePlayer_go.transform.position.x){
 				// Linearly interpolate 
 				currentXpos = Mathf.Lerp(currentXpos, activePlayer_go.transform.position.x, Time.deltaTime * panSpeed);
-				Debug.Log("Right - " + currentXpos.ToString());
+				//Debug.Log("Right - " + currentXpos.ToString());
 				// Pan camera position
 				this.transform.position = new Vector3(currentXpos, this.transform.position.y, this.transform.position.z);
 			}else{
