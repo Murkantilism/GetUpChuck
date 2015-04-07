@@ -8,10 +8,15 @@ public class HUD : MonoBehaviour {
 	private GameObject canvas;
 	private Animator mainAnim;
 
+	MasterCtrl master;
+
 	void Start () {
 		canvas = GameObject.Find("Canvas");
 		mainAnim = canvas.GetComponent<Animator>();
 		blank = Resources.Load<Sprite>("blank");
+
+		GameObject masterCTRL = GameObject.FindGameObjectWithTag ("Master");
+		master = masterCTRL.GetComponent<MasterCtrl>();
 	}
 	
 	public void Update () { }
