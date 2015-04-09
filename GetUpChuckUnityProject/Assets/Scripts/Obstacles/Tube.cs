@@ -26,7 +26,7 @@ public class Tube : MonoBehaviour, Obstacle {
 	}
 
 	public void condResponse() {
-		if (inv.getCurrentWeight () < weightCheck) {
+		if (inv.getCurrentWeight () <= weightCheck) {
 			fits = true;
 			this.GetComponent<BoxCollider2D> ().isTrigger = true;
 		} else {
