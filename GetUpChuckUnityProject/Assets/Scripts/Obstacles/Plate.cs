@@ -9,10 +9,13 @@ public class Plate : MonoBehaviour, Obstacle {
 	private Animator anim;
 	private bool pressed = false;
 	private Inventory inv;
+	public GameObject objectWithGate;
 
 	void Start(){
 		hud = GameObject.Find("UI_Handler").GetComponent<HUD>();
 		anim = this.gameObject.GetComponent<Animator> ();
+
+		target = objectWithGate.GetComponent<Gate> ();
 	}
 
 	public void OnCollisionEnter2D(Collision2D coll) {
