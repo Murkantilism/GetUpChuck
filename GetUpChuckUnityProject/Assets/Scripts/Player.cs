@@ -146,8 +146,7 @@ public class Player : MonoBehaviour {
 				}
 			}
 		}
-	}
-	
+	}	
 	
 	//geter and seter for colorRed
 	public bool getColorRed(){

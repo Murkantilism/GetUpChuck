@@ -107,7 +107,7 @@ public class MasterCtrl : MonoBehaviour {
 
 		// FIXMIE: Delete this dev key
 		if(Input.GetKeyUp(KeyCode.R)){
-			activePlayer.playerRe();
+			playerDeath();
 		}
 
 		#endif

@@ -53,4 +53,7 @@ public class HUD : MonoBehaviour {
 		master.swapPlayer();
 		Debug.Log("Player Swap");
 	}
+	public void RespawnPlayer(){
+		master.activePlayer.playerRe();
+	}
 }
