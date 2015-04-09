@@ -4,19 +4,19 @@ using UnityEngine.UI;
 
 public class HUD : MonoBehaviour {
 	
+
 	public Sprite blank;
 	private GameObject canvas;
 	private Animator mainAnim;
-
+	// UI_Inventory inventory;
 	MasterCtrl master;
-
+	
 	void Start () {
 		canvas = GameObject.Find("Canvas");
 		mainAnim = canvas.GetComponent<Animator>();
+	//	inventory = GameObject.Find("InventoryPanel").GetComponent<UI_Inventory>();
+		master = GameObject.Find("MasterController").GetComponent<MasterCtrl>();
 		blank = Resources.Load<Sprite>("blank");
-
-		GameObject masterCTRL = GameObject.FindGameObjectWithTag ("Master");
-		master = masterCTRL.GetComponent<MasterCtrl>();
 	}
 	
 	public void Update () { }
@@ -34,6 +34,7 @@ public class HUD : MonoBehaviour {
 	public void ItemDiscard() {
 		mainAnim.Play("Key_Discard");
 	}
+
 	// Messages for when the character is too big or too small for an obstacle
 	public void TooSmall() {
 		mainAnim.Play("Too_Small");
@@ -41,6 +42,7 @@ public class HUD : MonoBehaviour {
 	public void TooBig() {
 		mainAnim.Play("Too_Big");
 	}
+
 	public void SwapPlayers(){
 		master.swapPlayer();
 		Debug.Log("Player Swap");
