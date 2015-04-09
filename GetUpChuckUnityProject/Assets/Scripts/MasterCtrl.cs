@@ -50,6 +50,12 @@ public class MasterCtrl : MonoBehaviour {
 	//universal item weight for item size change
 	public float uniItemWeight;
 
+	//SFX
+	AudioSource[] sfx;
+	AudioSource eatSFX;
+	AudioSource jumpSFX;
+	AudioSource vomitSFX;
+
 	// Use this for initialization
 	void Start () {
 
@@ -82,6 +88,12 @@ public class MasterCtrl : MonoBehaviour {
 
 		Blue_GO.GetComponent<UnityJellySprite>().renderer.material.color = new Color(35.0f/255.0f, 92.0f/255.0f, 205.0f/255.0f, 1.0f);//Color.blue;
 		Red_GO.GetComponent<UnityJellySprite>().renderer.material.color = new Color(200.0f/255.0f, 35.0f/255.0f, 35.0f/255.0f, 1.0f);//Color.red;
+
+		sfx = this.GetComponents<AudioSource> ();
+		eatSFX = sfx [0];
+		jumpSFX = sfx [1];
+		vomitSFX = sfx [2];
+
 	}
 	
 	// Update is called once per frame
@@ -287,12 +299,14 @@ public class MasterCtrl : MonoBehaviour {
 	void jumpLeft(Vector2 swipeVector){
 		activePlayer.triggerJump("left", swipeVector);
 		masterAnimationDel ("jumpLeft");
+		jumpSFX.Play ();
 	}
 
 	//jump right
 	void jumpRight(Vector2 swipeVector){
 		activePlayer.triggerJump("right", swipeVector);
 		masterAnimationDel ("jumpRight");
+		jumpSFX.Play ();
 	}
 
 	//called when player dies
@@ -311,6 +325,7 @@ public class MasterCtrl : MonoBehaviour {
 		}
 		tmpI.eatMe ();
 		masterAnimationDel ("eat");
+		eatSFX.Play ();
 	}
 
 	void playerUpChuck(){
@@ -319,6 +334,7 @@ public class MasterCtrl : MonoBehaviour {
 			activePlayer.changeSize (-uniItemWeight);
 		}
 		masterAnimationDel ("upchuck");
+		vomitSFX.Play ();
 	}
 
 	void playerIdle(){
