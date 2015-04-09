@@ -15,6 +15,7 @@ public class Player : MonoBehaviour {
 	//force of jumps
 	public int jumpForce;
 	public float jumpAngle;
+	public int jumpSquash;
 	
 	//respawn x and y stored when player reaches a checkpoint
 	public float reX;
@@ -89,7 +90,7 @@ public class Player : MonoBehaviour {
 	public void chargeJump(bool charging){
 		//Debug.Log ("Charging jump.");
 		if(charging){
-			this.GetComponent<JellySprite>().AddForce(-Vector2.up*jumpForce);
+			this.GetComponent<JellySprite>().AddForce(-Vector2.up*jumpSquash);
 		}
 	}
 
