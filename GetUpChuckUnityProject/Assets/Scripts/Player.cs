@@ -7,7 +7,7 @@ public class Player : MonoBehaviour {
 	public bool colorRed;
 	
 	//intance of player inventory used for this player
-	Inventory playerInventory;
+	public Inventory playerInventory;
 	
 	//max inventory size stored for model calculations
 	float maxInvSize;
