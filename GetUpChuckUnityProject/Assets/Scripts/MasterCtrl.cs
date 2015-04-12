@@ -49,6 +49,8 @@ public class MasterCtrl : MonoBehaviour {
 	Color sickColor = new Color(0.502f, 0.392f, 0.118f, 1.0f);
 	Color healthyColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
 
+	TriggerPropReactions triggerPropReactions;
+
 	// Use this for initialization
 	void Start () {
 
@@ -83,6 +85,8 @@ public class MasterCtrl : MonoBehaviour {
 		Red_GO.GetComponent<UnityJellySprite>().renderer.material.color = new Color(200.0f/255.0f, 35.0f/255.0f, 35.0f/255.0f, 1.0f);//Color.red;
 
 		float maxJumpHeight = 25.0f;
+
+		triggerPropReactions = GameObject.Find("Props").GetComponent<TriggerPropReactions>();
 	}
 	
 	// Update is called once per frame
@@ -222,7 +226,8 @@ public class MasterCtrl : MonoBehaviour {
 					if(tmpGo.layer == LayerMask.NameToLayer("JellySprites")){
 						Debug.Log("UPCHUCK!");
 						// TODO: Uncomment throw up call here
-						//playerUpChuck();
+						playerUpChuck();
+						triggerPropReactions.TriggerReactions();
 					}
 				}
 			}
@@ -321,8 +326,7 @@ public class MasterCtrl : MonoBehaviour {
 		masterAnimationDel ("eat");
 	}
 
-	void playerUpChuck(Item tmpI){
-		activeInventory.DropItem (tmpI);
+	void playerUpChuck(){
 		masterAnimationDel ("upchuck");
 	}
 
