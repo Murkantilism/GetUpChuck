@@ -56,10 +56,12 @@ public class MasterCtrl : MonoBehaviour {
 	AudioSource jumpSFX;
 	AudioSource vomitSFX;
 
+	TriggerPropReactions triggerPropReactions;
+
 	// Use this for initialization
 	void Start () {
 
-		//ui_inventory = GameObject.Find("InventoryPanel").GetComponent<UI_Inventory>();
+		ui_inventory = GameObject.Find("InventoryPanel").GetComponent<UI_Inventory>();
 
 		Blue_GO = GameObject.Find("bluePlayer");
 		Blue_Player = Blue_GO.GetComponent<Player> ();
@@ -88,6 +90,8 @@ public class MasterCtrl : MonoBehaviour {
 
 		Blue_GO.GetComponent<UnityJellySprite>().renderer.material.color = new Color(35.0f/255.0f, 92.0f/255.0f, 205.0f/255.0f, 1.0f);//Color.blue;
 		Red_GO.GetComponent<UnityJellySprite>().renderer.material.color = new Color(200.0f/255.0f, 35.0f/255.0f, 35.0f/255.0f, 1.0f);//Color.red;
+
+		triggerPropReactions = GameObject.Find("Props").GetComponent<TriggerPropReactions>();
 
 		sfx = this.GetComponents<AudioSource> ();
 		eatSFX = sfx [0];
@@ -221,6 +225,7 @@ public class MasterCtrl : MonoBehaviour {
 					if(tmpGo.layer == LayerMask.NameToLayer("JellySprites")){
 						Debug.Log("UPCHUCK!");
 						playerUpChuck();
+						triggerPropReactions.TriggerReactions();
 					}
 				}
 			}
