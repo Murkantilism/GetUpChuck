@@ -7,7 +7,7 @@ public class Player : MonoBehaviour {
 	public bool colorRed;
 	
 	//intance of player inventory used for this player
-	Inventory playerInventory;
+	public Inventory playerInventory;
 	
 	//max inventory size stored for model calculations
 	public float maxInvSize;
@@ -98,10 +98,8 @@ public class Player : MonoBehaviour {
 	// the inverse of the swipe vector.
 	public void triggerJump(string Direc, Vector2 swipeVector){
 		if (Direc.Equals("right")){
-			//Debug.Log ("Right jump triggered.");
 			this.GetComponent<JellySprite>().AddForce(-swipeVector*jumpForce);
 		}else{
-			//Debug.Log ("Left jump triggered.");
 			this.GetComponent<JellySprite>().AddForce(-swipeVector*jumpForce);
 		}
 	}
@@ -120,9 +118,36 @@ public class Player : MonoBehaviour {
 	
 	//called when a player is forced to respawn (like on death)
 	public void playerRe(){
-		this.transform.position = new Vector3 (reX, reY, this.transform.position.z);
+		MoveJellySpriteToPosition(this.GetComponent<JellySprite>(), new Vector3 (reX, reY, this.transform.position.z), true);
 	}
-	
+
+	// A special function to move a Jelly Sprite to the given position.
+	void MoveJellySpriteToPosition(JellySprite jellySprite, Vector3 position, bool resetVelocity)
+	{
+		Vector3 offset = position - jellySprite.CentralPoint.GameObject.transform.position;
+		
+		foreach(JellySprite.ReferencePoint referencePoint in jellySprite.ReferencePoints)
+		{
+			if(!referencePoint.IsDummy)
+			{
+				referencePoint.GameObject.transform.position = referencePoint.GameObject.transform.position + offset;
+				
+				if(resetVelocity)
+				{
+					if(referencePoint.Body2D)
+					{
+						referencePoint.Body2D.angularVelocity = 0.0f;
+						referencePoint.Body2D.velocity = Vector2.zero;
+					}
+					else if(referencePoint.Body3D)
+					{
+						referencePoint.Body3D.angularVelocity = Vector3.zero;
+						referencePoint.Body3D.velocity = Vector3.zero;
+					}
+				}
+			}
+		}
+	}	
 	
 	//geter and seter for colorRed
 	public bool getColorRed(){

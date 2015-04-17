@@ -1,50 +1,59 @@
 ﻿using UnityEngine;
 using System.Collections;
-using UnityEngine.UI;
 
 public class HUD : MonoBehaviour {
 	
-
-	public Sprite blank;
-	private GameObject canvas;
-	private Animator mainAnim;
-	// UI_Inventory inventory;
+	public GameObject pauseMenuPanel;
+	public GameObject inventoryPanel;
+	private Animator pauseAnim;
+	private Animator invAnim;
+	private bool isPaused = false;
+	UI_Inventory inventory;
 	MasterCtrl master;
-	
+
 	void Start () {
-		canvas = GameObject.Find("Canvas");
-		mainAnim = canvas.GetComponent<Animator>();
-	//	inventory = GameObject.Find("InventoryPanel").GetComponent<UI_Inventory>();
+		inventory = GameObject.Find("InventoryPanel").GetComponent<UI_Inventory>();
+		Time.timeScale = 1;
+		pauseAnim = pauseMenuPanel.GetComponent<Animator>();
+		invAnim = inventoryPanel.GetComponent<Animator>();
+		pauseAnim.enabled = false;
+		invAnim.enabled = false;
 		master = GameObject.Find("MasterController").GetComponent<MasterCtrl>();
-		blank = Resources.Load<Sprite>("blank");
 	}
 	
-	public void Update () { }
-
+	public void Update () {
+		if(Input.GetKeyUp(KeyCode.Escape) && !isPaused){
+			PauseGame();
+		}
+		else if(Input.GetKeyUp(KeyCode.Escape) && isPaused){
+			UnpauseGame();
+		}
+	}
 	public void PauseGame(){
-		mainAnim.Play ("Pause_In");
+		pauseAnim.enabled = true;
+		pauseAnim.Play ("PauseMenuSlideIn");
+		isPaused = true;
+		Debug.Log("paused");
+		//Time.timeScale = 0;
 	}
 	public void UnpauseGame(){
-		mainAnim.Play ("Pause_Out");
+		isPaused = false;
+		pauseAnim.Play ("PauseMenuSlideOut");
 		Time.timeScale = 1;
 	}
-	public void ItemPickup() {
-		mainAnim.Play ("Key_Pickup");
+	public void OpenInventory(){
+		invAnim.enabled = true;
+		invAnim.Play ("InventoryFadeIn");
 	}
-	public void ItemDiscard() {
-		mainAnim.Play("Key_Discard");
+	public void CloseInventory(){
+		invAnim.enabled = true;
+		invAnim.Play ("InventoryFadeOut");
 	}
-
-	// Messages for when the character is too big or too small for an obstacle
-	public void TooSmall() {
-		mainAnim.Play("Too_Small");
-	}
-	public void TooBig() {
-		mainAnim.Play("Too_Big");
-	}
-
 	public void SwapPlayers(){
 		master.swapPlayer();
 		Debug.Log("Player Swap");
+	}
+	public void RespawnPlayer(){
+		master.activePlayer.playerRe();
 	}
 }
