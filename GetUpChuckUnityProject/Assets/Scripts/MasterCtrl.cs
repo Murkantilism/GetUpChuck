@@ -60,11 +60,19 @@ public class MasterCtrl : MonoBehaviour {
 	AudioSource vomitSFX;
 
 	TriggerPropReactions triggerPropReactions;
+	//muisic
+	AudioSource BGMusic;
+	bool isBGPaused;
+	public int BGPausedCountdownMAX;
+	int BGPausedCountTMP;
+
+	//tracks player direction
+	bool PlayerFacingRight;
 
 	// Use this for initialization
 	void Start () {
 
-		ui_inventory = GameObject.Find("InventoryPanel").GetComponent<UI_Inventory>();
+		//ui_inventory = GameObject.Find("InventoryPanel").GetComponent<UI_Inventory>();
 
 		Blue_GO = GameObject.Find("bluePlayer");
 		Blue_Player = Blue_GO.GetComponent<Player> ();
@@ -106,6 +114,11 @@ public class MasterCtrl : MonoBehaviour {
 
 		triggerPropReactions = GameObject.Find("Props").GetComponent<TriggerPropReactions>();
 
+		BGMusic = GameObject.Find ("BG music").GetComponent<AudioSource> ();
+		isBGPaused = false;
+		BGPausedCountTMP = BGPausedCountdownMAX;
+
+		PlayerFacingRight = true;
 	}
 	
 	// Update is called once per frame
@@ -140,6 +153,15 @@ public class MasterCtrl : MonoBehaviour {
 			HandleTouch(Input.GetTouch(0).fingerId, Camera.main.ScreenToWorldPoint(Input.GetTouch(0).position), Input.GetTouch(0).position, Input.GetTouch(0).phase);
 		}
 		#endif
+
+		if (isBGPaused) {
+			BGPausedCountTMP = BGPausedCountTMP - 1;
+			if (BGPausedCountTMP <= 0){
+				isBGPaused = false;
+				BGMusic.Play();
+				BGPausedCountTMP = BGPausedCountdownMAX;
+			}
+		}
 	}
 
 	private void HandleTouch(int touchFingerId, Vector2 touchPositionWorldPoint, Vector3 realPosition, TouchPhase touchPhase) {
@@ -311,12 +333,22 @@ public class MasterCtrl : MonoBehaviour {
 	void walkLeft(){
 		activePlayer.moveLeft();
 		masterAnimationDel ("walkLeft");
+		if (PlayerFacingRight && !couldBeSwipe) {
+			PlayerFacingRight = false;
+			float scalexTMP = activePlayer_go.transform.localScale.x;
+			activePlayer_go.transform.localScale = new Vector3(scalexTMP * -1,this.transform.localScale.y, this.transform.localScale.z);
+		}
 	}
 
 	//walk right
 	void walkRight(){
 		activePlayer.moveRight();
 		masterAnimationDel ("walkRight");
+		if (!PlayerFacingRight && !couldBeSwipe) {
+			PlayerFacingRight = true;
+			float scalexTMP = activePlayer_go.transform.localScale.x;
+			activePlayer_go.transform.localScale = new Vector3(scalexTMP * -1,this.transform.localScale.y, this.transform.localScale.z);
+		}
 	}
 
 	//jump left
@@ -358,7 +390,10 @@ public class MasterCtrl : MonoBehaviour {
 			activePlayer.changeSize (-uniItemWeight);
 		}
 		masterAnimationDel ("upchuck");
+		BGMusic.Pause ();
+		isBGPaused = true;
 		vomitSFX.Play ();
+		//BGMusic.PlayDelayed (60.0f);
 	}
 
 	void playerIdle(){
