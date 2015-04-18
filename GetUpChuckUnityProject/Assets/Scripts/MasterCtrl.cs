@@ -44,7 +44,7 @@ public class MasterCtrl : MonoBehaviour {
 	public float minSwipeDist;
 	public float maxSwipeTime;
 
-	public float maxJumpHeight = 25.0f; // The maximum height FROM which the player can trigger a jump
+	//public float maxJumpHeight = 25.0f; // The maximum height FROM which the player can trigger a jump
 
 	Color sickColor = new Color(0.502f, 0.392f, 0.118f, 1.0f);
 	Color healthyColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
@@ -110,7 +110,7 @@ public class MasterCtrl : MonoBehaviour {
 		jumpSFX = sfx [1];
 		vomitSFX = sfx [2];
 
-		float maxJumpHeight = 25.0f;
+		//float maxJumpHeight = 25.0f;
 
 		triggerPropReactions = GameObject.Find("Props").GetComponent<TriggerPropReactions>();
 
@@ -200,11 +200,11 @@ public class MasterCtrl : MonoBehaviour {
 					// Get the hit's collider, check if it's the same layer as the players (Jelly)
 					if(hit.collider.gameObject.layer == LayerMask.NameToLayer("JellySprites")){
 						// As long as the player isn't too high up to start a jump
-						if(activePlayer.transform.position.y < maxJumpHeight){
+						//if(activePlayer.transform.position.y < maxJumpHeight){
 							chargingJump = true;
-						}else{
-							Debug.LogWarning("MAX JUMP HEIGHT HIT");
-						}
+						//}else{
+						//	Debug.LogWarning("MAX JUMP HEIGHT HIT");
+						//}
 					}
 				}
 			}
