@@ -8,16 +8,16 @@ public class HUD : MonoBehaviour {
 	private GameObject canvas;
 	private Animator mainAnim;
 
-	public GameObject pauseMenuPanel;
-	private Animator pauseAnim;
+	//public GameObject pauseMenuPanel;
+	//private Animator pauseAnim;
 	private bool isPaused = false;
 	//UI_Inventory inventory;
 	MasterCtrl master;
 
 	void Start () {
 		Time.timeScale = 1;
-		pauseAnim = pauseMenuPanel.GetComponent<Animator>();
-		pauseAnim.enabled = false;
+		//pauseAnim = pauseMenuPanel.GetComponent<Animator>();
+		//pauseAnim.enabled = false;
 		master = GameObject.Find("MasterController").GetComponent<MasterCtrl>();
 
 		//from sams branch added manualy
@@ -35,15 +35,15 @@ public class HUD : MonoBehaviour {
 		}
 	}
 	public void PauseGame(){
-		pauseAnim.enabled = true;
-		pauseAnim.Play ("Pause_In");
+		//pauseAnim.enabled = true;
+		mainAnim.Play ("Pause_In");
 		isPaused = true;
 		Debug.Log("paused");
 		//Time.timeScale = 0;
 	}
 	public void UnpauseGame(){
 		isPaused = false;
-		pauseAnim.Play ("Pause_Out");
+		mainAnim.Play ("Pause_Out");
 		Time.timeScale = 1;
 	}
 
