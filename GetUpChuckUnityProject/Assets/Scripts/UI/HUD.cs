@@ -39,7 +39,7 @@ public class HUD : MonoBehaviour {
 		mainAnim.Play ("Pause_In");
 		isPaused = true;
 		Debug.Log("paused");
-		//Time.timeScale = 0;
+		Time.timeScale = 0.3f;
 	}
 	public void UnpauseGame(){
 		isPaused = false;
