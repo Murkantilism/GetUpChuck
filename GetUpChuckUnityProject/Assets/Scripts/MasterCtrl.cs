@@ -347,7 +347,7 @@ public class MasterCtrl : MonoBehaviour {
 		if (!PlayerFacingRight && !couldBeSwipe) {
 			PlayerFacingRight = true;
 			float scalexTMP = activePlayer_go.transform.localScale.x;
-			activePlayer_go.transform.localScale = new Vector3(scalexTMP * -1,this.transform.localScale.y, this.transform.localScale.z);
+			activePlayer_go.transform.localScale = new Vector3(Mathf.Abs(scalexTMP), this.transform.localScale.y, this.transform.localScale.z);
 		}
 	}
 
