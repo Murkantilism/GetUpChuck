@@ -141,16 +141,13 @@ public class MasterCtrl : MonoBehaviour {
 			playerIdle();
 		}
 
-		// FIXMIE: Delete this dev key
-		if(Input.GetKeyUp(KeyCode.R)){
-			playerDeath();
-		}
-
 		#endif
 
 		#if UNITY_IPHONE || UNITY_ANDROID
 		if(Input.touchCount > 0){
 			HandleTouch(Input.GetTouch(0).fingerId, Camera.main.ScreenToWorldPoint(Input.GetTouch(0).position), Input.GetTouch(0).position, Input.GetTouch(0).phase);
+		}else{
+			playerIdle();
 		}
 		#endif
 
