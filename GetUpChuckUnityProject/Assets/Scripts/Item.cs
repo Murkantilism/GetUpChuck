@@ -28,7 +28,7 @@ public class Item : MonoBehaviour {
 	}
 
 	//destroy item when eaten
-	public void eatMe(){
+	public IEnumerator eatMe(){
 		if (isTheCake) {
 			//TODO uncomment this when win sound is attached
 			//cakeWin.Play();
