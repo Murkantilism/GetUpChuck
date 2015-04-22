@@ -12,7 +12,7 @@ public class Plate : MonoBehaviour, Obstacle {
 	public GameObject objectWithGate;
 
 	void Start(){
-		hud = GameObject.Find("UI_Handler").GetComponent<HUD>();
+		hud = GameObject.Find("Canvas").GetComponent<HUD>();
 		anim = this.gameObject.GetComponent<Animator> ();
 
 		target = objectWithGate.GetComponent<Gate> ();
