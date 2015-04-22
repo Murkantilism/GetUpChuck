@@ -9,7 +9,7 @@ public class Tube : MonoBehaviour, Obstacle {
 	private Inventory inv;
 
 	void Start(){
-		hud = GameObject.Find("MenuEvents").GetComponent<HUD>();
+		hud = GameObject.Find("UI_Handler").GetComponent<HUD>();
 	}
 
 	public void OnCollisionEnter2D(Collision2D coll) {
