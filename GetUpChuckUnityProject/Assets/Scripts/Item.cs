@@ -28,13 +28,18 @@ public class Item : MonoBehaviour {
 	}
 
 	//destroy item when eaten
-	public IEnumerator eatMe(){
+	public void eatMe(){
 		if (isTheCake) {
-			//TODO uncomment this when win sound is attached
-			//cakeWin.Play();
-			yield return new WaitForSeconds(1);
-			nextLvForCake.goToNextLevel();
-		}
-		Destroy (this.gameObject);
+						StartCoroutine (eatMeCake());
+				} else {
+						Destroy (this.gameObject);
+				}
+	}
+
+	public IEnumerator eatMeCake(){
+		//TODO uncomment this when win sound is attached
+		//cakeWin.Play();
+		yield return new WaitForSeconds(1);
+		nextLvForCake.goToNextLevel();
 	}
 }
