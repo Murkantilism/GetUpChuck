@@ -17,6 +17,6 @@ Marcio Lama - Visual Art and Animation
 
 Andrew Ojemann - Programming
 
-Beejul Khatri - Sound and Music
+ - Sound and Music
 
 Dylan Schmidt - Marketing, etc.
