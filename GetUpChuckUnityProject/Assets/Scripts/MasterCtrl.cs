@@ -196,17 +196,13 @@ public class MasterCtrl : MonoBehaviour {
 				if(hit && chargingJump == false){	
 					// Get the hit's collider, check if it's the same layer as the players (Jelly)
 					if(hit.collider.gameObject.layer == LayerMask.NameToLayer("JellySprites")){
-						// As long as the player isn't too high up to start a jump
-						//if(activePlayer.transform.position.y < maxJumpHeight){
-							chargingJump = true;
-						//}else{
-						//	Debug.LogWarning("MAX JUMP HEIGHT HIT");
-						//}
+						chargingJump = true;
 					}
 				}
 			}
 			if(chargingJump){
-				activePlayer.chargeJump(true);
+				Vector2 tempSwipeVector = Camera.main.ScreenToWorldPoint(touchPositionWorldPoint) - Camera.main.ScreenToWorldPoint(startPos);
+				activePlayer.chargeJump(true, tempSwipeVector);
 			}
 			break;
 			
@@ -225,7 +221,7 @@ public class MasterCtrl : MonoBehaviour {
 		case TouchPhase.Ended:
 			float swipeDirection = Mathf.Sign(touchPositionWorldPoint.y - startPos.y);
 			Vector2 swipeVector = Camera.main.ScreenToWorldPoint(touchPositionWorldPoint) - Camera.main.ScreenToWorldPoint(startPos);
-			activePlayer.chargeJump(false);
+			activePlayer.chargeJump(false, new Vector2(0, 0));
 			// Based on swipe direction, jump
 			if(touchPositionWorldPoint.x >= activePlayer.transform.position.x && swipeDirection == -1 && couldBeSwipe && chargingJump){
 				jumpRight(swipeVector);
