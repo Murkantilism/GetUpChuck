@@ -218,7 +218,8 @@ public class MasterCtrl : MonoBehaviour {
 			}
 
 			if (chargingJump == true){
-				activePlayer.chargeJump(true);
+				Vector2 tempSwipeVector = Camera.main.ScreenToWorldPoint(touchPositionWorldPoint) - Camera.main.ScreenToWorldPoint(startPos);
+				activePlayer.chargeJump(true, tempSwipeVector);
 			}
 
 			break;
