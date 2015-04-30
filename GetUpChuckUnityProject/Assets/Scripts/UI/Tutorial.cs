@@ -9,7 +9,7 @@ public class Tutorial : MonoBehaviour {
 
 	void Start () {
 		tutAnim = tutorialPanel.GetComponent<Animator> ();
-		tutAnim.enabled = false;
+		//tutAnim.enabled = false;
 	}
 
 	public void tutorialTap(){
