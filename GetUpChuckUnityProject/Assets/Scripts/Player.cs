@@ -27,7 +27,7 @@ public class Player : MonoBehaviour {
 	//movespeed of the character
 	public float moveSpeed;
 
-	private LineRenderer lineRend;
+	//private LineRenderer lineRend;
 	
 	//==================================================================
 	
@@ -40,12 +40,13 @@ public class Player : MonoBehaviour {
 			playerInventory = this.GetComponent<Inventory_Blue> ();
 		}
 		maxInvSize = 100;
-		
+
+		/*
 		lineRend = this.gameObject.GetComponent<LineRenderer>();
 		lineRend.SetPosition(0, transform.position);
 		lineRend.SetWidth(0.6f, 0.6f);
 		lineRend.SetColors(Color.red, Color.red);
-
+		*/
 	}
 	
 	// Update is called once per frame
@@ -98,18 +99,21 @@ public class Player : MonoBehaviour {
 	public void chargeJump(bool charging, Vector2 swipeVector){
 		//Debug.Log ("Charging jump.");
 		if(charging){
+			/*
 			// Draw a line indicator
 			Vector2 ab = ((Vector2)transform.position - swipeVector).normalized;
 			Vector2 pointOnLine = (Vector2)(swipeVector + (0.1f * ab));
 			lineRend.SetPosition(0, new Vector2(transform.position.x, Mathf.Abs(transform.position.y)));
 			lineRend.SetPosition(1, pointOnLine);
+			*/
 			// Apply jump squash force
 			this.GetComponent<JellySprite>().AddForce(-Vector2.up*jumpSquash);
+		/*
 		}else{
 			// Draw a line indicator at 0, 0 (makes line disappear)
 			lineRend.SetPosition(0, new Vector2(0,0));
 			lineRend.SetPosition(1, new Vector2(0,0));
-		}
+		*/}
 	}
 
 	// Once the charged jump is released trigger it, apply force with
