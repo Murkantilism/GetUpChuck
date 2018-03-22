@@ -1,4 +1,4 @@
-GetUpChuck
+[GetUpChuck](http://denizoz.me/GetUpChuck/Build.html)
 ============
 ## Description
 You are what you eat! Get Up, Chuck! is a 2D puzzle-platformer game focused around eating and vomiting. Level puzzles will force players to creatively manage their stomach content inventory and overall weight to progress. The core audience is anyone who can stomach the metaphor.
